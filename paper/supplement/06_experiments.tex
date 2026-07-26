@@ -2,24 +2,24 @@
 
 All experiments use explicit normal-form games, SciPy's HiGHS interface, fixed random seeds, and one CPU core.  The full configuration uses seed 17, 20 replicates at every perturbation scale, 40 replicates at every sample count, seven timing repetitions for the zero-sum study, and three timing repetitions for the CE study.  Construction-based sharpness results are evaluated once per listed parameter.  The repository records the software environment, every CSV file, and both PDF and PNG figures.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \begin{tabular}{lll}
 \toprule
 Study & Varied quantity & Primary diagnostic\\
 \midrule
-Nonstrategic shift & scale $0$--$10$ & raw vs. strategic defect\\
-Strategic noise & $\sigma=0$--$0.35$ & regret/gap vs. certificate\\
-Group hierarchy & orbit size $1,2,4,8$ & compression vs. defect\\
-Reynolds family & $d=2$--$40$ & ratio $2-2/d$\\
-Role assignment & $n=2$--$10$ & independent vs. CE welfare\\
+Nonstrategic shift & scale $0$--$10$ & raw versus strategic defect\\
+Strategic noise & $\sigma=0$--$0.35$ & regret or gap versus certificate\\
+Group hierarchy & orbit size $1,2,4,8$ & compression versus defect\\
+Reynolds family & $d=2$--$40$ & approximation ratio $2-2/d$\\
+Role assignment & $n=2$--$10$ & independent versus CE welfare\\
 Payoff sampling & $M=5$--$1000$ & coverage and contraction\\
-Runtime & duplicated actions & full vs. orbit programs\\
+Runtime & duplicated actions & full versus orbit programs\\
 \bottomrule
 \end{tabular}
 \caption{Laptop-scale validation suite.  The synthetic families isolate one theorem at a time rather than model a large learned system.}
 \label{tab:supp-studies}
-\end{table}
+\end{table*}
 
 \subsection{Strategic Versus Raw Payoff Asymmetry}
 
@@ -27,8 +27,8 @@ We begin with an exactly lifted zero-sum quotient game and add arbitrary opponen
 
 \subsection{Sharpness of Group Averaging}
 
-For the zero-sum construction in Section~\ref{thm:supp-reynolds}, we independently compute the structured LP defect, unrestricted cycle defect, and Reynolds distance.  Figure~\ref{fig:supp-separation}(b) shows exact agreement with the formula $2-2/d$ for
-$d\in\{2,3,4,5,8,12,20,40\}$.  The largest instance reaches ratio $1.95$.  By contrast, random perturbations in the calibration study produce substantially smaller averaging ratios, separating typical behavior from the proved worst case.
+For the zero-sum construction underlying Theorem~\ref{thm:supp-reynolds}, we independently compute the structured LP defect, unrestricted cycle defect, and Reynolds distance.  Figure~\ref{fig:supp-separation}(b) shows exact agreement with $2-2/d$ for
+$d\in\{2,3,4,5,8,12,20,40\}$.  The largest instance reaches ratio $1.95$.  Random perturbations in the calibration study produce substantially smaller averaging ratios, separating typical behavior from the proved worst case.
 
 \begin{figure*}[t]
 \centering
@@ -74,7 +74,7 @@ For exact lifted zero-sum games, the ordinary equilibrium LP and orbit-reduced p
 
 \subsection{Finite-Sample Certificates}
 
-Each row-player payoff is transformed into a Bernoulli mean in $[0,1]$ and estimated independently from $M$ observations; the column payoff is its negative.  We project the empirical zero-sum game, solve the invariant surrogate, and evaluate the profile against the population matrix.  Figure~\ref{fig:supp-statistics}(a) compares true maximum regret with the $95\%$ certificate from \eqref{eq:supp-sampling}.  Every committed trial is covered, and the confidence contribution contracts at the predicted $M^{-1/2}$ rate.  The gap between empirical regret and the distribution-free bound motivates variance-adaptive confidence regions.
+Each row-player payoff is transformed into a Bernoulli mean in $[0,1]$ and estimated independently from $M$ observations; the column payoff is its negative.  We project the empirical zero-sum game, solve the invariant surrogate, and evaluate the profile against the population matrix.  Figure~\ref{fig:supp-statistics}(a) compares true maximum regret with the $95\%$ certificate from the statistical analysis.  Every committed trial is covered, and the confidence contribution contracts at the predicted $M^{-1/2}$ rate.  The gap between empirical regret and the distribution-free bound motivates variance-adaptive confidence regions.
 
 \subsection{Heterogeneous Role Preferences}
 
