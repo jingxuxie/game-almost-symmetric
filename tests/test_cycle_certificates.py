@@ -37,36 +37,20 @@ def _assert_witness_is_critical(result, atol: float = 5e-7) -> None:
     assert abs(witness_value - result.cycle_value) <= atol
 
 
-def _reynolds_tight_family(d: int):
-    """Return the family attaining Reynolds ratio 2 - 2/d^2."""
+def _reynolds_tight_zero_sum_family(d: int):
+    """Return a zero-sum family attaining Reynolds ratio ``2 - 2/d``."""
     if d < 2:
         raise ValueError("d must be at least two")
-    action_count = 2 * d
-    row_payoff = np.zeros((action_count, action_count), dtype=float)
 
-    # Only the first column block is nonzero. Rows are split into R0 and R1.
-    # At the special column t=0:
-    #   R0: [0, -1, ..., -1], R1: [-1, 0, ..., 0].
-    # At every other column in C0:
-    #   R0: all 0, R1: all 1.
-    row_payoff[1:d, 0] = -1.0
-    row_payoff[d, 0] = -1.0
-    row_payoff[d:, 1:d] = 1.0
-
-    payoffs = np.stack([row_payoff, np.zeros_like(row_payoff)], axis=0)
-    game = NormalFormGame(payoffs)
-    generators = []
-    for player in (0, 1):
-        generators.append(
-            cyclic_action_generator(
-                (action_count, action_count), player, list(range(0, d))
-            )
-        )
-        generators.append(
-            cyclic_action_generator(
-                (action_count, action_count), player, list(range(d, 2 * d))
-            )
-        )
+    matrix = np.zeros((d, 2 * d), dtype=float)
+    matrix[0, d:] = 1.0
+    matrix[1:, :d] = 1.0
+    game = NormalFormGame.zero_sum(matrix)
+    generators = [
+        cyclic_action_generator((d, 2 * d), 0, list(range(d))),
+        cyclic_action_generator((d, 2 * d), 1, list(range(d))),
+        cyclic_action_generator((d, 2 * d), 1, list(range(d, 2 * d))),
+    ]
     return game, generators
 
 
@@ -115,17 +99,23 @@ def test_tight_edge_witness_matches_lp_on_random_games():
         _assert_witness_is_critical(cycle)
 
 
-def test_reynolds_factor_two_is_asymptotically_tight():
-    for d in (2, 3, 4, 6, 10):
-        game, generators = _reynolds_tight_family(d)
-        optimal = project_strategic(game, generators)
+def test_reynolds_factor_two_is_tight_even_in_zero_sum_games():
+    for d in (2, 3, 4, 6, 10, 12):
+        game, generators = _reynolds_tight_zero_sum_family(d)
+        optimal = project_strategic(
+            game,
+            generators,
+            structure="zero_sum",
+        )
         cycle = project_strategic_cycle(game, generators)
         averaged = reynolds_symmetrize(game, generators)
         averaged_distance = strategic_distance(game, averaged)
 
+        assert game.is_zero_sum()
+        assert averaged.is_zero_sum()
         assert abs(optimal.distance - 1.0) < 2e-7
         assert abs(cycle.cycle_value - 1.0) < 2e-7
-        assert abs(averaged_distance - (2.0 - 2.0 / d**2)) < 2e-7
+        assert abs(averaged_distance - (2.0 - 2.0 / d)) < 2e-7
         assert averaged_distance <= 2.0 * optimal.distance + 2e-7
 
 
