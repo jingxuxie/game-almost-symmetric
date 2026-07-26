@@ -36,13 +36,12 @@ Let $\Gamma=(N,(A_i)_i,(u_i)_i)$ and $\Gamma'=(N,(A_i)_i,(v_i)_i)$ be compatible
 \max_{i,a_{-i},a_i,b_i}
 \left|r_i(a_i,a_{-i})-r_i(b_i,a_{-i})\right|.
 \]
-For a fixed slice $(i,a_{-i})$, the maximum absolute pairwise difference equals the range of the residual values:
+For a fixed slice $(i,a_{-i})$, the maximum absolute pairwise difference equals the residual range:
 \[
 \max_{a_i,b_i}|r_i(a_i,a_{-i})-r_i(b_i,a_{-i})|
 =
 \max_{a_i}r_i(a_i,a_{-i})-\min_{a_i}r_i(a_i,a_{-i}).
 \]
-This identity gives the compact LP formulation in the main paper.
 
 \begin{lemma}[Relabeling invariance]
 For every compatible pair of games and every player--action relabeling $g$,
@@ -51,11 +50,11 @@ For every compatible pair of games and every player--action relabeling $g$,
 \]
 \end{lemma}
 \begin{proof}
-The relabeling bijectively permutes the set of tuples $(i,a_{-i},a_i,b_i)$ over which the maximum is taken and preserves the corresponding residual difference.
+The relabeling bijectively permutes the tuples $(i,a_{-i},a_i,b_i)$ over which the maximum is taken and preserves the corresponding residual difference.
 \end{proof}
 
 \begin{lemma}[Mixed extension]
-If $\devdist(\Gamma,\Gamma')\le\delta$, then for every player $i$, every opponent mixture $\sigma_{-i}$, and every pair of own mixed strategies $p_i,q_i$,
+If $\devdist(\Gamma,\Gamma')\le\delta$, then for every player $i$, opponent mixture $\sigma_{-i}$, and own mixed strategies $p_i,q_i$,
 \begin{align*}
 \Big|&[u_i(p_i,\sigma_{-i})-u_i(q_i,\sigma_{-i})]\\
 &-[v_i(p_i,\sigma_{-i})-v_i(q_i,\sigma_{-i})]\Big|
@@ -63,9 +62,7 @@ If $\devdist(\Gamma,\Gamma')\le\delta$, then for every player $i$, every opponen
 \end{align*}
 \end{lemma}
 \begin{proof}
-Fix a pure opponent profile $a_{-i}$.  The residual values
-$\{r_i(a_i,a_{-i}):a_i\in A_i\}$ lie in an interval of width at most $\delta$.  Both $\sum_{a_i}p_i(a_i)r_i(a_i,a_{-i})$ and
-$\sum_{a_i}q_i(a_i)r_i(a_i,a_{-i})$ are convex combinations inside this interval, so their difference has magnitude at most $\delta$.  Averaging this difference with weights $\sigma_{-i}(a_{-i})$ preserves the bound.
+For a fixed pure opponent profile, all residuals lie in an interval of width at most $\delta$.  Two convex combinations of numbers in that interval differ by at most $\delta$.  Averaging over opponent profiles preserves the bound.
 \end{proof}
 
 \section{Exactness of the Projection LP}
@@ -93,19 +90,19 @@ The LP optimum equals
 \]
 \end{theorem}
 \begin{proof}
-Fix any exactly invariant surrogate $\widehat\Gamma$.  For a slice $(i,a_{-i})$, the smallest interval containing all residual values has endpoints equal to their minimum and maximum; its width is the slice contribution to $\devdist$.  Therefore the smallest feasible $t$ associated with this surrogate is exactly $\devdist(\Gamma,\widehat\Gamma)$.  Conversely, every feasible solution has residual range at most $t$ in every slice, so its strategic distance is at most $t$.
+Fix an invariant surrogate.  The smallest interval containing the residuals in one slice has endpoints equal to their minimum and maximum, so its width is exactly that slice's contribution to $\devdist$.  The smallest feasible $t$ for the surrogate is therefore its strategic distance from $\Gamma$.  Conversely, every feasible solution has every residual range at most $t$.
 
-It remains to check the symmetry constraints.  Invariance under all generators implies invariance under every finite product of generators, hence under $G$.  Conversely, every member of $\Fix(G)$ satisfies each generator equality.  Minimizing over the payoff variables therefore minimizes strategic distance over $\Fix(G)$.
+Invariance under all generators implies invariance under every finite product of generators, hence under $G$.  Every game in $\Fix(G)$ satisfies the generator equalities.  Minimizing over the payoff variables therefore minimizes strategic distance over $\Fix(G)$.
 \end{proof}
 
 Let
 $P=n\prod_i|A_i|$ and
 $Q=\sum_i\prod_{j\ne i}|A_j|$.
-The implementation uses $P+2Q+1$ variables, $2P+Q$ strategic inequalities, and at most $|S|P$ raw generator equalities before duplicate removal.  Optional zero-sum, constant-sum, or common-payoff constraints are linear and do not alter polynomial solvability in the explicit table size.
+The implementation uses $P+2Q+1$ variables, $2P+Q$ strategic inequalities, and at most $|S|P$ raw generator equalities before duplicate removal.  Optional zero-sum or common-payoff constraints are linear and do not alter polynomial solvability in the explicit table size.
 
 \section{Cycle Characterization}
 
-We provide the full graph construction and the difference-constraint argument.  Let $V$ contain one vertex for each orbit of payoff coordinates $(i,a)$ under $G$.  Write $[i,a]\in V$ for the orbit of coordinate $(i,a)$.  For every player $i$, opponent profile $a_{-i}$, and ordered pair of own actions $(b_i,a_i)$, insert an edge
+Let $V$ contain one vertex for each orbit of payoff coordinates $(i,a)$ under $G$.  Write $[i,a]\in V$ for the orbit of coordinate $(i,a)$.  For every player $i$, opponent profile $a_{-i}$, and ordered pair of distinct own actions $(b_i,a_i)$, insert an edge
 \[
 e:[i,(b_i,a_{-i})]\longrightarrow[i,(a_i,a_{-i})]
 \]
@@ -113,7 +110,7 @@ with label
 \[
 c_e=u_i(a_i,a_{-i})-u_i(b_i,a_{-i}).
 \]
-The reverse ordered comparison is also present and has label $-c_e$ before orbit identifications.  Parallel edges are permitted.  Equivalently, for feasibility purposes, parallel upper-bound edges with the same endpoints may be replaced by the smallest label.  Self-loops are retained.
+The reverse ordered comparison is also present and has label $-c_e$ before orbit identification.  Parallel edges are permitted; for feasibility, parallel upper-bound edges with the same endpoints may be replaced by the smallest label.  Self-loops are retained.
 
 An invariant surrogate assigns one potential $x_v$ to each vertex, with
 $\widehat u_i(a)=x_{[i,a]}$.  Its error on comparison $e$ is
@@ -122,59 +119,57 @@ $\widehat u_i(a)=x_{[i,a]}$.  Its error on comparison $e$ is
 \]
 
 \begin{theorem}[Maximum-mean-cycle formula]
-Let $\mathcal C$ be the set of directed cycles, including self-loops, in the orbit graph.  Then
+Let $\mathcal C$ be the set of directed cycles, including self-loops, in the orbit graph.  With the convention that the maximum is zero when $\mathcal C$ is empty,
 \[
 \delta_G(\Gamma)
 =
 \max_{C\in\mathcal C}
 \left(-\frac{1}{|C|}\sum_{e\in C}c_e\right).
 \]
-A critical cycle is a certificate that no smaller strategic error is possible.
+A critical cycle certifies that no smaller strategic error is possible.
 \end{theorem}
 \begin{proof}
-A potential has error at most $t$ if and only if, for every edge,
+A potential has error at most $t$ if and only if
 \begin{equation}
--t\le x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}-c_e\le t.
+-t\le x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}-c_e\le t
 \label{eq:two-sided}
 \end{equation}
-The upper half of \eqref{eq:two-sided} is
+for every edge.  The upper half is
 \[
 x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}\le c_e+t.
 \]
-The lower half is the upper constraint for the reverse ordered comparison.  Hence the complete two-sided system is equivalent to a system of directed difference constraints with edge lengths $\ell_e(t)=c_e+t$.
+The lower half is the upper constraint for the reverse ordered comparison.  Thus the two-sided system is equivalent to directed difference constraints with lengths $c_e+t$.
 
-A finite system $x_v-x_u\le\ell_{uv}$ is feasible if and only if its graph has no negative directed cycle.  Necessity follows by summing the inequalities around a cycle, where the potentials telescope.  For sufficiency, add a source with a zero-length edge to every vertex and let $x_v$ be the shortest-path distance from the source; absence of negative cycles makes the distances finite and the triangle inequality gives every difference constraint.
+A finite system $x_v-x_u\le\ell_{uv}$ is feasible if and only if its graph has no negative directed cycle.  Necessity follows by summing around a cycle.  For sufficiency, add a zero-length source edge to every vertex and use shortest-path distances; absence of negative cycles makes them finite and gives every constraint.
 
-Therefore a value $t$ is feasible exactly when
+Hence $t$ is feasible exactly when
 \[
 0\le\sum_{e\in C}(c_e+t)
 =
 \sum_{e\in C}c_e+|C|t
-\quad\forall C.
+\quad\forall C,
 \]
-Equivalently,
+or
 \[
 t\ge-\frac{1}{|C|}\sum_{e\in C}c_e
 \quad\forall C.
 \]
-The smallest feasible $t$ is the maximum right-hand side.  Because every original comparison and its reverse are present, the maximum is nonnegative.  At the optimum, shortest-path potentials construct a nearest invariant surrogate.
+Minimizing $t\ge0$ gives the formula, including the acyclic case.  At the optimum, shortest-path potentials construct a nearest invariant surrogate.
 \end{proof}
 
-Karp's dynamic program computes the value by applying the maximum-cycle-mean formula to weights $w_e=-c_e$ \cite{karp1978cycle}.  The implementation recovers a witness without relying on predecessor backtracking from Karp's value table.  Let $\lambda$ be the computed maximum mean and set $w'_e=w_e-\lambda$.  The reduced graph has no positive cycle and has at least one zero-weight cycle.  If $h_v$ is the maximum reduced weight of a path from an added zero-weight source, then
+Karp's dynamic program computes the value using weights $w_e=-c_e$ \cite{karp1978cycle}.  The implementation recovers a witness without assuming that a predecessor chain in Karp's value table is critical.  Let $\lambda$ be the maximum mean and set $w'_e=w_e-\lambda$.  The reduced graph has no positive cycle and, when it has edges, has a zero-weight critical cycle.  Max-plus path potentials satisfy
 \[
 h_{\mathrm{head}(e)}
-\ge h_{\mathrm{tail}(e)}+w'_e
-\quad\forall e.
+\ge h_{\mathrm{tail}(e)}+w'_e.
 \]
-The associated slacks are nonnegative.  Around a zero-weight cycle they sum to zero, so every edge on that cycle is tight.  A directed-cycle search in the tight-edge subgraph therefore returns a critical witness.  Separately, shortest-path difference constraints with lengths $c_e+\lambda$ recover a nearest surrogate.  Regression tests cover self-loops, compressed parallel edges, player-swapping symmetries, and 100 randomized comparisons against the independent LP.
+The associated slacks are nonnegative.  Around a zero-weight cycle they telescope and sum to zero, so every edge on that cycle is tight.  A directed-cycle search in the tight-edge subgraph returns a critical witness.  Separately, difference constraints with lengths $c_e+\lambda$ recover a nearest surrogate.  Tests cover empty graphs, self-loops, parallel-edge compression, player swaps, and randomized comparisons against the independent LP.
 
 \section{Invariant Equilibrium Existence}
 
-For completeness, we prove that an exactly invariant finite game has an invariant Nash equilibrium.  Let
-$X=\prod_i\Delta(A_i)$ be the mixed-profile space and
+Let $X=\prod_i\Delta(A_i)$ be the mixed-profile space and
 $X^G=\{\sigma:g\sigma=\sigma\ \forall g\in G\}$ its fixed set.  Averaging any profile over $G$ shows that $X^G$ is nonempty; it is also compact and convex.
 
-For precision parameter $\lambda>0$, define the logit response map
+For precision $\lambda>0$, define the logit response
 \[
 F_i^\lambda(\sigma)(a_i)
 =
@@ -183,43 +178,44 @@ F_i^\lambda(\sigma)(a_i)
 \]
 
 \begin{lemma}
-If $\Gamma$ is exactly $G$-invariant, then $F^\lambda(g\sigma)=gF^\lambda(\sigma)$ for every $g\in G$.
+If $\Gamma$ is exactly $G$-invariant, then
+$F^\lambda(g\sigma)=gF^\lambda(\sigma)$ for every $g\in G$.
 \end{lemma}
 \begin{proof}
-Exact invariance maps the expected payoff of action $a_i$ against $\sigma_{-i}$ to the expected payoff of the relabeled action against the relabeled opponent profile.  The softmax denominator is merely permuted, which gives equivariance coordinate by coordinate.
+Exact invariance maps the expected payoff of an action against $\sigma_{-i}$ to the expected payoff of the relabeled action against the relabeled opponent profile.  The softmax denominator is merely permuted.
 \end{proof}
 
 \begin{theorem}[Invariant Nash equilibrium]
 Every finite exactly $G$-invariant game has a Nash equilibrium in $X^G$.
 \end{theorem}
 \begin{proof}
-Equivariance implies that $F^\lambda$ maps $X^G$ into itself.  Brouwer's theorem therefore gives a fixed point $\sigma^\lambda\in X^G$.  Compactness gives a convergent subsequence $\sigma^{\lambda_k}\to\sigma^*$ as $\lambda_k\to\infty$, and closedness gives $\sigma^*\in X^G$.
+Equivariance implies that $F^\lambda$ maps $X^G$ into itself.  Brouwer gives a fixed point $\sigma^\lambda\in X^G$.  Compactness gives a convergent subsequence $\sigma^{\lambda_k}\to\sigma^*$ as $\lambda_k\to\infty$.
 
-Suppose an action $a_i$ in the support of $\sigma_i^*$ is strictly worse than some action $b_i$ against $\sigma_{-i}^*$ by margin $\gamma>0$.  By continuity, the same comparison has margin at least $\gamma/2$ along the subsequence for all large $k$.  At a logit fixed point,
+Suppose an action $a_i$ in the support of $\sigma_i^*$ is worse than $b_i$ against $\sigma_{-i}^*$ by margin $\gamma>0$.  By continuity, the margin is at least $\gamma/2$ for all large $k$.  At a logit fixed point,
 \[
 \frac{\sigma_i^{\lambda_k}(a_i)}
 {\sigma_i^{\lambda_k}(b_i)}
-\le e^{-\lambda_k\gamma/2}\to0,
+\le e^{-\lambda_k\gamma/2}\to0.
 \]
-contradicting positive limiting mass on $a_i$.  Every supported action is therefore a best response, so $\sigma^*$ is a Nash equilibrium.
+Since the denominator is at most one, the numerator tends to zero, contradicting positive limiting mass.  Every supported action is a best response, so $\sigma^*$ is an invariant Nash equilibrium.
 \end{proof}
 
 Combining this theorem with equilibrium transfer yields a $G$-respecting $\delta_G(\Gamma)$-Nash equilibrium in every finite game.
 
 \section{Tightness of the Transfer Constant}
 
-Fix $k\ge2$.  Player 1 has actions $1,\ldots,k$ and player 2 has two irrelevant actions.  Player 1's payoff is one exactly when action 1 is chosen and zero otherwise; player 2's payoff is always zero.  Let $G_k$ cycle player 1's actions.
+Fix $k\ge2$.  Player 1 has actions $1,\ldots,k$ and player 2 has two irrelevant actions.  Player 1's payoff is one exactly when action 1 is chosen and zero otherwise; player 2's payoff is zero.  Let $G_k$ cycle player 1's actions.
 
-Every invariant surrogate gives player 1 equal payoff for all $k$ actions at each fixed action of player 2.  The original difference between action 1 and every other action is one, so strategic distance to any invariant surrogate is at least one.  The all-zero surrogate attains one, hence $\delta_{G_k}=1$.  Every invariant strategy of player 1 is uniform.  Its payoff is $1/k$, whereas deviating to action 1 gives one, so its regret is $1-1/k$.  The ratio to the defect tends to one.  Thus no universal transfer theorem can replace the additive coefficient one by a smaller constant.
+Every invariant surrogate gives player 1 equal payoff for all $k$ actions at each fixed action of player 2.  The original difference between action 1 and any other action is one, so strategic distance to every invariant surrogate is at least one.  The zero surrogate attains one, hence $\delta_{G_k}=1$.  Every invariant strategy of player 1 is uniform, with payoff $1/k$ and regret $1-1/k$.  Thus no universal transfer theorem can replace the additive coefficient one by a smaller constant.
 
 \section{Group Averaging}
 
-Define the Reynolds projection
+Define
 \[
-\mathcal P_G\Gamma=|G|^{-1}\sum_{g\in G}g\Gamma
+\mathcal P_G\Gamma=|G|^{-1}\sum_{g\in G}g\Gamma,
+\qquad
+\eta_G(\Gamma)=\max_{g\in G}\devdist(\Gamma,g\Gamma).
 \]
-and direct orbit discrepancy
-$\eta_G(\Gamma)=\max_{g\in G}\devdist(\Gamma,g\Gamma)$.
 
 \begin{theorem}
 \[
@@ -230,13 +226,13 @@ $\eta_G(\Gamma)=\max_{g\in G}\devdist(\Gamma,g\Gamma)$.
 \]
 \end{theorem}
 \begin{proof}
-The averaged game is invariant, giving the first inequality.  Convexity of the seminorm gives
+The average is invariant.  Convexity gives
 \[
 \devdist(\Gamma,\mathcal P_G\Gamma)
 \le |G|^{-1}\sum_g\devdist(\Gamma,g\Gamma)
 \le\eta_G(\Gamma).
 \]
-For any invariant surrogate $\widehat\Gamma$ and any $g$,
+For any invariant $\widehat\Gamma$ and any $g$,
 \begin{align*}
 \devdist(\Gamma,g\Gamma)
 &\le\devdist(\Gamma,\widehat\Gamma)
@@ -248,58 +244,46 @@ For any invariant surrogate $\widehat\Gamma$ and any $g$,
 Minimize over invariant surrogates and maximize over $g$.
 \end{proof}
 
-The group average can be computed without enumerating the group: each payoff-coordinate orbit receives its arithmetic mean.  Generator-induced union--find therefore computes the projection in near-linear time in the number of enumerated generator edges.
+The group average can be computed without enumerating the group: every payoff-coordinate orbit receives its arithmetic mean.  Generator-induced union--find therefore computes it in near-linear time in the enumerated generator edges.
 
-\subsection{The factor two is asymptotically tight}
+\subsection{The Factor Two Is Tight in Zero-Sum Games}
 
-Fix $d\ge2$.  Both players have action set
+Fix $d\ge2$.  The row player has actions $R=\{0,\ldots,d-1\}$ and the column player has actions
+$C=\{0,1\}\times\{0,\ldots,d-1\}$.  Let $G_d$ cyclically permute all row actions and independently cyclically permute the column actions within each of the two blocks.  Define the row payoff, independent of the column's within-block index, by
 \[
-A_1=A_2=\{0,1\}\times\{0,\ldots,d-1\}.
-\]
-The first coordinate is a block and the second is a within-block index.  Let $G_d$ be generated by independent cyclic shifts of the within-block index in each of the four player--block pairs.  Player 2's payoff is zero.  For row action $(r,s)$ and column action $(c,t)$, define player 1's payoff by
-\[
-u_1((r,s),(c,t))
+A_d(s,(c,t))
 =
 \begin{cases}
-0, & c=1,\\
--\mathbf 1\{t=0,\ s\ne0\}, & c=0,\ r=0,\\
-\mathbf 1\{t\ne0\}-\mathbf 1\{t=0,\ s=0\},
-& c=0,\ r=1.
+c, & s=0,\\
+1-c, & s\ne0.
 \end{cases}
 \]
+The column payoff is $-A_d$, so the game is zero-sum.
 
-Under $G_d$, player 1's payoff coordinates have one orbit $V_{rc}$ for each pair of blocks $(r,c)$.  At column $(0,0)$, comparing row $(0,0)$ to row $(1,0)$ gives an edge
-$V_{00}\to V_{10}$ with label $-1$.  At column $(0,1)$, comparing row $(1,0)$ to row $(0,0)$ gives an edge $V_{10}\to V_{00}$ with label $-1$.  Their mean label is $-1$, so the cycle theorem gives $\delta_{G_d}\ge1$.  The all-zero surrogate has strategic error one because every fixed-column payoff slice has range at most one.  Therefore
+The zero game is an invariant zero-sum surrogate at strategic distance one: in every fixed column, the row-payoff range across row actions is one, and in every fixed row, the column player's payoff range across column actions is also one.  Conversely, every invariant surrogate gives all row actions the same payoff at a fixed column.  The distinguished row $s=0$ and any other row differ by one in the original game, so their deviation-incentive error is one.  Therefore
 \[
-\delta_{G_d}=1.
+\delta_{G_d}(\Gamma_d)
+=
+\delta_{G_d,\mathcal Z}(\Gamma_d)
+=1.
 \]
 
-The group-averaged payoffs on the two nonzero coordinate orbits are
+Under group averaging, the row-payoff mean in column block zero is $(d-1)/d$, while the mean in block one is $1/d$.  On the distinguished row, the residuals in the two blocks are
 \[
-\overline u_1(V_{00})=-\frac{d-1}{d^2},
-\qquad
-\overline u_1(V_{10})
-=\frac{d(d-1)-1}{d^2},
+-\frac{d-1}{d}
+\quad\text{and}\quad
+\frac{d-1}{d}.
 \]
-and the other two block-pair means are zero.  At the distinguished column $(0,0)$, the largest residual is $(d-1)/d^2$ and the smallest is
-\[
--1-\frac{d(d-1)-1}{d^2}.
-\]
-Their range is
-\[
-2-\frac{2}{d^2}.
-\]
-All other residual ranges are no larger, hence
+Their range is $2-2/d$.  Every fixed-column residual range remains one, and every other row has residual range $2/d$, so
 \[
 \devdist(\Gamma_d,\mathcal P_{G_d}\Gamma_d)
-=
-2-\frac{2}{d^2}.
+=2-\frac{2}{d}.
 \]
-The approximation ratio therefore converges to two.
+Thus the factor-two approximation is asymptotically tight even when both the original game and the nearest structured surrogate are zero-sum.
 
 \section{Zero-Sum Programs}
 
-Let $A$ be a row payoff matrix and $-A$ the column payoff.  For strategies $(x,y)$ define
+Let $A$ be the row payoff matrix and $-A$ the column payoff.  For strategies $(x,y)$ define
 \[
 \Gap_A(x,y)=\max_i(Ay)_i-\min_j(x^\top A)_j.
 \]
@@ -311,13 +295,13 @@ The invariant-gap program is
 \text{s.t.}\quad
 &Ay\le\alpha\mathbf1,\qquad x^\top A\ge\beta\mathbf1^\top,\\
 &x\in\Delta_m,\qquad y\in\Delta_n,\\
-&(x,y)\text{ is }G\text{-respecting}.
+&(x,y)\text{ respects }G.
 \end{align*}
 For fixed $(x,y)$, the smallest feasible $\alpha$ is $\max_i(Ay)_i$ and the largest feasible $\beta$ is $\min_j(x^\top A)_j$.  Hence the optimum is exactly the minimum saddle gap over invariant profiles.
 
-If $A$ is exactly invariant and $y$ is invariant, row actions in the same orbit have identical expected payoffs; the analogous statement holds for columns.  Thus one best-response constraint per action orbit is sufficient.  Strategy probabilities can likewise be represented by one variable per global action orbit, with simplex equations weighted by orbit multiplicity.  This is the quotient LP implemented in the repository.
+If $A$ is exactly invariant and $y$ is invariant, row actions in the same orbit have identical expected payoffs; analogously for columns.  One best-response constraint per relevant action orbit is therefore sufficient.  Strategy probabilities are represented by one variable per global action orbit, with simplex equations weighted by orbit multiplicity.
 
-For approximate zero-sum games, projection is constrained to the intersection of the fixed subspace and the zero-sum subspace.  If its structured defect is $\delta_G^{\mathrm{zs}}$, an invariant equilibrium of the projected matrix has each original-player regret at most $\delta_G^{\mathrm{zs}}$ and total saddle gap at most $2\delta_G^{\mathrm{zs}}$.  The direct invariant-gap LP can only improve this a priori guarantee.
+For approximate zero-sum games, projection is constrained to the intersection of the fixed and zero-sum subspaces.  If the structured defect is $\delta_G^{\mathrm{zs}}$, an invariant equilibrium of the projected matrix has each original-player regret at most $\delta_G^{\mathrm{zs}}$ and total saddle gap at most $2\delta_G^{\mathrm{zs}}$.  The direct invariant-gap LP can only improve this a priori guarantee.
 
 \section{Statistical Stability}
 
@@ -332,18 +316,16 @@ For compatible games $\Gamma$ and $\widetilde\Gamma$,
 \]
 \end{lemma}
 \begin{proof}
-For every $H\in S$, the triangle inequality gives
-$d(\Gamma,S)\le\devdist(\Gamma,H)
-\le\devdist(\Gamma,\widetilde\Gamma)+\devdist(\widetilde\Gamma,H)$.
-Take the infimum over $H$ and then swap the games for the reverse inequality.
+For every $H\in S$,
+\[
+d(\Gamma,S)
+\le\devdist(\Gamma,H)
+\le\devdist(\Gamma,\widetilde\Gamma)+\devdist(\widetilde\Gamma,H).
+\]
+Take the infimum over $H$ and swap the two games for the reverse inequality.
 \end{proof}
 
 Let $\widehat\Gamma$ be a nearest invariant surrogate of an estimate $\widetilde\Gamma$, with empirical defect $\widehat\delta$.  If $\sigma$ is an $\epsilon$-equilibrium of $\widehat\Gamma$, then
-\[
-\devdist(\Gamma,\widehat\Gamma)
-\le\devdist(\Gamma,\widetilde\Gamma)+\widehat\delta,
-\]
-so equilibrium transfer yields
 \[
 \operatorname{Reg}_i^\Gamma(\sigma)
 \le\epsilon+\widehat\delta+\devdist(\Gamma,\widetilde\Gamma).
@@ -357,15 +339,16 @@ with probability at least $1-\alpha$ \cite{hoeffding1963probability}.  This prov
 
 \section{Additional Experimental Details}
 
-The principal synthetic family begins with a quotient matrix $B\in\mathbb R^{q\times q}$ and replaces every quotient action by $d$ copies.  The planted group independently permutes copies within each quotient block.  Perturbations are then added in four forms: independent strategic noise, opponent-dependent nonstrategic shifts, structured within-block heterogeneity, and Bernoulli payoff observations.  This design gives known exact symmetries before perturbation while allowing the symmetry defect to vary continuously.
+The principal synthetic family begins with a quotient matrix and replaces every quotient action by interchangeable copies.  Perturbations include independent strategic noise, opponent-dependent nonstrategic shifts, structured heterogeneity, and Bernoulli payoff observations.
 
-The critical-cycle audit compares the combinatorial solver with the independent projection LP and verifies three certificate conditions: consecutive witness edges form a closed walk, the negative mean witness label equals the computed defect, and the reconstructed surrogate attains that defect.  Dedicated tests exercise critical self-loops and parallel-edge compression in addition to randomized games.
+The critical-cycle audit checks that consecutive witness edges form a closed walk, the negative mean witness label equals the computed defect, and the reconstructed surrogate attains that defect.  Dedicated tests exercise the empty graph, critical self-loops, parallel-edge compression, and player-swapping symmetries, in addition to 100 randomized comparisons with the LP.
 
-For the Reynolds sharpness family above, the experiment evaluates $d\in\{2,3,4,5,8,12,20\}$.  It independently computes the LP defect, cycle defect, and averaged-game distance and compares the observed ratio with $2-2/d^2$.
+For the zero-sum Reynolds family, the experiment evaluates
+$d\in\{2,3,4,5,8,12,20,40\}$.  It independently computes the structured LP defect, unrestricted cycle defect, and averaged-game distance and compares the ratio with $2-2/d$.
 
-The role-assignment family is a small common-payoff game in which players must occupy complementary roles.  A heterogeneity parameter adds player--role preferences that break exact interchangeability.  We report strategic defect, regret of projected invariant profiles, and welfare.  The family is not used to claim a welfare theorem; it demonstrates why incentive and welfare preservation must be distinguished.
+The role-assignment family is a common-payoff game in which players must occupy complementary roles.  Heterogeneous player-role preferences break exact interchangeability.  The family demonstrates why incentive and welfare preservation must be distinguished.
 
-Runtime results use exactly lifted zero-sum games so that the full and quotient programs solve the same strategic problem.  Each timing is a median over repeated HiGHS solves after a warm-up.  Since absolute times depend on hardware and solver version, the experiment is intended to validate scaling with orbit compression rather than establish a universal wall-clock constant.
+Runtime results use exactly lifted zero-sum games so that the full and quotient programs solve the same strategic problem.  Each timing is a median over repeated HiGHS solves after a warm-up.  Absolute times depend on hardware and solver version, so the experiment validates scaling rather than a universal wall-clock constant.
 
 \bibliography{references}
 \end{document}
