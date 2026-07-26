@@ -70,4 +70,4 @@ Finally, each row-player payoff entry is treated as the mean of a Bernoulli vari
 \end{figure*}
 
 \paragraph{Implementation checks.}
-The codebase contains twenty deterministic and randomized tests.  The cycle audit checks critical self-loops, parallel-edge compression, closed-walk witnesses, and player-swapping symmetries.  Across 100 newly generated games, the critical-cycle value, witness mean, reconstructed-surrogate distance, and independent LP objective agree to numerical tolerance.  These diagnostics do not replace proof, but they guard against sign, orbit, and witness-extraction errors.
+The test suite audits critical self-loops, parallel-edge compression, closed-walk witnesses, and player-swapping symmetries.  Across 100 newly generated games, the critical-cycle value, witness mean, reconstructed-surrogate distance, and independent LP objective agree to numerical tolerance.  These diagnostics do not replace proof, but they guard against sign, orbit, and witness-extraction errors.
