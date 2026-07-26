@@ -1,0 +1,68 @@
+\section{Zero-Sum Programs}
+
+Let $A\in\mathbb R^{m\times n}$ be the row player's payoff and $-A$ the column player's payoff.  For strategies $(x,y)$, define
+\[
+\Gap_A(x,y)=\max_i(Ay)_i-\min_j(x^\top A)_j.
+\]
+If $p=x^\top Ay$, row regret is $\max_i(Ay)_i-p$ and column regret is $p-\min_j(x^\top A)_j$, so their sum is $\Gap_A(x,y)$.
+
+Let $\mathcal Z$ be the zero-sum subspace and define
+$\delta^{\mathrm{zs}}_G=\delta_{G,\mathcal Z}$.
+
+\begin{corollary}[Structured zero-sum transfer]
+\label{cor:supp-zs-transfer}
+Let $\widehat\Gamma\in\Fix(G)\cap\mathcal Z$ have strategic distance at most $\delta$ from a zero-sum game $\Gamma$.  An equilibrium $(x,y)$ of $\widehat\Gamma$ has each original-player regret at most $\delta$ and $\Gap_A(x,y)\le2\delta$.  In particular, the nearest structured surrogate gives a $G$-respecting profile with gap at most $2\delta_G^{\mathrm{zs}}$.
+\end{corollary}
+\begin{proof}
+Apply Theorem~\ref{thm:supp-ne-transfer} separately to the two players and add their regret bounds.
+\end{proof}
+
+The direct invariant-gap program is
+\begin{align}
+\min_{x,y,\alpha,\beta}\quad&\alpha-\beta\label{eq:supp-gap-lp}\\
+\text{s.t.}\quad
+&Ay\le\alpha\mathbf1,\qquad x^\top A\ge\beta\mathbf1^\top,\nonumber\\
+&x\in\Delta_m,\quad y\in\Delta_n,\quad (x,y)\text{ respects }G.\nonumber
+\end{align}
+
+\begin{proposition}[Best invariant saddle gap]
+\label{prop:supp-gap-lp}
+The optimum of \eqref{eq:supp-gap-lp} is $\min_{(x,y)\text{ respects }G}\Gap_A(x,y)$.  It is zero in an exactly invariant zero-sum game and at most $2\delta_G^{\mathrm{zs}}$ in general.
+\end{proposition}
+\begin{proof}
+For fixed $(x,y)$, the smallest feasible $\alpha$ is $\max_i(Ay)_i$ and the largest feasible $\beta$ is $\min_j(x^\top A)_j$, making the objective exactly the saddle gap.  Exact invariance gives an invariant equilibrium.  In the approximate case, Corollary~\ref{cor:supp-zs-transfer} supplies a feasible profile with the stated gap.
+\end{proof}
+
+Invariant strategies use one variable per global action orbit.  In an exactly invariant matrix, best-response values are constant within an action orbit when the opponent strategy is invariant, so one best-response inequality per relevant orbit suffices.
+
+\section{Statistical Stability}
+
+Let $S=\Fix(G)\cap\mathcal C$ for a closed linear class $\mathcal C$, and write $d(\Gamma,S)=\inf_{H\in S}\devdist(\Gamma,H)$.
+
+\begin{lemma}[Distance-to-set stability]
+\label{lem:supp-stability}
+For compatible games $\Gamma,\widetilde\Gamma$,
+\[
+|d(\Gamma,S)-d(\widetilde\Gamma,S)|\le\devdist(\Gamma,\widetilde\Gamma).
+\]
+\end{lemma}
+\begin{proof}
+For every $H\in S$,
+$d(\Gamma,S)\le\devdist(\Gamma,H)\le\devdist(\Gamma,\widetilde\Gamma)+\devdist(\widetilde\Gamma,H)$.  Take the infimum over $H$ and exchange the two games.
+\end{proof}
+
+Let $\widehat\Gamma$ be a nearest invariant surrogate of an estimate $\widetilde\Gamma$, with empirical defect $\widehat\delta$.  If $\sigma$ is an $\epsilon$-equilibrium of $\widehat\Gamma$, then
+\[
+\operatorname{Reg}_i^\Gamma(\sigma)
+\le\epsilon+\widehat\delta+\devdist(\Gamma,\widetilde\Gamma).
+\]
+If each of $P$ payoff means is estimated from at least $M$ independent observations in an interval of length one, Hoeffding's inequality and a union bound give, with probability at least $1-\alpha$,
+\[
+\max_{i,a}|u_i(a)-\widetilde u_i(a)|
+\le\xi_M=\sqrt{\frac{\log(2P/\alpha)}{2M}}.
+\]
+By \eqref{eq:supp-raw-upper}, $\devdist(\Gamma,\widetilde\Gamma)\le2\xi_M$.  An exact equilibrium of the projected estimate therefore has true per-player regret at most
+\[
+\widehat\delta+2\xi_M.
+\]
+In a zero-sum game, the saddle gap is at most $2\widehat\delta+4\xi_M$.  The same argument applies to CE and CCE through Theorem~\ref{thm:supp-ce-transfer}.
