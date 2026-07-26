@@ -26,13 +26,14 @@ surrogate at strategic distance `delta` is an `(epsilon + delta)`-Nash
 equilibrium of the original game. Consequently, every finite game admits a
 `G`-respecting `delta_G`-Nash equilibrium. The additive coefficient one is
 asymptotically tight. Group averaging is always within factor two of the
-optimal strategic projection, and an explicit family attains ratio
+optimal strategic projection, and an explicit **zero-sum** family attains ratio
 
 ```text
-2 - 2 / d^2
+2 - 2 / d
 ```
 
-so this factor is also asymptotically tight.
+so this factor is also asymptotically tight, even relative to the nearest
+symmetric zero-sum surrogate.
 
 ## Repository layout
 
@@ -41,7 +42,7 @@ so this factor is also asymptotically tight.
 - `src/almost_symmetric/`: game, symmetry, projection, cycle, and zero-sum
   algorithms.
 - `experiments/run_all.py`: deterministic experiment suite and figure generator.
-- `experiments/sharpness.py`: exact Reynolds factor-two construction.
+- `experiments/sharpness.py`: exact zero-sum Reynolds factor-two construction.
 - `experiments/results/`: generated CSV tables and summary metrics.
 - `experiments/figures/`: generated PDF/PNG figures, not versioned.
 - `tests/`: unit, adversarial, and randomized theorem-regression tests.
@@ -58,7 +59,8 @@ Python 3.10 or newer is required.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install --no-build-isolation -e ".[dev]"
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -e ".[dev]"
 ```
 
 ## Run tests
@@ -67,9 +69,9 @@ python -m pip install --no-build-isolation -e ".[dev]"
 pytest
 ```
 
-The adversarial cycle tests cover critical self-loops, parallel-edge
-compression, global action orbits under player swaps, exact sharpness families,
-and randomized agreement between the cycle and LP solvers.
+The adversarial cycle tests cover empty graphs, critical self-loops,
+parallel-edge compression, global action orbits under player swaps, exact
+sharpness families, and randomized agreement between the cycle and LP solvers.
 
 ## Reproduce experiments
 
@@ -125,7 +127,8 @@ With seed 17, the committed deterministic studies report:
 - no equilibrium-transfer certificate violation in the perturbed zero-sum
   sweep;
 - the largest random-perturbation Reynolds/optimal ratio is about `1.325`;
-- the sharpness family matches `2 - 2 / d^2` and reaches `1.995` at `d=20`;
+- the zero-sum sharpness family matches `2 - 2 / d` and reaches `1.95` at
+  `d=40`;
 - raw payoff defect grows under strategically irrelevant shifts while strategic
   defect remains numerically zero;
 - orbit reduction produces increasing runtime separation through 512 actions
