@@ -1,24 +1,17 @@
-\section{Fast Symmetrization and Compression Frontiers}
+\section{Fast Symmetrization and Compression}
 
-The LP and cycle algorithm compute the sharp strategic projection.  A simpler surrogate is obtained by averaging the game over the group.  Define the Reynolds operator
+The sharp projection requires an LP or cycle computation.  A closed-form alternative is the Reynolds average
 \begin{equation}
 \mathcal P_G\Gamma
 =
-\frac{1}{|G|}\sum_{g\in G}g\Gamma.
+|G|^{-1}\sum_{g\in G}g\Gamma,
 \label{eq:reynolds}
 \end{equation}
-The result lies in $\Fix(G)$.  It need not minimize MPD, but it has a universal approximation guarantee.
+computed without enumerating $G$ by averaging each payoff-coordinate orbit.
 
-Let the direct orbit discrepancy be
-\[
-\eta_G(\Gamma)
-=
-\max_{g\in G}\devdist(\Gamma,g\Gamma).
-\]
-
-\begin{theorem}[Group averaging is a factor-two projection]
+\begin{theorem}[Factor-two projection]
 \label{thm:reynolds}
-For every finite game and finite relabeling group,
+Let $\eta_G(\Gamma)=\max_{g\in G}\devdist(\Gamma,g\Gamma)$.  Then
 \begin{equation}
 \delta_G(\Gamma)
 \le
@@ -29,32 +22,12 @@ For every finite game and finite relabeling group,
 2\delta_G(\Gamma).
 \label{eq:reynolds-chain}
 \end{equation}
-Consequently, any equilibrium of the averaged game has at most twice the optimal strategic transfer error.
 \end{theorem}
-\begin{proof}
-The first inequality follows because $\mathcal P_G\Gamma$ is invariant.  By convexity of the seminorm,
-\[
-\devdist(\Gamma,\mathcal P_G\Gamma)
-=
-\left\|\frac1{|G|}\sum_g(\Gamma-g\Gamma)\right\|_{\mathrm{dev}}
-\le\eta_G(\Gamma).
-\]
-For any invariant $\widehat\Gamma$ and any $g$,
-\[
-\devdist(\Gamma,g\Gamma)
-\le
-\devdist(\Gamma,\widehat\Gamma)
-+
-\devdist(g\widehat\Gamma,g\Gamma)
-=2\devdist(\Gamma,\widehat\Gamma),
-\]
-where relabeling invariance and $g\widehat\Gamma=\widehat\Gamma$ are used.  Minimize over $\widehat\Gamma$.
-\end{proof}
+The first inequality is feasibility, the second follows by convexity, and the third applies the triangle inequality through any invariant surrogate.  Hence solving the averaged game loses at most twice the optimal strategic transfer error.  Averaging also preserves every relabeling-invariant convex linear class, including zero-sum and common-payoff games.
 
-The constant two cannot be improved, even in zero-sum games.
-\begin{proposition}[Tightness of group averaging]
+\begin{proposition}[Asymptotic tightness]
 \label{prop:reynolds-tight}
-For every $d\ge2$, there is a two-player zero-sum game $\Gamma_d$ and a within-player relabeling group $G_d$ such that
+For every $d\ge2$, a two-player zero-sum game and within-player group satisfy
 \[
 \delta_{G_d}(\Gamma_d)
 =
@@ -62,27 +35,17 @@ For every $d\ge2$, there is a two-player zero-sum game $\Gamma_d$ and a within-p
 =1,
 \qquad
 \devdist(\Gamma_d,\mathcal P_{G_d}\Gamma_d)
-=
-2-\frac{2}{d}.
+=2-2/d.
 \]
-Hence the approximation ratio of group averaging converges to two even relative to the nearest symmetric zero-sum surrogate.
+Thus factor two is asymptotically tight even relative to the nearest symmetric zero-sum surrogate.
 \end{proposition}
-\begin{proof}[Proof sketch]
-Give the row player $d$ actions in one orbit and the column player two $d$-action blocks.  A distinguished row receives payoff zero in the first block and one in the second; every other row receives the opposite payoff, and the column payoff is its negative.  The zero game is an invariant zero-sum surrogate at distance one.  Conversely, invariance equalizes all row-action payoffs within a fixed column, whereas the distinguished and any other row differ by one, proving a matching lower bound.  Orbit averaging replaces the two row-payoff blocks by their means $(d-1)/d$ and $1/d$.  On the distinguished row, the two residual levels are $-(d-1)/d$ and $(d-1)/d$, whose range is $2-2/d$.
-\end{proof}
+The construction has one orbit of $d$ row actions and two column blocks: a distinguished row receives block payoffs $(0,1)$ and every other row receives $(1,0)$.  The zero surrogate attains distance one; invariance gives the matching lower bound, while orbit means $(d-1)/d$ and $1/d$ produce residual range $2-2/d$.  Full details are in the supplement.
 
-Although \eqref{eq:reynolds} appears to require enumerating $G$, it can be computed from generators alone: the group average assigns each payoff coordinate the mean value over its payoff-coordinate orbit.  A union--find traversal of generator edges therefore suffices.  When the original game belongs to a relabeling-invariant convex linear class, such as zero-sum or common-payoff games, orbit averaging remains in that class and the same argument applies to the corresponding structured defect.
-
-\paragraph{A hierarchy of candidate symmetries.}
-In applications, the designer may have several plausible groups.  Let
-$G_0\subseteq G_1\subseteq\cdots\subseteq G_K$.  Because
-$\Fix(G_{k+1})\subseteq\Fix(G_k)$,
+For nested groups $G_0\subseteq\cdots\subseteq G_K$, fixed subspaces shrink, so
 \begin{equation}
 \delta_{G_0}(\Gamma)
-\le\delta_{G_1}(\Gamma)
-\le\cdots\le\delta_{G_K}(\Gamma).
+\le\cdots\le
+\delta_{G_K}(\Gamma),
 \label{eq:defect-monotone}
 \end{equation}
-At the same time, the number of action orbits and payoff-coordinate orbits is nonincreasing.  Thus a group hierarchy produces a certified compression--fidelity frontier: one may choose the largest group satisfying a desired regret budget, or minimize a regularized objective combining orbit count and strategic defect.
-
-For an exactly invariant game, a $G$-respecting profile has one probability variable per action orbit.  Best-response constraints that are mapped into one another are identical, so an equilibrium program can retain one representative per relevant orbit.  Approximate games can either be projected and solved in this reduced representation, with Theorem~\ref{thm:transfer} providing the certificate, or optimized directly over invariant profiles as in the next section.
+while action and payoff-coordinate orbit counts decrease.  This gives a certified compression--fidelity frontier: choose the largest group within the desired incentive budget.
