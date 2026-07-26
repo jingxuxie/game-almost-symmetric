@@ -1,45 +1,54 @@
 \section{Zero-Sum and Statistical Certificates}
 
-For a two-player zero-sum matrix $A$, let $\mathcal Z$ be the zero-sum subspace and define the structured defect $\zsdef=\delta_{G,\mathcal Z}$.  For $x\in\Delta_m,y\in\Delta_n$, the saddle gap
+For a two-player zero-sum matrix $A$, let $\mathcal Z$ be the zero-sum subspace and define $\zsdef=\delta_{G,\mathcal Z}$.  For $x\in\Delta_m,y\in\Delta_n$, the saddle gap
 \begin{equation}
-\Gap_A(x,y)=\max_i(Ay)_i-\min_j(x^\top A)_j
+\Gap_A(x,y)
+=
+\max_i(Ay)_i-\min_j(x^\top A)_j
 \label{eq:saddle-gap}
 \end{equation}
 is the sum of the two player regrets.
 
 \begin{corollary}[Transferred zero-sum certificate]
 \label{cor:zs-transfer}
-An equilibrium of a $G$-invariant zero-sum surrogate at strategic distance $\delta$ has each original-player regret at most $\delta$ and saddle gap at most $2\delta$.  In particular, a nearest structured surrogate gives gap at most $2\zsdef$.
+An equilibrium of a $G$-invariant zero-sum surrogate at distance $\delta$ has each original-player regret at most $\delta$ and saddle gap at most $2\delta$.  A nearest structured surrogate therefore gives gap at most $2\zsdef$.
 \end{corollary}
 
 A tighter a posteriori profile is obtained directly from
 \begin{align}
-\min_{x,y,\alpha,\beta}\quad&\alpha-\beta \label{eq:invariant-gap-lp}\
+\min_{x,y,\alpha,\beta}\quad
+&\alpha-\beta
+\label{eq:invariant-gap-lp}\\
 \text{s.t.}\quad
-&Ay\le\alpha\mathbf1,\quad
-x^\top A\ge\beta\mathbf1^\top,\nonumber\
-&x\in\Delta_m,\ y\in\Delta_n,\ (x,y)\text{ respects }G.\nonumber
+&Ay\le\alpha\mathbf1,\nonumber\\
+&x^\top A\ge\beta\mathbf1^\top,\nonumber\\
+&x\in\Delta_m,\quad y\in\Delta_n,\nonumber\\
+&(x,y)\text{ respects }G.\nonumber
 \end{align}
 For fixed $(x,y)$, the objective is exactly \eqref{eq:saddle-gap}; hence the optimum is the best invariant saddle gap and is at most $2\zsdef$.  In an exactly invariant game, one strategy variable and one best-response constraint per relevant action orbit suffice.
 
 \paragraph{Estimated payoffs.}
 Distance to a fixed closed linear class is one-Lipschitz:
-\begin{equation}
-|\delta_{G,\mathcal C}(\Gamma)-\delta_{G,\mathcal C}(\widetilde\Gamma)|
-\le\devdist(\Gamma,\widetilde\Gamma).
+\begin{align}
+\big|\delta_{G,\mathcal C}(\Gamma)
+&-\delta_{G,\mathcal C}(\widetilde\Gamma)\big|
+\nonumber\\
+&\le\devdist(\Gamma,\widetilde\Gamma).
 \label{eq:defect-stability}
-\end{equation}
-If $\widehat\Gamma$ is the nearest invariant surrogate of an estimate $\widetilde\Gamma$ with empirical defect $\widehat\delta$, transfer and the triangle inequality give
+\end{align}
+If $\widehat\Gamma$ is the nearest invariant surrogate of an estimate $\widetilde\Gamma$ with empirical defect $\widehat\delta$, then
 \[
 \operatorname{Reg}_i^\Gamma(\sigma)
 \le
-\epsilon+\widehat\delta+\devdist(\Gamma,\widetilde\Gamma).
+\epsilon+\widehat\delta+
+\devdist(\Gamma,\widetilde\Gamma).
 \]
 If $P$ payoff means are each estimated from $M$ independent observations in an interval of length one, Hoeffding and a union bound imply, with probability $1-\alpha$,
 \begin{equation}
 \operatorname{Reg}_i^\Gamma(\sigma)
 \le
-\widehat\delta+2\sqrt{\frac{\log(2P/\alpha)}{2M}},
+\widehat\delta
++2\sqrt{\frac{\log(2P/\alpha)}{2M}}.
 \label{eq:sampling-certificate}
 \end{equation}
-for an exact equilibrium of the projected estimate; the zero-sum saddle gap is at most twice this quantity.  Proofs and variance-adaptive extensions are discussed in the supplement.
+The zero-sum saddle gap is at most twice this quantity.  Full proofs and variance-adaptive extensions are in the supplement.
