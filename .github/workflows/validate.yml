@@ -73,6 +73,7 @@ jobs:
             texlive-latex-extra \
             texlive-fonts-recommended \
             texlive-fonts-extra \
+            texlive-plain-generic \
             texlive-science
       - name: Reproduce a deterministic smoke sweep
         run: PYTHONPATH=src python -m experiments.run_all --quick
@@ -96,4 +97,7 @@ jobs:
             experiments/results/environment.txt
             experiments/results/summary.json
             experiments/results/reynolds_tightness.csv
+            experiments/results/correlated_*.csv
             experiments/figures/reynolds_tightness.pdf
+            experiments/figures/correlated_*.pdf
+            experiments/figures/role_assignment_correlation.pdf
