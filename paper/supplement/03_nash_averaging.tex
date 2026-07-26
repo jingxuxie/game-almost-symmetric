@@ -1,0 +1,128 @@
+\section{Invariant Nash Equilibrium and Tight Constants}
+
+Let $X=\prod_i\Delta(A_i)$ be the mixed-profile space and
+$X^G=\{\sigma:g\sigma=\sigma\ \forall g\in G\}$.  The fixed set is nonempty, compact, and convex: averaging any profile over $G$ produces an element of $X^G$.
+
+\begin{theorem}[Invariant Nash equilibrium]
+\label{thm:supp-invariant-ne}
+Every finite exactly $G$-invariant game has a Nash equilibrium in $X^G$.
+\end{theorem}
+\begin{proof}
+For precision $\lambda>0$, define the logit response
+\[
+F_i^\lambda(\sigma)(a_i)
+=
+\frac{\exp(\lambda u_i(a_i,\sigma_{-i}))}
+{\sum_{b_i}\exp(\lambda u_i(b_i,\sigma_{-i}))}.
+\]
+Exact invariance implies equivariance:
+$F^\lambda(g\sigma)=gF^\lambda(\sigma)$.  Thus $F^\lambda$ maps $X^G$ into itself.  Brouwer gives a fixed point $\sigma^\lambda\in X^G$.  By compactness, along a sequence $\lambda_k\to\infty$ we have
+$\sigma^{\lambda_k}\to\sigma^*\in X^G$.
+
+Suppose an action $a_i$ in the support of $\sigma_i^*$ is worse than an action $b_i$ against $\sigma_{-i}^*$ by margin $\gamma>0$.  By continuity, the margin is at least $\gamma/2$ along the sequence for all large $k$.  At a logit fixed point,
+\[
+\frac{\sigma_i^{\lambda_k}(a_i)}
+{\sigma_i^{\lambda_k}(b_i)}
+\le e^{-\lambda_k\gamma/2}\to0,
+\]
+which contradicts positive limiting mass on $a_i$.  Every supported action is a best response, so $\sigma^*$ is Nash.
+\end{proof}
+
+\begin{theorem}[Nash transfer]
+\label{thm:supp-ne-transfer}
+If $\devdist(\Gamma,\widehat\Gamma)\le\delta$ and $\sigma$ is an $\epsilon$-Nash equilibrium of $\widehat\Gamma$, then $\sigma$ is an $(\epsilon+\delta)$-Nash equilibrium of $\Gamma$.
+\end{theorem}
+\begin{proof}
+For every player and deviation $\tau_i$, Lemma~\ref{lem:supp-mixed} gives
+\[
+u_i(\tau_i,\sigma_{-i})-u_i(\sigma)
+\le
+\widehat u_i(\tau_i,\sigma_{-i})-
+\widehat u_i(\sigma)+\delta
+\le\epsilon+\delta.
+\]
+\end{proof}
+
+Combining Theorems~\ref{thm:supp-invariant-ne} and
+\ref{thm:supp-ne-transfer} with a nearest symmetric surrogate proves that every finite game has a $G$-respecting $\delta_G$-Nash equilibrium.
+
+\subsection{Tightness of the Transfer Coefficient}
+
+Fix $k\ge2$.  Player 1 has $k$ actions, obtains payoff one from action 1 and zero from every other action, independently of player 2; player 2 is strategically irrelevant.  Let $G_k$ cycle player 1's actions.  Every invariant surrogate equalizes those $k$ action payoffs.  Since the original incentive difference between action 1 and another action is one, every invariant surrogate has strategic distance at least one, while the zero surrogate attains one.  Hence $\delta_{G_k}=1$.
+
+The only invariant strategy of player 1 is uniform.  Its payoff is $1/k$, while deviating to action 1 gives one, so its regret is $1-1/k$.  Therefore no universal equilibrium-transfer theorem can replace the additive coefficient one by a smaller constant.
+
+\section{Group Averaging}
+
+Define the Reynolds projection and direct orbit discrepancy by
+\[
+\mathcal P_G\Gamma=|G|^{-1}\sum_{g\in G}g\Gamma,
+\qquad
+\eta_G(\Gamma)=\max_{g\in G}\devdist(\Gamma,g\Gamma).
+\]
+
+\begin{theorem}[Factor-two averaging]
+\label{thm:supp-reynolds}
+For every finite game and finite relabeling group,
+\[
+\delta_G(\Gamma)
+\le
+\devdist(\Gamma,\mathcal P_G\Gamma)
+\le
+\eta_G(\Gamma)
+\le
+2\delta_G(\Gamma).
+\]
+\end{theorem}
+\begin{proof}
+The average is invariant, proving the first inequality.  Convexity of the seminorm gives
+\[
+\devdist(\Gamma,\mathcal P_G\Gamma)
+\le
+|G|^{-1}\sum_g\devdist(\Gamma,g\Gamma)
+\le\eta_G(\Gamma).
+\]
+For any invariant surrogate $\widehat\Gamma$ and $g\in G$,
+\begin{align*}
+\devdist(\Gamma,g\Gamma)
+&\le
+\devdist(\Gamma,\widehat\Gamma)
++
+\devdist(\widehat\Gamma,g\Gamma)\\
+&=
+\devdist(\Gamma,\widehat\Gamma)
++
+\devdist(g\widehat\Gamma,g\Gamma)\\
+&=2\devdist(\Gamma,\widehat\Gamma).
+\end{align*}
+Minimize over invariant surrogates and maximize over $g$.
+\end{proof}
+
+The average is computable without enumerating $G$: each payoff-coordinate orbit receives its arithmetic mean.  If the original game lies in a relabeling-invariant convex linear class, such as zero-sum or common-payoff games, the average remains in that class.
+
+\subsection{Zero-Sum Sharpness Family}
+
+Fix $d\ge2$.  The row player has actions $R=\{0,\ldots,d-1\}$ and the column player has actions
+$C=\{0,1\}\times\{0,\ldots,d-1\}$.  Let $G_d$ cycle all row actions and independently cycle column actions within each block.  Define the row payoff, independent of the within-block column index, by
+\[
+A_d(s,(c,t))
+=
+\begin{cases}
+c,&s=0,\\
+1-c,&s\ne0.
+\end{cases}
+\]
+The column payoff is $-A_d$.
+
+The zero game is an invariant zero-sum surrogate at strategic distance one.  Conversely, invariance equalizes the row payoffs of the distinguished row and any other row at a fixed column, while their original difference is one.  Thus
+\[
+\delta_{G_d}(\Gamma_d)
+=
+\delta_{G_d,\mathcal Z}(\Gamma_d)
+=1.
+\]
+Under group averaging, row-payoff means in the two column blocks are $(d-1)/d$ and $1/d$.  The distinguished row therefore has residual levels $-(d-1)/d$ and $(d-1)/d$, whose range is
+\[
+2-\frac{2}{d}.
+\]
+All other residual slices are no larger.  Hence the factor-two approximation is asymptotically tight even when both the original game and the nearest structured surrogate are zero-sum.
