@@ -1,8 +1,8 @@
 # Novelty and Claim-Boundary Audit
 
-This note records the closest literature checked for **Almost Symmetric Games** and
-the exact boundary of the manuscript's claims. It is intended to prevent both
-overclaiming and accidental omission of a nearby result.
+This note records the closest literature checked for **Almost Symmetric Games**
+and the precise boundary of the manuscript's claims. It is intended to prevent
+both overclaiming and accidental omission of a nearby result.
 
 ## 1. Exact finite-game symmetries
 
@@ -17,8 +17,8 @@ symmetries.
 
 - Same finite normal-form relabeling formalism.
 - Same fixed strategy concept.
-- Exact-symmetry equilibrium existence and zero-sum tractability are direct
-  foundations for this paper.
+- Exact-symmetry equilibrium existence and zero-sum tractability are foundations
+  for this paper.
 
 **Difference**
 
@@ -39,17 +39,16 @@ CLS-completeness of computing symmetric equilibria in a restricted exact class.
 
 **Relevance**
 
-This result reinforces an important scope statement: projection onto a symmetric
-common-payoff game is tractable, but computing a symmetry-respecting Nash
-equilibrium in a general-sum/team surrogate need not be. The present paper's
-strongest end-to-end algorithmic theorem is therefore deliberately zero-sum.
+Projection onto a symmetric common-payoff game is tractable, but computing a
+symmetry-respecting Nash equilibrium in a general-sum/team surrogate need not
+be. The paper's strongest end-to-end algorithmic result is therefore zero-sum.
 
 ## 2. Strategic distances between games
 
 ### Candogan, Ozdaglar, and Parrilo (GEB 2013)
 
 **Near-Potential Games: Geometry and Dynamics** introduces maximum pairwise
-difference (MPD) to compare unilateral deviation incentives and studies distance
+difference (MPD) to compare unilateral-deviation incentives and studies distance
 to the potential-game subspace.
 
 **Overlap**
@@ -64,23 +63,23 @@ to the potential-game subspace.
 
 - The target set here is the fixed subspace of an arbitrary player/action
   relabeling group, not the potential-game subspace.
-- The orbit-graph reduction yields a new maximum-mean-cycle formula specific to
+- The orbit-graph reduction yields a maximum-mean-cycle formula specific to
   symmetry identifications.
 - The paper does not claim to introduce MPD itself.
 
 ### Marris, Gemp, and Piliouras (2023)
 
-**Equilibrium-Invariant Embedding, Metric Space, and Fundamental Set of
-2x2 Normal-Form Games** develops equilibrium- and better-response-invariant
-metrics and geometric embeddings, with detailed classification of 2x2 games.
+**Equilibrium-Invariant Embedding, Metric Space, and Fundamental Set of 2x2
+Normal-Form Games** develops equilibrium- and better-response-invariant metrics
+and geometric embeddings, with detailed classification of 2x2 games.
 
 **Difference**
 
-- Their objective is geometric representation/classification.
-- The present work handles arbitrary finite games and candidate relabeling
-  groups and optimizes distance to a group-fixed subspace.
-- The equilibrium transfer, critical-cycle witness, and orbit-compressed
-  algorithms are distinct.
+- Their objective is geometric representation and classification.
+- The present work handles arbitrary finite games and supplied relabeling groups
+  and optimizes distance to a group-fixed subspace.
+- Equilibrium transfer, critical-cycle witnesses, and orbit-compressed solvers
+  are distinct.
 
 ## 3. Approximate and partial symmetry in MARL
 
@@ -99,7 +98,7 @@ complexity.
 
 **Overlap**
 
-- All three works motivate symmetry under heterogeneity.
+- All motivate symmetry under heterogeneity.
 - All provide approximation guarantees after imposing or exploiting symmetry.
 
 **Difference**
@@ -108,8 +107,8 @@ complexity.
   complexity.
 - This paper concerns an explicitly represented finite normal-form game and an
   arbitrary supplied player/action relabeling group.
-- Its main object is the *minimum unilateral-incentive perturbation* that makes
-  the group exact.
+- Its central object is the minimum unilateral-incentive perturbation required
+  to make the group exact.
 - Its critical-cycle certificate and exact projection algorithms do not follow
   from dynamic-game approximate-symmetry bounds.
 
@@ -141,7 +140,7 @@ quality bounds under aggregation.
 
 **Difference**
 
-- Those abstractions merge states/actions/information sets in sequential
+- Those abstractions merge states, actions, or information sets in sequential
   decision processes or game trees.
 - This paper identifies payoff coordinates through a normal-form relabeling
   group and measures error directly in unilateral incentives.
@@ -154,11 +153,11 @@ difference constraints and shortest-path feasibility.
 
 **Novel component**
 
-The contribution is the reduction of strategic symmetry projection to this graph:
-payoff-coordinate orbits are vertices, unilateral comparisons are labeled edges,
-and the optimal symmetry defect is the critical cycle mean. The implementation
-uses Karp for the value, tight reduced edges for a certified cycle, and
-difference-constraint potentials for the surrogate.
+The contribution is the reduction of strategic symmetry projection to this
+graph: payoff-coordinate orbits are vertices, unilateral comparisons are
+labeled edges, and the optimal symmetry defect is the critical cycle mean. The
+implementation uses Karp for the value, tight reduced edges for a certified
+cycle, and difference-constraint potentials for the surrogate.
 
 The manuscript must not describe Karp's algorithm itself as new.
 
@@ -169,17 +168,18 @@ The current draft can defensibly claim:
 1. A strategic symmetry defect for arbitrary finite player/action relabeling
    groups based on MPD.
 2. An exact sparse LP for the nearest invariant surrogate.
-3. An exact maximum-mean-cycle characterization of the unrestricted projection.
+3. An exact maximum-mean-cycle characterization of the unrestricted projection,
+   including empty and self-loop orbit graphs.
 4. A local critical-cycle lower-bound certificate and constructive surrogate.
 5. Additive `epsilon + delta` equilibrium transfer.
 6. Existence of a group-respecting `delta_G`-Nash equilibrium.
 7. Asymptotic tightness of the coefficient one.
 8. A closed-form Reynolds projection with approximation factor two.
-9. An explicit family attaining ratio `2 - 2/d^2`, proving factor-two
-   asymptotic tightness.
+9. An explicit zero-sum family attaining ratio `2 - 2/d`, proving factor-two
+   asymptotic tightness even relative to the nearest symmetric zero-sum game.
 10. Structured zero-sum projection and direct invariant saddle-gap LPs.
 11. Finite-sample certificates under entrywise independent bounded sampling.
-12. Orbit compression and all theorem diagnostics on explicit laptop-scale games.
+12. Orbit compression and theorem diagnostics on explicit laptop-scale games.
 
 ## 8. Claims intentionally excluded
 
@@ -211,5 +211,5 @@ A final author-side search should include combinations of:
 - quotient games unilateral incentive distance.
 
 Any newly found result should be compared against the graph reduction, sharp
-constants, and supplied-group setting—not only against the phrase “approximate
-symmetry.”
+constants, zero-sum sharpness, and supplied-group setting—not only against the
+phrase “approximate symmetry.”
