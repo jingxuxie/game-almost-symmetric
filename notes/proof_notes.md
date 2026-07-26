@@ -102,8 +102,8 @@ For a closed linear class `C`, such as zero-sum or common-payoff games, define
  d_{\rm dev}(\Gamma,\widehat\Gamma).
 \]
 
-The unrestricted and structured defects can differ. Every zero-sum theorem in
-the paper uses the zero-sum structured defect.
+The unrestricted and structured defects can differ. Every zero-sum theorem uses
+the zero-sum structured defect.
 
 ## 4. Projection LP
 
@@ -122,10 +122,9 @@ objective `t`:
 \end{array}
 \]
 
-Here `S` is a generating set. For a fixed surrogate, the smallest interval
-width in a residual slice is exactly that slice's MPD contribution. Generator
-invariance is equivalent to group invariance. Hence the optimum is exactly
-`delta_G`.
+For a fixed surrogate, the smallest interval width in a residual slice is
+exactly that slice's MPD contribution. Generator invariance is equivalent to
+group invariance. Hence the optimum is exactly `delta_G`.
 
 If
 
@@ -143,7 +142,7 @@ inequalities, plus sparse generator and optional structure equalities.
 ### Orbit graph
 
 Vertices are payoff-coordinate orbits `[i,a]`. For every ordered unilateral
-comparison from action `b_i` to `a_i` against `a_-i`, add an edge
+comparison from distinct action `b_i` to `a_i` against `a_-i`, add an edge
 
 \[
 [i,(b_i,a_{-i})]\to[i,(a_i,a_{-i})]
@@ -156,13 +155,7 @@ c_e=u_i(a_i,a_{-i})-u_i(b_i,a_{-i}).
 \]
 
 An invariant surrogate assigns one potential `x_v` per vertex. Error at most
-`t` means
-
-\[
-|x_{\rm head(e)}-x_{\rm tail(e)}-c_e|\le t.
-\]
-
-Because the reverse ordered comparison is also present, this is equivalent to
+`t` is equivalent, using the reverse comparison, to
 
 \[
 x_{\rm head(e)}-x_{\rm tail(e)}\le c_e+t
@@ -170,7 +163,7 @@ x_{\rm head(e)}-x_{\rm tail(e)}\le c_e+t
 \]
 
 A difference-constraint system is feasible exactly when every directed cycle
-has nonnegative total length. Therefore
+has nonnegative total length. Therefore, with an empty maximum defined as zero,
 
 \[
 \boxed{
@@ -193,20 +186,19 @@ Shortest-path potentials give a feasible invariant surrogate at distance
 ### Certified lower-bound witness
 
 Let `w_e=-c_e` and `lambda=delta_G`. The reduced graph with weights
-`w_e-lambda` has no positive cycle and at least one zero-weight critical cycle.
-Max-plus path potentials make every reduced edge inequality have nonnegative
-slack. Around a zero-weight cycle the slacks telescope and sum to zero, so every
-critical-cycle edge is tight. Searching the tight-edge graph yields a closed
-cycle whose mean is exactly `lambda`.
+`w_e-lambda` has no positive cycle and, when nonempty, has a zero-weight
+critical cycle. Max-plus path potentials make every reduced-edge inequality have
+nonnegative slack. Around a zero-weight cycle the slacks telescope and sum to
+zero, so every critical-cycle edge is tight. A directed-cycle search in the
+tight-edge graph yields a closed cycle whose mean is `lambda`.
 
-This avoids the unjustified shortcut of treating a Karp dynamic-programming
-predecessor chain as automatically critical.
+This avoids treating a predecessor chain in Karp's value table as automatically
+critical.
 
 ### Scope
 
-The cycle theorem applies to the unrestricted projection. Adding zero-sum or
-team equalities can destroy the pure difference-constraint form; structured
-projections use the LP.
+The cycle theorem applies to the unrestricted fixed subspace. Structured
+zero-sum and team projections remain LPs.
 
 ## 6. Mixed incentive transfer
 
@@ -216,20 +208,15 @@ If
 d_{\rm dev}(\Gamma,\widehat\Gamma)\le\delta,
 \]
 
-then for every player, opponent mixture, and two own mixed strategies, the
-corresponding incentive difference changes by at most `delta`. In every pure
-opponent slice, residuals lie in an interval of width `delta`; two convex
-combinations remain within that interval, and averaging over opponent profiles
-preserves the bound.
-
-Therefore an `epsilon`-Nash equilibrium of the surrogate satisfies
+then every unilateral mixed-strategy incentive changes by at most `delta`.
+Consequently, an `epsilon`-Nash equilibrium of the surrogate satisfies
 
 \[
 \operatorname{Reg}_i^\Gamma(\sigma)
 \le \epsilon+\delta.
 \]
 
-## 7. Existence of an invariant approximate equilibrium
+## 7. Invariant approximate equilibrium
 
 Every exactly invariant finite game has an invariant Nash equilibrium:
 
@@ -238,8 +225,8 @@ Every exactly invariant finite game has an invariant Nash equilibrium:
 3. Brouwer gives an invariant logit fixed point at every precision;
 4. any limit as precision diverges assigns positive mass only to best responses.
 
-Combining this fact with a nearest invariant surrogate and equilibrium transfer
-yields a `G`-respecting `delta_G`-Nash equilibrium in every finite game.
+Combining this with a nearest invariant surrogate yields a `G`-respecting
+`delta_G`-Nash equilibrium in every finite game.
 
 ## 8. Tightness of the transfer coefficient
 
@@ -274,20 +261,36 @@ Then
 The first inequality is feasibility, the second is convexity, and the third is
 the triangle inequality through an optimal invariant surrogate.
 
-### Tightness
+### Factor-two tightness in zero-sum games
 
-For the two-block size-`d` construction in the supplement,
+For every `d>=2`, let the row player have `d` actions in one orbit and the
+column player have two `d`-action blocks. A distinguished row receives payoff
+zero in the first block and one in the second; every other row receives the
+opposite payoff. The column payoff is the negative row payoff.
+
+The zero game is an invariant zero-sum surrogate at strategic distance one.
+Every invariant surrogate equalizes the distinguished and ordinary row at a
+fixed column, while their original payoffs differ by one, so both the
+unrestricted and zero-sum structured defects equal one.
+
+The Reynolds row-payoff means in the two column blocks are `(d-1)/d` and `1/d`.
+On the distinguished row, the residual levels are
 
 \[
-\delta_{G_d}=1,
-\qquad
- d_{\rm dev}(\Gamma_d,\mathcal P_{G_d}\Gamma_d)
-=2-\frac{2}{d^2}.
+-\frac{d-1}{d}
+\quad\text{and}\quad
+\frac{d-1}{d},
 \]
 
-A two-edge critical cycle gives the lower bound one; the zero surrogate gives
-the matching upper bound. Direct orbit averaging gives the stated residual
-range. Hence the factor two is asymptotically tight.
+so
+
+\[
+d_{\rm dev}(\Gamma_d,\mathcal P_{G_d}\Gamma_d)
+=2-\frac{2}{d}.
+\]
+
+The factor two is therefore asymptotically tight even relative to the nearest
+symmetric zero-sum surrogate.
 
 ## 10. Nested groups
 
@@ -303,8 +306,8 @@ the fixed subspaces shrink, so
 \delta_{G_0}\le\delta_{G_1}\le\cdots\le\delta_{G_K}.
 \]
 
-Meanwhile the number of action and payoff-coordinate orbits cannot increase.
-This is the certified compression--fidelity frontier.
+The number of action and payoff-coordinate orbits cannot increase. This is the
+certified compression--fidelity frontier.
 
 ## 11. Zero-sum results
 
@@ -338,8 +341,8 @@ x^TA\ge\beta\mathbf 1^T,
 \]
 
 simplex constraints, and global action-orbit equalities. For an exactly
-invariant matrix, best-response values are constant on the relevant action
-orbits, so one representative constraint per orbit is sufficient.
+invariant matrix, one best-response constraint per relevant action orbit is
+sufficient.
 
 ## 12. Statistical stability
 
@@ -356,8 +359,7 @@ If every payoff estimate has entrywise error at most `xi`, then
 d_{\rm dev}(\Gamma,\widetilde\Gamma)\le2\xi.
 \]
 
-For `P` bounded means with `M` independent samples each, Hoeffding and a union
-bound give
+For `P` bounded means with `M` independent samples each,
 
 \[
 \xi_M=\sqrt{\frac{\log(2P/\alpha)}{2M}}.
@@ -378,11 +380,11 @@ and zero-sum saddle gap at most
 
 ## 13. Numerical audit
 
-The independent checks now cover:
+The independent checks cover:
 
+- empty, self-loop, and parallel-edge orbit graphs;
 - LP versus cycle defect on randomized games;
 - witness closure and critical mean;
-- self-loop and parallel-edge obstructions;
 - reconstructed-surrogate distance;
 - player-swapping action orbits;
 - transfer and zero-sum certificates;
@@ -392,13 +394,11 @@ The independent checks now cover:
 
 ## 14. Claims intentionally not made
 
-- Approximate symmetry in games or MARL is not claimed to be new as a broad
-  topic.
+- Approximate symmetry in games or MARL is not claimed to be new broadly.
 - MPD itself is not introduced by this paper.
 - The candidate group is supplied rather than discovered.
-- General-sum Nash computation does not become tractable merely because
-  projection is tractable.
+- General-sum Nash computation remains hard.
 - Small strategic defect does not imply welfare preservation.
-- Polynomial time is with respect to the explicit normal-form table.
+- Polynomial time is measured in the explicit normal-form table size.
 - Stochastic, extensive-form, graphical, and polymatrix extensions remain
   future work.
