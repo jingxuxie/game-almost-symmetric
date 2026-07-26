@@ -1,0 +1,102 @@
+\section{Correlated Equilibrium: A Tractable General-Sum Extension}
+
+Nash equilibrium restricts the joint distribution over actions to a product distribution.  This independence is often the source of the welfare loss attributed to symmetry: agents may agree that several roles are interchangeable, yet independent randomization cannot assign distinct roles without collisions.  Correlated equilibrium separates symmetry from independence by allowing a mediator to sample a joint action while treating all relabeled outcomes identically.
+
+Let $\mu\in\Delta(A)$ be a joint distribution.  For player $i$, recommendation $a_i$, and deviation $b_i$, define the correlated-equilibrium deviation gain
+\begin{equation}
+R^{\mathrm{CE}}_{i,a_i\to b_i}(\mu;\Gamma)
+=
+\sum_{a_{-i}}\mu(a_i,a_{-i})
+\bigl[u_i(b_i,a_{-i})-u_i(a_i,a_{-i})\bigr].
+\label{eq:ce-regret}
+\end{equation}
+The distribution is an $\epsilon$-correlated equilibrium ($\epsilon$-CE) if every quantity in \eqref{eq:ce-regret} is at most $\epsilon$.  This is the standard probability-weighted convention that yields linear incentive constraints.  A coarse-correlated equilibrium is protected against choosing one fixed deviation before observing a recommendation:
+\begin{equation}
+R^{\mathrm{CCE}}_{i\to b_i}(\mu;\Gamma)
+=
+\sum_{a}\mu(a)
+\bigl[u_i(b_i,a_{-i})-u_i(a)\bigr]
+\le\epsilon.
+\label{eq:cce-regret}
+\end{equation}
+We call $\mu$ $G$-respecting when $\mu(ga)=\mu(a)$ for all $g\in G$ and $a\in A$.
+
+\begin{theorem}[Transfer of mediated equilibria]
+\label{thm:ce-transfer}
+If $\devdist(\Gamma,\widehat\Gamma)\le\delta$, then every $\epsilon$-CE of $\widehat\Gamma$ is an $(\epsilon+\delta)$-CE of $\Gamma$.  The same statement holds for coarse-correlated equilibrium.
+\end{theorem}
+\begin{proof}
+For a fixed CE deviation $a_i\to b_i$, the pointwise difference between its gain in the two games is at most $\delta$ by the definition of $\devdist$.  Therefore
+\[
+\left|
+R^{\mathrm{CE}}_{i,a_i\to b_i}(\mu;\Gamma)
+-
+R^{\mathrm{CE}}_{i,a_i\to b_i}(\mu;\widehat\Gamma)
+\right|
+\le
+\delta\sum_{a_{-i}}\mu(a_i,a_{-i})
+\le\delta.
+\]
+For CCE the same calculation sums over a distribution of total mass one.  Adding the surrogate violation $\epsilon$ proves both claims.
+\end{proof}
+
+The next result shows that exact symmetry never conflicts with correlated-equilibrium feasibility or with an invariant selection objective.
+
+\begin{theorem}[Invariant correlated equilibria]
+\label{thm:invariant-ce}
+Suppose $\widehat\Gamma$ is exactly $G$-invariant.  Then it has a $G$-respecting correlated equilibrium and a $G$-respecting coarse-correlated equilibrium.  More strongly, let $w:A\to\mathbb R$ be any $G$-invariant linear objective, meaning $w(ga)=w(a)$.  Among all CE (respectively CCE) of $\widehat\Gamma$, some objective maximizer respects $G$.
+\end{theorem}
+\begin{proof}
+The action of any $g\in G$ bijectively relabels the CE inequalities: if $\mu$ is feasible, then the pushforward $g\mu$ is feasible.  The CE polytope is convex, so the Reynolds average
+\[
+\mathcal P_G\mu
+=
+\frac1{|G|}\sum_{g\in G}g\mu
+\]
+is feasible and $G$-respecting.  If $\mu$ maximizes $w$, invariance of $w$ implies that every $g\mu$ has the same objective value, so their average is also optimal.  CCE follows identically because its incentive constraints are likewise relabeled by $G$.
+\end{proof}
+
+Combining Theorems~\ref{thm:ce-transfer} and \ref{thm:invariant-ce} with a nearest symmetric surrogate immediately gives the following counterpart to Corollary~\ref{cor:invariant-existence}.
+
+\begin{corollary}[Invariant approximate CE and CCE]
+\label{cor:invariant-ce}
+Every finite game admits a $G$-respecting $\delta_G(\Gamma)$-CE and a $G$-respecting $\delta_G(\Gamma)$-CCE.
+\end{corollary}
+
+\subsection{A Profile-Orbit Linear Program}
+
+Let $\mathcal O_A$ denote the orbits of pure profiles under $G$.  A $G$-respecting distribution is represented by one nonnegative variable $z_O$ per orbit, interpreted as the probability of each profile in $O$.  Normalization becomes
+\begin{equation}
+\sum_{O\in\mathcal O_A}|O|z_O=1.
+\label{eq:orbit-simplex}
+\end{equation}
+Substituting $\mu(a)=z_{[a]}$ into \eqref{eq:ce-regret} gives a linear program with $|\mathcal O_A|$ distribution variables and
+$\sum_i |A_i|(|A_i|-1)$ CE inequalities.  CCE needs only $\sum_i|A_i|$ incentive inequalities.
+
+\begin{proposition}[Orbit-optimal CE]
+\label{prop:orbit-ce}
+In an explicit finite game, a $G$-respecting CE or CCE optimizing any linear objective can be computed in time polynomial in the payoff table size.  If the game and objective are exactly $G$-invariant, the orbit-restricted program has the same optimal value as the unrestricted CE or CCE program.
+\end{proposition}
+\begin{proof}
+All constraints, including \eqref{eq:orbit-simplex}, are linear and have polynomial explicit size.  For the second claim, average any unrestricted objective-optimal equilibrium over $G$ and apply Theorem~\ref{thm:invariant-ce}; the average is feasible, invariant, and has the same value.
+\end{proof}
+
+This provides an end-to-end tractable general-sum result that is unavailable for Nash equilibrium: project the game, solve the invariant CE in profile-orbit variables, and use Theorem~\ref{thm:ce-transfer} to certify its deviation gain in the original game.  The objective need not be the surrogate's welfare.  For example, one may maximize the original estimated welfare over the invariant CE polytope of the surrogate, obtaining the best selected profile among those covered by the transfer guarantee.
+
+\subsection{Correlation Resolves Symmetric Role Assignment}
+
+The following family isolates the coordination resource supplied by correlation.  There are $n$ agents and $n$ roles.  Every agent receives common payoff one if all selected roles are distinct and zero otherwise.  The game is invariant to every player permutation and every common relabeling of roles.
+
+\begin{proposition}[Independent versus correlated symmetry]
+\label{prop:role-correlation}
+In the $n$-agent role-assignment game, the unique fully symmetry-respecting independent profile has welfare
+\[
+\frac{n!}{n^n}.
+\]
+There is, however, a fully symmetry-respecting correlated equilibrium with welfare one.
+\end{proposition}
+\begin{proof}
+Player and role symmetry force every marginal of an invariant product profile to be uniform.  Independent uniform draws are all distinct with probability $n!/n^n$.  For the correlated solution, sample uniformly from the $n!$ permutations of the roles and privately recommend one role to each agent.  The distribution is unchanged by permuting players or relabeling roles.  Conditional on any recommendation, following it yields distinct roles and payoff one; every alternative role is assigned to another agent and therefore yields payoff zero.  The distribution is thus a correlated equilibrium with welfare one.
+\end{proof}
+
+As $n$ grows, $n!/n^n$ decays exponentially up to polynomial factors, whereas the correlated welfare remains one.  The loss is therefore not caused by respecting symmetry itself; it is caused by requiring agents to realize the symmetric solution through independent randomization.  This distinction also explains why a small strategic defect certifies incentive compatibility but cannot by itself determine which coordination resources are available.
