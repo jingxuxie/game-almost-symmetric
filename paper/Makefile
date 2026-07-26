@@ -3,10 +3,14 @@ TEXINPUTS := ../AAAI_AuthorKit27//:$(TEXINPUTS)
 BSTINPUTS := ../AAAI_AuthorKit27//:$(BSTINPUTS)
 
 FIGURES := \
+	../experiments/figures/overview.pdf \
 	../experiments/figures/nonstrategic_separation.pdf \
 	../experiments/figures/certificate_calibration.pdf \
 	../experiments/figures/compression_frontier.pdf \
 	../experiments/figures/role_assignment.pdf \
+	../experiments/figures/correlated_calibration.pdf \
+	../experiments/figures/role_assignment_correlation.pdf \
+	../experiments/figures/correlated_compression.pdf \
 	../experiments/figures/runtime_scaling.pdf \
 	../experiments/figures/sampling_certificate.pdf \
 	../experiments/figures/reynolds_tightness.pdf
