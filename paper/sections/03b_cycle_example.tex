@@ -1,0 +1,20 @@
+\subsection{Reading a Critical-Cycle Certificate}
+
+The cycle theorem is more than an alternative solver: it explains which proposed identifications are incompatible.  Consider two payoff-coordinate orbits $U$ and $V$.  Suppose two unilateral comparisons produce an edge $U\to V$ with label $1$ and an edge $V\to U$ with label $-3$.  An invariant surrogate assigns orbit potentials $x_U,x_V$.  Writing $d=x_V-x_U$, the two approximation errors are
+\[
+|d-1|
+\qquad\text{and}\qquad
+|3-d|.
+\]
+Their minimum possible maximum is one, attained at $d=2$.  The directed cycle has mean label $(1-3)/2=-1$, so Theorem~\ref{thm:cycle} gives exactly the same lower bound $\delta_G=1$.  In larger games, a returned critical cycle plays the same role: it is a short sequence of deviation comparisons whose desired payoff differences cannot telescope consistently after the coordinates are merged into symmetry orbits.
+
+The witness also suggests how to revise a poor abstraction.  One can split an orbit touched repeatedly by the critical cycle, remove a questionable generator, or inspect whether a small number of payoff estimates dominate the inconsistency.  Conversely, before solving the sharp projection, a generator set $S$ supplies a cheap interval:
+\begin{equation}
+\frac12\max_{s\in S}\devdist(\Gamma,s\Gamma)
+\le
+\delta_G(\Gamma)
+\le
+\devdist(\Gamma,\mathcal P_G\Gamma).
+\label{eq:screening-bounds}
+\end{equation}
+The lower bound follows from the triangle inequality through any invariant surrogate; the upper bound evaluates the feasible Reynolds surrogate.  Thus inexpensive generator discrepancies and orbit averaging can screen candidate groups, while the LP or cycle algorithm is reserved for candidates near the desired error budget.
