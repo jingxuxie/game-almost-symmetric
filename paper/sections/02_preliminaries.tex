@@ -1,0 +1,76 @@
+\section{Preliminaries}
+
+A finite normal-form game is $\Gamma=(N,(A_i)_{i\in N},(u_i)_{i\in N})$, where $N=\{1,\ldots,n\}$, $A_i$ is player $i$'s finite action set, $A=\prod_i A_i$, and $u_i:A\to\mathbb R$.  We write $a=(a_i,a_{-i})$ for a pure profile and $\sigma=(\sigma_i)_{i\in N}$ for an independent mixed profile.  Player $i$'s regret is
+\[
+\operatorname{Reg}_i^\Gamma(\sigma)
+=
+\max_{\tau_i\in\Delta(A_i)}
+\bigl[u_i(\tau_i,\sigma_{-i})-u_i(\sigma)\bigr].
+\]
+The profile is an $\epsilon$-Nash equilibrium if every regret is at most $\epsilon$.
+
+\paragraph{Relabelings and exact symmetries.}
+A relabeling $g$ consists of a permutation $\pi_g$ of the players and, for every player $i$, a bijection
+$\tau_{g,i}:A_i\to A_{\pi_g(i)}$.  It maps a pure profile according to
+\[
+(ga)_{\pi_g(i)}=\tau_{g,i}(a_i).
+\]
+The induced action on games is defined by
+\[
+(g\Gamma)_{\pi_g(i)}(ga)=u_i(a).
+\]
+Thus $g$ is an exact symmetry of $\Gamma$ precisely when $g\Gamma=\Gamma$.  We consider a finite group $G$ of such relabelings, represented algorithmically by a generating set $S$.  A mixed profile respects $G$ if
+\[
+\sigma_{\pi_g(i)}\bigl(\tau_{g,i}(a_i)\bigr)=\sigma_i(a_i)
+\quad
+\text{for all }g\in G,i,a_i.
+\]
+Equivalently, strategy probabilities are constant on the orbits of the disjoint union $\bigsqcup_i A_i$.
+
+\paragraph{Strategic distance.}
+For compatible games $\Gamma$ and $\Gamma'$ with utilities $u$ and $v$, define
+\begin{align}
+\devdist(\Gamma,\Gamma')
+=\max_{\substack{i,a_{-i},\\a_i,b_i\in A_i}}
+\Big|&[u_i(a_i,a_{-i})-u_i(b_i,a_{-i})] \nonumber\\
+&-[v_i(a_i,a_{-i})-v_i(b_i,a_{-i})]\Big|.
+\label{eq:mpd}
+\end{align}
+This is the maximum pairwise difference of unilateral incentives.  If
+$r_i(a)=u_i(a)-v_i(a)$ is the residual, then
+\begin{equation}
+\devdist(\Gamma,\Gamma')
+=
+\max_{i,a_{-i}}
+\left(
+\max_{a_i}r_i(a_i,a_{-i})-\min_{a_i}r_i(a_i,a_{-i})
+\right).
+\label{eq:range-form}
+\end{equation}
+
+A game component $q$ is \emph{nonstrategic} when
+$q_i(a_i,a_{-i})=c_i(a_{-i})$ for some functions $c_i$; such a component changes payoff levels but no unilateral incentive.
+
+\begin{proposition}[Strategic quotient norm]
+\label{prop:quotient}
+The function $\devdist$ is a relabeling-invariant seminorm distance, and
+\[
+\devdist(\Gamma,\Gamma')=0
+\quad\Longleftrightarrow\quad
+\Gamma-\Gamma'\text{ is nonstrategic}.
+\]
+Consequently it is a norm on the quotient of games by the nonstrategic subspace.
+\end{proposition}
+\begin{proof}
+It is the maximum of absolute linear functionals, which gives symmetry, homogeneity, and the triangle inequality.  Distance zero means that, for every fixed $(i,a_{-i})$, the residual $r_i(a_i,a_{-i})$ is constant over $a_i$, exactly the nonstrategic form.  Relabelings only permute the functionals in the maximum.
+\end{proof}
+
+For comparison, let
+$\|\Gamma-\Gamma'\|_\infty=\max_{i,a}|u_i(a)-v_i(a)|$.
+The triangle inequality for real numbers gives
+\begin{equation}
+\devdist(\Gamma,\Gamma')
+\le 2\|\Gamma-\Gamma'\|_\infty.
+\label{eq:raw-upper}
+\end{equation}
+There is no reverse inequality up to any universal constant: adding an arbitrarily large nonstrategic component leaves $\devdist$ equal to zero.  This separation is why we define almost symmetry through incentives rather than raw utilities.
