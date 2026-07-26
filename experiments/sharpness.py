@@ -19,54 +19,50 @@ from .common import save_plot
 
 
 def reynolds_tight_family(d: int):
-    """Construct the family with ratio ``2 - 2 / d**2``.
+    """Construct a zero-sum family with ratio ``2 - 2 / d``.
 
-    Each player has two blocks of ``d`` actions. The candidate group independently
-    cycles actions inside each block. Player 2 has zero utility. The two critical
-    comparisons for player 1 form a mean-minus-one cycle, so the optimal defect is
-    one, while orbit averaging approaches distance two.
+    The row player has one orbit of ``d`` actions. The column player has two
+    ``d``-action blocks. A distinguished row receives zero in the first block
+    and one in the second; every other row receives the opposite payoff. Every
+    row and column payoff range is one, so the zero game is an invariant
+    surrogate at strategic distance one. Orbit averaging, however, subtracts
+    opposing block means and creates a residual range ``2 - 2 / d`` on the
+    distinguished row.
     """
     if d < 2:
         raise ValueError("d must be at least two")
-    action_count = 2 * d
-    row_payoff = np.zeros((action_count, action_count), dtype=float)
 
-    row_payoff[1:d, 0] = -1.0
-    row_payoff[d, 0] = -1.0
-    row_payoff[d:, 1:d] = 1.0
+    matrix = np.zeros((d, 2 * d), dtype=float)
+    matrix[0, d:] = 1.0
+    matrix[1:, :d] = 1.0
+    game = NormalFormGame.zero_sum(matrix)
 
-    game = NormalFormGame(
-        np.stack([row_payoff, np.zeros_like(row_payoff)], axis=0)
-    )
-    generators = []
-    for player in (0, 1):
-        generators.append(
-            cyclic_action_generator(
-                (action_count, action_count), player, list(range(d))
-            )
-        )
-        generators.append(
-            cyclic_action_generator(
-                (action_count, action_count), player, list(range(d, 2 * d))
-            )
-        )
+    generators = [
+        cyclic_action_generator((d, 2 * d), 0, list(range(d))),
+        cyclic_action_generator((d, 2 * d), 1, list(range(d))),
+        cyclic_action_generator((d, 2 * d), 1, list(range(d, 2 * d))),
+    ]
     return game, generators
 
 
 def run_reynolds_tightness() -> pd.DataFrame:
     rows = []
-    for d in [2, 3, 4, 5, 8, 12, 20]:
+    for d in [2, 3, 4, 5, 8, 12, 20, 40]:
         game, generators = reynolds_tight_family(d)
-        optimal = project_strategic(game, generators)
+        optimal = project_strategic(
+            game,
+            generators,
+            structure="zero_sum",
+        )
         cycle = project_strategic_cycle(game, generators)
         averaged = reynolds_symmetrize(game, generators)
         averaged_distance = strategic_distance(game, averaged)
-        theory_ratio = 2.0 - 2.0 / d**2
+        theory_ratio = 2.0 - 2.0 / d
         rows.append(
             {
-                "block_size": d,
-                "optimal_defect": optimal.distance,
-                "cycle_defect": cycle.cycle_value,
+                "orbit_size": d,
+                "optimal_structured_defect": optimal.distance,
+                "cycle_unrestricted_defect": cycle.cycle_value,
                 "reynolds_distance": averaged_distance,
                 "observed_ratio": averaged_distance / optimal.distance,
                 "theory_ratio": theory_ratio,
@@ -82,21 +78,21 @@ def run_reynolds_tightness() -> pd.DataFrame:
 def make_reynolds_tightness_figure(table: pd.DataFrame) -> None:
     fig, axis = plt.subplots(figsize=(3.35, 2.45))
     axis.plot(
-        table["block_size"],
+        table["orbit_size"],
         table["observed_ratio"],
         marker="o",
         label="Computed ratio",
     )
     axis.plot(
-        table["block_size"],
+        table["orbit_size"],
         table["theory_ratio"],
         linestyle="--",
-        label=r"$2-2/d^2$",
+        label=r"$2-2/d$",
     )
     axis.axhline(2.0, linestyle=":", linewidth=1.0, label="Upper bound 2")
     axis.set_xscale("log")
-    axis.set_ylim(1.4, 2.03)
-    axis.set_xlabel("Actions per block $d$")
+    axis.set_ylim(0.95, 2.03)
+    axis.set_xlabel("Actions in the row orbit $d$")
     axis.set_ylabel("Reynolds distance / optimal defect")
     axis.legend(frameon=False)
     axis.grid(alpha=0.25)
