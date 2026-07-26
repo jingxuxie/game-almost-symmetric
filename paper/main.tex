@@ -1,0 +1,49 @@
+\documentclass[letterpaper]{article}
+\usepackage[submission]{../AAAI_AuthorKit27/aaai2027}
+\usepackage[hyphens]{url}
+\usepackage{graphicx}
+\urlstyle{rm}
+\def\UrlFont{\rm}
+\usepackage{natbib}
+\usepackage{caption}
+\frenchspacing
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+
+\pdfinfo{/TemplateVersion (2027.1)}
+\setcounter{secnumdepth}{0}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Gam}{\Gamma}
+\newcommand{\devdist}{d_{\mathrm{dev}}}
+\newcommand{\zsdef}{\delta_G^{\mathrm{zs}}}
+\newcommand{\Fix}{\operatorname{Fix}}
+\newcommand{\NE}{\operatorname{NE}}
+\newcommand{\Gap}{\operatorname{Gap}}
+
+\title{Almost Symmetric Games: Incentive-Preserving Projections and Certified Equilibrium Computation}
+\author{Anonymous Submission}
+\affiliations{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Symmetries can compress game representations, accelerate equilibrium computation, and provide principled constraints for decentralized coordination.  Existing treatments generally require payoffs to be preserved exactly under player and action relabelings, an assumption violated by heterogeneous agents, estimated utilities, and small design perturbations.  We study finite normal-form games equipped with a candidate relabeling group and introduce an approximate-symmetry defect based on unilateral-deviation incentives rather than raw payoff differences.  The resulting metric is invariant to strategically irrelevant utility shifts.  We formulate projection onto the nearest exactly symmetric game as a linear program and prove that an $\epsilon$-Nash equilibrium of a surrogate at defect $\delta$ is an $(\epsilon+\delta)$-Nash equilibrium of the original game.  Consequently, every game admits a symmetry-respecting $\delta_G$-equilibrium, and the coefficient one is asymptotically tight.  We further show that group averaging is a closed-form factor-two approximation to the optimal strategic projection.  For two-player zero-sum games, orbit-restricted linear programs directly minimize the saddle-point residual and produce a posteriori exploitability certificates.  Finally, we extend the certificates to sampled payoff tables.  Lightweight experiments on perturbed matrix and role-assignment games verify the bounds, separate strategic from raw payoff asymmetry, and expose a practical compression--fidelity trade-off.
+\end{abstract}
+
+\input{sections/01_introduction_related}
+\input{sections/02_preliminaries}
+\input{sections/03_projection_transfer}
+\input{sections/04_orbit_averaging}
+\input{sections/05_zero_sum_sampling}
+\input{sections/06_experiments}
+\input{sections/07_discussion}
+
+\bibliography{references}
+\end{document}
