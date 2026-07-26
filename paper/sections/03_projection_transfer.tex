@@ -67,7 +67,7 @@ with label
 \[
 c_e=u_i(a_i,a_{-i})-u_i(b_i,a_{-i}).
 \]
-Both directions are present because all ordered action pairs are included.  A $G$-invariant surrogate is specified by one potential $x_v$ for each orbit, with $\widehat u_i(a)=x_{[i,a]}$.
+Both directions are present because all ordered pairs of distinct actions are included.  A $G$-invariant surrogate is specified by one potential $x_v$ for each orbit, with $\widehat u_i(a)=x_{[i,a]}$.
 
 \begin{theorem}[Cycle characterization]
 \label{thm:cycle}
@@ -81,7 +81,7 @@ Let $\mathcal Z$ be the set of directed cycles of $\mathcal D_G(\Gamma)$, includ
 }
 \label{eq:cycle-characterization}
 \end{equation}
-At the optimum, shortest-path potentials for edge lengths $c_e+\delta_G$ define a nearest invariant surrogate.  Hence $\delta_G$ and a witness cycle can be computed in polynomial time by a maximum-mean-cycle algorithm.
+The maximum is defined as zero when $\mathcal Z$ is empty.  At the optimum, shortest-path potentials for edge lengths $c_e+\delta_G$ define a nearest invariant surrogate.  Hence $\delta_G$ and a witness cycle can be computed in polynomial time by maximum-cycle-mean and difference-constraint algorithms.
 \end{theorem}
 \begin{proof}
 A potential $x$ has strategic error at most $t$ exactly when
@@ -92,7 +92,7 @@ x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}\le c_e+t
 \]
 A system of difference constraints is feasible if and only if every directed cycle has nonnegative total length.  Thus feasibility is equivalent to
 $\sum_{e\in C}(c_e+t)\ge0$ for every cycle $C$, or
-$t\ge-|C|^{-1}\sum_{e\in C}c_e$.  Minimizing $t$ gives \eqref{eq:cycle-characterization}.  At the critical value there are no negative cycles, so shortest-path distances from an added source provide feasible potentials.  Karp's algorithm finds the extremal cycle mean in polynomial time \cite{karp1978cycle}.
+$t\ge-|C|^{-1}\sum_{e\in C}c_e$.  Minimizing $t\ge0$ gives \eqref{eq:cycle-characterization}, including the acyclic case.  At the critical value there are no negative cycles, so shortest-path distances from an added source provide feasible potentials.  Karp's algorithm finds the extremal cycle mean in polynomial time \cite{karp1978cycle}.
 \end{proof}
 
 The witness cycle has a useful interpretation: exact symmetry identifies several payoff coordinates, while unilateral incentives prescribe differences between them.  A nonzero sum around a cycle is an inconsistent set of prescriptions.  The most-negative average inconsistency is precisely the minimum uniform relaxation required to make all prescriptions integrable.
