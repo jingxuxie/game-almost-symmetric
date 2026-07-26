@@ -1,7 +1,6 @@
 \section{Strategic Distance and Projection}
 
-Let
-$\Gamma=(N,(A_i)_i,(u_i)_i)$ and
+Let $\Gamma=(N,(A_i)_i,(u_i)_i)$ and
 $\Gamma'=(N,(A_i)_i,(v_i)_i)$ be compatible finite games.  Write
 $r_i(a)=u_i(a)-v_i(a)$ and recall
 \[
@@ -10,14 +9,16 @@ $r_i(a)=u_i(a)-v_i(a)$ and recall
 \max_{i,a_{-i},a_i,b_i}
 |r_i(a_i,a_{-i})-r_i(b_i,a_{-i})|.
 \]
-For a fixed slice $(i,a_{-i})$, the largest absolute pairwise difference is the residual range:
-\begin{equation}
-\max_{a_i,b_i}|r_i(a_i,a_{-i})-r_i(b_i,a_{-i})|
-=
+For a fixed slice $(i,a_{-i})$, the pairwise maximum is the residual range:
+\begin{align}
+\max_{a_i,b_i}
+&|r_i(a_i,a_{-i})-r_i(b_i,a_{-i})|
+\nonumber\\
+&=
 \max_{a_i}r_i(a_i,a_{-i})-
 \min_{a_i}r_i(a_i,a_{-i}).
 \label{eq:supp-range}
-\end{equation}
+\end{align}
 
 \begin{lemma}[Quotient seminorm]
 \label{lem:supp-seminorm}
@@ -30,7 +31,7 @@ r_i(a_i,a_{-i})=c_i(a_{-i})
 for some functions $c_i$.  Hence it is a norm after quotienting by the nonstrategic subspace.
 \end{lemma}
 \begin{proof}
-Each ordered unilateral comparison defines a linear functional of the payoff residual, and $\devdist$ is the maximum absolute value of these functionals.  Symmetry, homogeneity, and the triangle inequality follow immediately.  Distance zero means that every residual slice is constant over the player's own action, which is exactly the displayed nonstrategic form.  A player--action relabeling bijectively permutes the comparison functionals, so it preserves the maximum.
+Each ordered unilateral comparison defines a linear functional of the payoff residual, and $\devdist$ is the maximum absolute value of these functionals.  Symmetry, homogeneity, and the triangle inequality follow immediately.  Distance zero means that every residual slice is constant over the player's own action, exactly the displayed nonstrategic form.  A player--action relabeling bijectively permutes the comparison functionals.
 \end{proof}
 
 The raw sup-norm satisfies
@@ -45,26 +46,30 @@ but there is no reverse inequality up to a universal constant: multiply any nonz
 \label{lem:supp-mixed}
 If $\devdist(\Gamma,\Gamma')\le\delta$, then for every player $i$, opponent mixture $\sigma_{-i}$, and own mixed strategies $p_i,q_i$,
 \begin{align*}
-\Big|&[u_i(p_i,\sigma_{-i})-u_i(q_i,\sigma_{-i})]\\
-&-[v_i(p_i,\sigma_{-i})-v_i(q_i,\sigma_{-i})]\Big|
+\Big|&u_i(p_i,\sigma_{-i})-u_i(q_i,\sigma_{-i})\\
+&-v_i(p_i,\sigma_{-i})+v_i(q_i,\sigma_{-i})\Big|
 \le\delta.
 \end{align*}
 \end{lemma}
 \begin{proof}
 For a pure opponent profile $a_{-i}$, all residuals
-$r_i(a_i,a_{-i})$ lie in an interval of width at most $\delta$.  The expectations under $p_i$ and $q_i$ are two convex combinations inside that interval, so their difference has magnitude at most $\delta$.  Averaging this difference over $\sigma_{-i}$ preserves the bound.
+$r_i(a_i,a_{-i})$ lie in an interval of width at most $\delta$.  The expectations under $p_i$ and $q_i$ are two convex combinations inside that interval, so their difference has magnitude at most $\delta$.  Averaging over $\sigma_{-i}$ preserves the bound.
 \end{proof}
 
 \subsection{Exactness of the Sparse Projection LP}
 
-Let $S$ generate the candidate group $G$.  The projection program has payoff variables $\widehat u_i(a)$, lower and upper residual variables $L_{i,a_{-i}},U_{i,a_{-i}}$, and $t\ge0$:
+Let $S$ generate $G$.  The projection program has payoff variables $\widehat u_i(a)$, residual bounds $L_{i,a_{-i}},U_{i,a_{-i}}$, and $t\ge0$:
 \begin{align}
-\min\quad&t\label{eq:supp-lp}\\
+\min\quad&t
+\label{eq:supp-lp}\\
 \text{s.t.}\quad
-&L_{i,a_{-i}}\le u_i(a)-\widehat u_i(a)\le U_{i,a_{-i}},\nonumber\\
+&L_{i,a_{-i}}
+\le u_i(a)-\widehat u_i(a),\nonumber\\
+&u_i(a)-\widehat u_i(a)
+\le U_{i,a_{-i}},\nonumber\\
 &U_{i,a_{-i}}-L_{i,a_{-i}}\le t,\nonumber\\
 &\widehat u_i(a)=\widehat u_{\pi_g(i)}(ga)
-\qquad(g\in S).\nonumber
+\quad(g\in S).\nonumber
 \end{align}
 
 \begin{theorem}[Projection LP]
@@ -76,20 +81,13 @@ The optimum of \eqref{eq:supp-lp} equals
 \min_{\widehat\Gamma\in\Fix(G)}
 \devdist(\Gamma,\widehat\Gamma),
 \]
-and the payoff variables of an optimum define a nearest invariant surrogate.
+and the payoff variables define a nearest invariant surrogate.
 \end{theorem}
 \begin{proof}
 Fix surrogate payoffs $\widehat u$.  In a slice $(i,a_{-i})$, the smallest interval containing all residuals has endpoints equal to their minimum and maximum.  By \eqref{eq:supp-range}, its width is exactly the slice contribution to strategic distance.  Therefore the smallest feasible $t$ for this surrogate is $\devdist(\Gamma,\widehat\Gamma)$.  Conversely, every feasible solution has every residual range at most $t$.
 
-Invariance under each generator implies invariance under every finite product of generators, and hence under $G$.  Conversely, every game in $\Fix(G)$ satisfies all generator equalities.  The program therefore minimizes precisely over $\Fix(G)$.
+Invariance under each generator implies invariance under every finite product and hence under $G$.  Conversely, every game in $\Fix(G)$ satisfies the generator equalities.  The program therefore minimizes precisely over $\Fix(G)$.
 \end{proof}
 
 If $P=n\prod_i|A_i|$ is the number of payoff entries and
-$Q=\sum_i\prod_{j\ne i}|A_j|$ the number of residual slices, the formulation uses $P+2Q+1$ variables and $2P+Q$ strategic inequalities, plus at most $|S|P$ raw generator equalities before duplicate removal.  Zero-sum, constant-sum, common-payoff, or other convex linear structure can be retained by adding equalities.  The resulting structured defect
-\[
-\delta_{G,\mathcal C}(\Gamma)
-=
-\min_{\widehat\Gamma\in\Fix(G)\cap\mathcal C}
-\devdist(\Gamma,\widehat\Gamma)
-\]
-can be larger than the unrestricted defect.
+$Q=\sum_i\prod_{j\ne i}|A_j|$ the number of slices, the formulation uses $P+2Q+1$ variables and $2P+Q$ strategic inequalities, plus sparse generator equalities.  Additional equalities preserve zero-sum, common-payoff, or other convex linear structure.
