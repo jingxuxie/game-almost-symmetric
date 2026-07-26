@@ -14,57 +14,57 @@ A minimizer is a nearest symmetric surrogate.  Zero defect means strategic equiv
 \end{definition}
 
 \paragraph{Sparse projection LP.}
-For each surrogate coordinate $\widehat u_i(a)$, each slice $(i,a_{-i})$, and $t\ge0$, introduce residual bounds $L_{i,a_{-i}},U_{i,a_{-i}}$ and solve
+For each surrogate coordinate $\widehat u_i(a)$, slice $(i,a_{-i})$, and $t\ge0$, introduce residual bounds $L_{i,a_{-i}},U_{i,a_{-i}}$ and solve
 \begin{align}
-\min\quad&t \label{eq:projection-lp}\
+\min\quad &t \label{eq:projection-lp}\\
 \text{s.t.}\quad
-&L_{i,a_{-i}}\le u_i(a)-\widehat u_i(a)\le U_{i,a_{-i}},\nonumber
-&U_{i,a_{-i}}-L_{i,a_{-i}}\le t,\nonumber
+&L_{i,a_{-i}}
+\le u_i(a)-\widehat u_i(a),\nonumber\\
+&u_i(a)-\widehat u_i(a)
+\le U_{i,a_{-i}},\nonumber\\
+&U_{i,a_{-i}}-L_{i,a_{-i}}\le t,\nonumber\\
 &\widehat u_i(a)=\widehat u_{\pi_g(i)}(ga)
-\quad(g\in S),\nonumber
+\quad(g\in S).\nonumber
 \end{align}
-where $S$ generates $G$.
+Here $S$ generates $G$.
 \begin{theorem}[Exact strategic projection]
 \label{thm:lp}
 The optimum of \eqref{eq:projection-lp} is $\delta_G(\Gamma)$, and the payoff variables define a nearest invariant surrogate.
 \end{theorem}
-For $P=n\prod_i|A_i|$ payoff entries and $Q=\sum_i\prod_{j\ne i}|A_j|$ residual slices, the LP has $P+2Q+1$ variables and $2P+Q$ strategic inequalities.  Extra linear constraints preserve classes such as zero-sum or common-payoff games; their corresponding defect is
-$\delta_{G,\mathcal C}=\min_{\Fix(G)\cap\mathcal C}\devdist(\Gamma,\widehat\Gamma)$.
+For $P=n\prod_i|A_i|$ payoff entries and
+$Q=\sum_i\prod_{j\ne i}|A_j|$ residual slices, the LP has $P+2Q+1$ variables and $2P+Q$ strategic inequalities.  Linear equalities can additionally preserve zero-sum or common-payoff structure.
 
 \paragraph{Critical cycles.}
-For the unrestricted projection, let vertices be payoff-coordinate orbits $[i,a]$.  Every ordered unilateral comparison $b_i\to a_i$ against $a_{-i}$ gives an edge
+For the unrestricted projection, vertices are payoff-coordinate orbits $[i,a]$.  An ordered comparison $b_i\to a_i$ against $a_{-i}$ gives
 \[
-[i,(b_i,a_{-i})]\to[i,(a_i,a_{-i})],
-\qquad
+[i,(b_i,a_{-i})]\longrightarrow[i,(a_i,a_{-i})]
+\]
+with label
+\[
 c_e=u_i(a_i,a_{-i})-u_i(b_i,a_{-i}).
 \]
 An invariant surrogate assigns one potential $x_v$ per orbit.
 \begin{theorem}[Cycle characterization]
 \label{thm:cycle}
-For the directed cycles $\mathcal Z$ of this orbit graph, including self-loops,
+For the directed cycles $\mathcal Z$ of this graph, including self-loops,
 \begin{equation}
 \boxed{
 \delta_G(\Gamma)
 =
 \max_{C\in\mathcal Z}
-\left(-\frac1{|C|}\sum_{e\in C}c_e\right)
+\left(-|C|^{-1}\sum_{e\in C}c_e\right)
 }
 \label{eq:cycle-characterization}
 \end{equation}
-with value zero if there is no cycle.  A critical cycle is a lower-bound certificate, and shortest-path potentials at edge lengths $c_e+\delta_G$ construct a matching surrogate.
+with value zero if there is no cycle.  A critical cycle is a lower-bound certificate, and shortest-path potentials construct a matching surrogate.
 \end{theorem}
-Indeed, error at most $t$ is equivalent, using reverse comparisons, to the difference constraints
-$x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}\le c_e+t$; feasibility is exactly the absence of a negative cycle.  Thus Karp's cycle-mean algorithm and shortest paths give a polynomial-time combinatorial solver \cite{karp1978cycle}.  A cycle records payoff-difference prescriptions that cannot telescope consistently after symmetry identification.
+Error at most $t$ is equivalent, using reverse comparisons, to
+$x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}\le c_e+t$.  Feasibility is exactly the absence of a negative cycle, so Karp's cycle-mean algorithm and shortest paths give a polynomial-time solver \cite{karp1978cycle}.
 
 \paragraph{Equilibrium preservation.}
-If $\devdist(\Gamma,\widehat\Gamma)\le\delta$, then the incentive difference between any two own mixed strategies against any opponent mixture changes by at most $\delta$: residuals in each opponent slice lie in an interval of width $\delta$.
+If $\devdist(\Gamma,\widehat\Gamma)\le\delta$, the incentive difference between any two own mixed strategies against any opponent mixture changes by at most $\delta$.
 \begin{theorem}[Equilibrium transfer]
 \label{thm:transfer}
 Every $\epsilon$-Nash equilibrium of $\widehat\Gamma$ is an $(\epsilon+\delta)$-Nash equilibrium of $\Gamma$.
 \end{theorem}
-Every exactly invariant finite game has an invariant Nash equilibrium \cite{tewolde2025game}; applying the theorem to a nearest surrogate gives:
-\begin{corollary}
-\label{cor:invariant-existence}
-Every finite game has a $G$-respecting $\delta_G(\Gamma)$-Nash equilibrium.
-\end{corollary}
-The coefficient is asymptotically tight: if one of $k$ cyclically identified actions has payoff one and the rest zero, then $\delta_G=1$, while the unique invariant strategy is uniform and has regret $1-1/k$.  Complete proofs and the certified witness-extraction procedure appear in the supplement.
+Every exactly invariant finite game has an invariant Nash equilibrium \cite{tewolde2025game}.  Thus every game has a $G$-respecting $\delta_G(\Gamma)$-Nash equilibrium.  The coefficient is tight asymptotically: one valuable action among $k$ cyclically identified actions gives defect one and invariant regret $1-1/k$.  Complete proofs appear in the supplement.
