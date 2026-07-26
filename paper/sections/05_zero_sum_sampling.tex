@@ -1,95 +1,45 @@
 \section{Zero-Sum and Statistical Certificates}
 
-The transfer theorem is equilibrium-agnostic, but two-player zero-sum games allow especially direct computation.  Let $A\in\mathbb R^{m\times n}$ be the row player's payoff matrix and $-A$ the column player's payoff.  Let $\mathcal Z$ denote the linear class of zero-sum games and define the structured defect
-\[
-\zsdef(\Gamma)=\delta_{G,\mathcal Z}(\Gamma).
-\]
-For strategies $x\in\Delta_m$ and $y\in\Delta_n$, define the saddle-point residual
-\begin{align}
-\Gap_A(x,y)
-&=
-\max_i (Ay)_i-\min_j(x^\top A)_j \nonumber\\
-&=\operatorname{Reg}_{\rm row}(x,y)
-+\operatorname{Reg}_{\rm col}(x,y).
+For a two-player zero-sum matrix $A$, let $\mathcal Z$ be the zero-sum subspace and define the structured defect $\zsdef=\delta_{G,\mathcal Z}$.  For $x\in\Delta_m,y\in\Delta_n$, the saddle gap
+\begin{equation}
+\Gap_A(x,y)=\max_i(Ay)_i-\min_j(x^\top A)_j
 \label{eq:saddle-gap}
-\end{align}
+\end{equation}
+is the sum of the two player regrets.
 
 \begin{corollary}[Transferred zero-sum certificate]
 \label{cor:zs-transfer}
-Let $\widehat\Gamma\in\Fix(G)\cap\mathcal Z$ satisfy
-$\devdist(\Gamma,\widehat\Gamma)\le\delta$, and let $(x,y)$ be a Nash equilibrium of $\widehat\Gamma$.  Then each player's regret in $\Gamma$ is at most $\delta$ and
-\[
-\Gap_A(x,y)\le2\delta.
-\]
-In particular, a nearest structured surrogate admits a $G$-respecting profile with saddle gap at most $2\zsdef(\Gamma)$.
+An equilibrium of a $G$-invariant zero-sum surrogate at strategic distance $\delta$ has each original-player regret at most $\delta$ and saddle gap at most $2\delta$.  In particular, a nearest structured surrogate gives gap at most $2\zsdef$.
 \end{corollary}
 
-One can also optimize the invariant profile directly in the original matrix game.  Consider
+A tighter a posteriori profile is obtained directly from
 \begin{align}
-\min_{x,y,\alpha,\beta}\quad &\alpha-\beta \label{eq:invariant-gap-lp}\\
+\min_{x,y,\alpha,\beta}\quad&\alpha-\beta \label{eq:invariant-gap-lp}\
 \text{s.t.}\quad
-&Ay\le\alpha\mathbf1,\qquad
-x^\top A\ge\beta\mathbf1^\top,\nonumber\\
-&x\in\Delta_m,\quad y\in\Delta_n,\quad (x,y)\text{ respects }G.\nonumber
+&Ay\le\alpha\mathbf1,\quad
+x^\top A\ge\beta\mathbf1^\top,\nonumber\
+&x\in\Delta_m,\ y\in\Delta_n,\ (x,y)\text{ respects }G.\nonumber
 \end{align}
-The final condition consists only of linear equalities between probabilities in the same action orbit.
+For fixed $(x,y)$, the objective is exactly \eqref{eq:saddle-gap}; hence the optimum is the best invariant saddle gap and is at most $2\zsdef$.  In an exactly invariant game, one strategy variable and one best-response constraint per relevant action orbit suffice.
 
-\begin{proposition}[Best invariant saddle gap]
-\label{prop:direct-gap}
-The optimum of \eqref{eq:invariant-gap-lp} equals
-$\min_{(x,y)\text{ respects }G}\Gap_A(x,y)$.  It is zero for an exactly $G$-invariant zero-sum game and is at most $2\zsdef(\Gamma)$ in general.
-\end{proposition}
-\begin{proof}
-For fixed $(x,y)$, the smallest feasible $\alpha$ is $\max_i(Ay)_i$ and the largest feasible $\beta$ is $\min_j(x^\top A)_j$, so the objective is exactly \eqref{eq:saddle-gap}.  Exact invariance gives an invariant equilibrium.  For an approximate game, apply Corollary~\ref{cor:zs-transfer} to an invariant equilibrium of a nearest structured surrogate.
-\end{proof}
-
-The LP can be expressed with one strategy variable per global action orbit.  If the matrix itself is exactly invariant, then $(Ay)_i$ is constant over every row-action orbit for invariant $y$, and $x^\top A$ is constant over every column-action orbit for invariant $x$.  Hence only one best-response constraint per orbit is needed.  This gives a quotient-size solver without changing the saddle gap.
-
-\subsection{Payoffs Estimated from Samples}
-
-Suppose the true game $\Gamma$ is unavailable and a payoff table $\widetilde\Gamma$ is estimated from data.  Distance to any fixed closed set is one-Lipschitz under a norm; the same statement holds for our quotient seminorm.
-
-\begin{proposition}[Stability of the defect]
-\label{prop:defect-stability}
-For every relabeling-invariant closed linear class $\mathcal C$,
+\paragraph{Estimated payoffs.}
+Distance to a fixed closed linear class is one-Lipschitz:
+\begin{equation}
+|\delta_{G,\mathcal C}(\Gamma)-\delta_{G,\mathcal C}(\widetilde\Gamma)|
+\le\devdist(\Gamma,\widetilde\Gamma).
+\label{eq:defect-stability}
+\end{equation}
+If $\widehat\Gamma$ is the nearest invariant surrogate of an estimate $\widetilde\Gamma$ with empirical defect $\widehat\delta$, transfer and the triangle inequality give
 \[
-\big|\delta_{G,\mathcal C}(\Gamma)
--
-\delta_{G,\mathcal C}(\widetilde\Gamma)\big|
+\operatorname{Reg}_i^\Gamma(\sigma)
 \le
-\devdist(\Gamma,\widetilde\Gamma).
+\epsilon+\widehat\delta+\devdist(\Gamma,\widetilde\Gamma).
 \]
-\end{proposition}
-
-Let $\widehat\Gamma$ be a nearest $G$-invariant surrogate of the estimated game in class $\mathcal C$, and write
-$\widehat\delta=\delta_{G,\mathcal C}(\widetilde\Gamma)$.  If $\sigma$ is an $\epsilon$-equilibrium of $\widehat\Gamma$, then the triangle inequality and Theorem~\ref{thm:transfer} give
+If $P$ payoff means are each estimated from $M$ independent observations in an interval of length one, Hoeffding and a union bound imply, with probability $1-\alpha$,
 \begin{equation}
 \operatorname{Reg}_i^\Gamma(\sigma)
 \le
-\epsilon+\widehat\delta
-+\devdist(\Gamma,\widetilde\Gamma).
-\label{eq:stat-general}
+\widehat\delta+2\sqrt{\frac{\log(2P/\alpha)}{2M}},
+\label{eq:sampling-certificate}
 \end{equation}
-If every estimated payoff entry is within $\xi$ of its true mean, then \eqref{eq:raw-upper} yields
-$\devdist(\Gamma,\widetilde\Gamma)\le2\xi$.
-
-\begin{corollary}[Finite-sample certificate]
-\label{cor:sampling}
-Assume each of the $P$ payoff means is estimated from at least $M$ independent observations contained in an interval of length one.  With probability at least $1-\alpha$,
-\[
-\xi_M
-=
-\sqrt{\frac{\log(2P/\alpha)}{2M}}
-\]
-uniformly bounds all entrywise errors.  Therefore an exact equilibrium of the projected estimate has true per-player regret at most
-\[
-\widehat\delta+2\xi_M.
-\]
-In a two-player zero-sum game its true saddle gap is at most
-$2\widehat\delta+4\xi_M$.
-\end{corollary}
-\begin{proof}
-Apply Hoeffding's inequality to each payoff entry and take a union bound \cite{hoeffding1963probability}; then use \eqref{eq:stat-general}.  The zero-sum statement sums the two player regrets.
-\end{proof}
-
-The bound is distribution-free and intentionally conservative.  Tighter empirical-Bernstein, likelihood-region, or structure-aware confidence sets can replace the entrywise Hoeffding term without changing the projection-and-transfer argument.
+for an exact equilibrium of the projected estimate; the zero-sum saddle gap is at most twice this quantity.  Proofs and variance-adaptive extensions are discussed in the supplement.
