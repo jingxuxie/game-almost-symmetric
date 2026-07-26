@@ -36,7 +36,7 @@ jobs:
   paper:
     name: Reproduce experiments and build PDFs
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 75
     needs: tests
 
     steps:
@@ -76,8 +76,12 @@ jobs:
             texlive-fonts-extra \
             texlive-plain-generic \
             texlive-science
-      - name: Reproduce a deterministic smoke sweep
-        run: PYTHONPATH=src python -m experiments.run_all --quick
+      - name: Reproduce the full deterministic experiment sweep
+        run: |
+          PYTHONPATH=src python -m experiments.run_all \
+            --seed 17 \
+            --replicates 20 \
+            --sampling-replicates 40
       - name: Build paper, supplement, and checklist
         run: make -C paper
       - name: Check page budget, fonts, metadata, and logs
@@ -96,9 +100,6 @@ jobs:
             paper/*.aux
             paper/*.bbl
             experiments/results/environment.txt
+            experiments/results/*.csv
             experiments/results/summary.json
-            experiments/results/reynolds_tightness.csv
-            experiments/results/correlated_*.csv
-            experiments/figures/reynolds_tightness.pdf
-            experiments/figures/correlated_*.pdf
-            experiments/figures/role_assignment_correlation.pdf
+            experiments/figures/*.pdf
