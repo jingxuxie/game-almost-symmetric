@@ -16,3 +16,5 @@ paper/*.pdf
 paper/*.toc
 _renders/
 experiments/figures/
+experiments/results/calibration.csv
+experiments/results/sampling.csv
