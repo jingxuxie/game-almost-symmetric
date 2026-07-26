@@ -6,7 +6,7 @@ All studies use explicit games, SciPy/HiGHS, fixed seeds, and one CPU core.  The
 We lift random quotient games by duplicating actions and add strategic Gaussian perturbations.  In zero-sum games, Figure~\ref{fig:results}(a) compares the saddle gap of an equilibrium of the nearest invariant zero-sum surrogate with its certificate $2\zsdef$; every profile is covered up to solver tolerance, while the directly optimized invariant gap is often smaller.  In independently generated general-sum games, Figure~\ref{fig:results}(b) evaluates a welfare-maximizing invariant CE of the projected game.  Its original-game CE violation remains below $\delta_G$.  Directly optimizing welfare over invariant $\delta_G$-CE can improve selection while retaining the same incentive budget.
 
 \paragraph{Correlation and compression.}
-Figure~\ref{fig:results}(c) verifies Proposition~\ref{prop:role-correlation}: independent invariant role choices have welfare $n!/n^n$, whereas an invariant CE retains welfare one.  The CE LP matches the analytic construction for every explicitly enumerated instance through $n=5$.  Figure~\ref{fig:results}(d) shows a nested group hierarchy: increasing the within-block symmetry reduces the zero-sum representation from 48 action variables to 6 while increasing the structured defect, exposing the predicted compression--fidelity frontier.
+Figure~\ref{fig:results}(c) verifies Proposition~\ref{prop:role-correlation}: independent invariant role choices have welfare $n!/n^n$, whereas an invariant CE retains welfare one.  The CE LP matches the analytic construction for every explicitly enumerated instance through $n=5$.  Figure~\ref{fig:results}(d) shows a nested group hierarchy: increasing within-block symmetry reduces the zero-sum representation from 48 action variables to 6 while increasing the structured defect, exposing the predicted compression--fidelity frontier.
 
 \begin{figure*}[t]
 \centering
@@ -33,11 +33,32 @@ Figure~\ref{fig:results}(c) verifies Proposition~\ref{prop:role-correlation}: in
 \includegraphics[width=\linewidth]{../experiments/figures/compression_frontier.pdf}\\
 {\small (d) Compression--fidelity frontier.}
 \end{minipage}
-\caption{Main empirical results.  Transferred zero-sum and correlated solutions obey their strategic-distance certificates; correlation removes symmetric role collisions; and larger groups trade incentive fidelity for a smaller orbit representation.  Figure legends abbreviate the structured zero-sum defect $\zsdef$ as $\delta_G$.}
+\caption{Transferred zero-sum and correlated solutions obey their strategic-distance certificates; correlation removes symmetric role collisions; and larger groups trade incentive fidelity for a smaller orbit representation.  Figure legends abbreviate the structured zero-sum defect $\zsdef$ as $\delta_G$.}
 \label{fig:results}
 \end{figure*}
 
-\paragraph{Additional diagnostics.}
-The supplement reports four further checks.  First, arbitrarily large opponent-dependent payoff shifts increase raw payoff asymmetry while leaving strategic defect numerically zero.  Second, the Reynolds sharpness family exactly matches $2-2/d$ and reaches $1.95$ at $d=40$.  Third, profile-orbit CE variables remain at nine while the full joint distribution grows to 1,296 variables in the largest exact instance.  Fourth, orbit-reduced zero-sum solving separates increasingly from the full LP through 512 actions per player, and the Hoeffding certificate covers every sampled-payoff trial while contracting at the predicted $M^{-1/2}$ rate.
+\paragraph{Why incentive distance matters.}
+We add opponent-action-dependent payoff terms of increasing magnitude to an exactly symmetric game.  These changes preserve every unilateral incentive.  Figure~\ref{fig:diagnostic-sharpness}(a) shows that raw payoff distance grows linearly while strategic defect remains at numerical zero, confirming that payoff-level approximate symmetry can be arbitrarily pessimistic.
 
-The test suite audits empty and self-loop incentive graphs, parallel-edge compression, closed critical witnesses, player-swapping symmetries, CE/CCE transfer, and invariant profile orbits.  Across 100 generated games, the cycle value, witness mean, reconstructed-surrogate distance, and independent LP objective agree to numerical tolerance.
+\paragraph{Sharpness of group averaging.}
+The explicit zero-sum family in Proposition~\ref{prop:reynolds-tight} is evaluated independently with the structured LP, cycle solver, and direct Reynolds distance.  Figure~\ref{fig:diagnostic-sharpness}(b) matches $2-2/d$ exactly and reaches $1.95$ at $d=40$.  Randomly perturbed games are much less adversarial, but the construction shows that the universal factor cannot be improved.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/nonstrategic_separation.pdf}\\
+{\small (a) Strategic versus raw asymmetry.}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/reynolds_tightness.pdf}\\
+{\small (b) Tightness of group averaging.}
+\end{minipage}
+\caption{Additional theorem diagnostics.  MPD ignores strategically irrelevant payoff shifts, and the averaging construction approaches the proved factor two.}
+\label{fig:diagnostic-sharpness}
+\end{figure*}
+
+\paragraph{Further checks.}
+The supplement reports CE profile-orbit compression, zero-sum runtime scaling, finite-sample coverage, and heterogeneous-role welfare diagnostics.  The test suite audits empty and self-loop incentive graphs, parallel-edge compression, closed critical witnesses, player swaps, CE/CCE transfer, and invariant profile orbits.  Across 100 generated games, the cycle value, witness mean, reconstructed-surrogate distance, and independent LP objective agree to numerical tolerance.
