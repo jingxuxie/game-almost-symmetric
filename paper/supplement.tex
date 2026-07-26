@@ -1,0 +1,314 @@
+\documentclass[letterpaper]{article}
+\usepackage[submission]{../AAAI_AuthorKit27/aaai2027}
+\usepackage[hyphens]{url}
+\usepackage{graphicx}
+\urlstyle{rm}
+\def\UrlFont{\rm}
+\usepackage{natbib}
+\usepackage{caption}
+\frenchspacing
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+
+\pdfinfo{/TemplateVersion (2027.1)}
+\setcounter{secnumdepth}{2}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newcommand{\devdist}{d_{\mathrm{dev}}}
+\newcommand{\Fix}{\operatorname{Fix}}
+\newcommand{\Gap}{\operatorname{Gap}}
+
+\title{Supplementary Material: Almost Symmetric Games}
+\author{Anonymous Submission}
+\affiliations{}
+
+\begin{document}
+\maketitle
+
+\section{Notation and Elementary Properties}
+
+Let $\Gamma=(N,(A_i)_i,(u_i)_i)$ and $\Gamma'=(N,(A_i)_i,(v_i)_i)$ be compatible finite games.  Define the residual $r_i(a)=u_i(a)-v_i(a)$ and
+\[
+\devdist(\Gamma,\Gamma')
+=
+\max_{i,a_{-i},a_i,b_i}
+\left|r_i(a_i,a_{-i})-r_i(b_i,a_{-i})\right|.
+\]
+For a fixed slice $(i,a_{-i})$, the maximum absolute pairwise difference equals the range of the residual values:
+\[
+\max_{a_i,b_i}|r_i(a_i,a_{-i})-r_i(b_i,a_{-i})|
+=
+\max_{a_i}r_i(a_i,a_{-i})-\min_{a_i}r_i(a_i,a_{-i}).
+\]
+This identity gives the compact LP formulation in the main paper.
+
+\begin{lemma}[Relabeling invariance]
+For every compatible pair of games and every player--action relabeling $g$,
+\[
+\devdist(g\Gamma,g\Gamma')=\devdist(\Gamma,\Gamma').
+\]
+\end{lemma}
+\begin{proof}
+The relabeling bijectively permutes the set of tuples $(i,a_{-i},a_i,b_i)$ over which the maximum is taken and preserves the corresponding residual difference.
+\end{proof}
+
+\begin{lemma}[Mixed extension]
+If $\devdist(\Gamma,\Gamma')\le\delta$, then for every player $i$, every opponent mixture $\sigma_{-i}$, and every pair of own mixed strategies $p_i,q_i$,
+\begin{align*}
+\Big|&[u_i(p_i,\sigma_{-i})-u_i(q_i,\sigma_{-i})]\\
+&-[v_i(p_i,\sigma_{-i})-v_i(q_i,\sigma_{-i})]\Big|
+\le\delta.
+\end{align*}
+\end{lemma}
+\begin{proof}
+Fix a pure opponent profile $a_{-i}$.  The residual values
+$\{r_i(a_i,a_{-i}):a_i\in A_i\}$ lie in an interval of width at most $\delta$.  Both $\sum_{a_i}p_i(a_i)r_i(a_i,a_{-i})$ and
+$\sum_{a_i}q_i(a_i)r_i(a_i,a_{-i})$ are convex combinations inside this interval, so their difference has magnitude at most $\delta$.  Averaging this difference with weights $\sigma_{-i}(a_{-i})$ preserves the bound.
+\end{proof}
+
+\section{Exactness of the Projection LP}
+
+Let $S$ generate the candidate finite group $G$.  The LP has surrogate payoff variables $\widehat u_i(a)$, residual bounds $L_{i,a_{-i}}$ and $U_{i,a_{-i}}$, and objective variable $t$:
+\begin{align*}
+\min\quad &t\\
+\text{s.t.}\quad
+&L_{i,a_{-i}}\le u_i(a)-\widehat u_i(a)\le U_{i,a_{-i}}
+&&\forall i,a,\\
+&U_{i,a_{-i}}-L_{i,a_{-i}}\le t
+&&\forall i,a_{-i},\\
+&\widehat u_i(a)=\widehat u_{\pi_g(i)}(ga)
+&&\forall g\in S,i,a,\\
+&t\ge0.
+\end{align*}
+
+\begin{theorem}[Projection LP]
+The LP optimum equals
+\[
+\delta_G(\Gamma)
+=
+\min_{\widehat\Gamma\in\Fix(G)}
+\devdist(\Gamma,\widehat\Gamma).
+\]
+\end{theorem}
+\begin{proof}
+Fix any exactly invariant surrogate $\widehat\Gamma$.  For a slice $(i,a_{-i})$, the smallest interval containing all residual values has endpoints equal to their minimum and maximum; its width is the slice contribution to $\devdist$.  Therefore the smallest feasible $t$ associated with this surrogate is exactly $\devdist(\Gamma,\widehat\Gamma)$.  Conversely, every feasible solution has residual range at most $t$ in every slice, so its strategic distance is at most $t$.
+
+It remains to check the symmetry constraints.  Invariance under all generators implies invariance under every finite product of generators, hence under $G$.  Conversely, every member of $\Fix(G)$ satisfies each generator equality.  Minimizing over the payoff variables therefore minimizes strategic distance over $\Fix(G)$.
+\end{proof}
+
+Let
+$P=n\prod_i|A_i|$ and
+$Q=\sum_i\prod_{j\ne i}|A_j|$.
+The implementation uses $P+2Q+1$ variables, $2P+Q$ strategic inequalities, and at most $|S|P$ raw generator equalities before duplicate removal.  Optional zero-sum, constant-sum, or common-payoff constraints are linear and do not alter polynomial solvability in the explicit table size.
+
+\section{Cycle Characterization}
+
+We provide the full graph construction and the difference-constraint argument.  Let $V$ contain one vertex for each orbit of payoff coordinates $(i,a)$ under $G$.  Write $[i,a]\in V$ for the orbit of coordinate $(i,a)$.  For every player $i$, opponent profile $a_{-i}$, and ordered pair of own actions $(b_i,a_i)$, insert an edge
+\[
+e:[i,(b_i,a_{-i})]\longrightarrow[i,(a_i,a_{-i})]
+\]
+with label
+\[
+c_e=u_i(a_i,a_{-i})-u_i(b_i,a_{-i}).
+\]
+The reverse ordered comparison is also present and has label $-c_e$ before orbit identifications.  Parallel edges are permitted.  Equivalently, for feasibility purposes, parallel upper-bound edges with the same endpoints may be replaced by the smallest label.
+
+An invariant surrogate assigns one potential $x_v$ to each vertex, with
+$\widehat u_i(a)=x_{[i,a]}$.  Its error on comparison $e$ is
+\[
+\left|x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}-c_e\right|.
+\]
+
+\begin{theorem}[Maximum-mean-cycle formula]
+Let $\mathcal C$ be the set of directed cycles, including self-loops, in the orbit graph.  Then
+\[
+\delta_G(\Gamma)
+=
+\max_{C\in\mathcal C}
+\left(-\frac{1}{|C|}\sum_{e\in C}c_e\right).
+\]
+A critical cycle is a certificate that no smaller strategic error is possible.
+\end{theorem}
+\begin{proof}
+A potential has error at most $t$ if and only if, for every edge,
+\begin{equation}
+-t\le x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}-c_e\le t.
+\label{eq:two-sided}
+\end{equation}
+The upper half of \eqref{eq:two-sided} is
+\[
+x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}\le c_e+t.
+\]
+The lower half is the upper constraint for the reverse ordered comparison.  Hence the complete two-sided system is equivalent to a system of directed difference constraints with edge lengths $\ell_e(t)=c_e+t$.
+
+A finite system $x_v-x_u\le\ell_{uv}$ is feasible if and only if its graph has no negative directed cycle.  Necessity follows by summing the inequalities around a cycle, where the potentials telescope.  For sufficiency, add a source with a zero-length edge to every vertex and let $x_v$ be the shortest-path distance from the source; absence of negative cycles makes the distances finite and the triangle inequality gives every difference constraint.
+
+Therefore a value $t$ is feasible exactly when
+\[
+0\le\sum_{e\in C}(c_e+t)
+=
+\sum_{e\in C}c_e+|C|t
+\quad\forall C.
+\]
+Equivalently,
+\[
+t\ge-rac{1}{|C|}\sum_{e\in C}c_e
+\quad\forall C.
+\]
+The smallest feasible $t$ is the maximum right-hand side.  Because every original comparison and its reverse are present, the maximum is nonnegative; a zero-length trivial consistency case is handled by taking the maximum with zero in an implementation.  At the optimum, shortest-path potentials construct a nearest invariant surrogate.
+\end{proof}
+
+Karp's dynamic program computes a minimum or maximum cycle mean in time polynomial in $|V|+|E|$ \cite{karp1978cycle}.  We apply it to weights $-c_e$.  The implementation also reconstructs one critical cycle and obtains potentials with Bellman--Ford after shifting every edge by the computed defect.  A randomized regression test compares this solver against the independent LP implementation on 100 generated instances.
+
+\section{Invariant Equilibrium Existence}
+
+For completeness, we prove that an exactly invariant finite game has an invariant Nash equilibrium.  Let
+$X=\prod_i\Delta(A_i)$ be the mixed-profile space and
+$X^G=\{\sigma:g\sigma=\sigma\ \forall g\in G\}$ its fixed set.  Averaging any profile over $G$ shows that $X^G$ is nonempty; it is also compact and convex.
+
+For precision parameter $\lambda>0$, define the logit response map
+\[
+F_i^\lambda(\sigma)(a_i)
+=
+\frac{\exp(\lambda u_i(a_i,\sigma_{-i}))}
+{\sum_{b_i\in A_i}\exp(\lambda u_i(b_i,\sigma_{-i}))}.
+\]
+
+\begin{lemma}
+If $\Gamma$ is exactly $G$-invariant, then $F^\lambda(g\sigma)=gF^\lambda(\sigma)$ for every $g\in G$.
+\end{lemma}
+\begin{proof}
+Exact invariance maps the expected payoff of action $a_i$ against $\sigma_{-i}$ to the expected payoff of the relabeled action against the relabeled opponent profile.  The softmax denominator is merely permuted, which gives equivariance coordinate by coordinate.
+\end{proof}
+
+\begin{theorem}[Invariant Nash equilibrium]
+Every finite exactly $G$-invariant game has a Nash equilibrium in $X^G$.
+\end{theorem}
+\begin{proof}
+Equivariance implies that $F^\lambda$ maps $X^G$ into itself.  Brouwer's theorem therefore gives a fixed point $\sigma^\lambda\in X^G$.  Compactness gives a convergent subsequence $\sigma^{\lambda_k}\to\sigma^*$ as $\lambda_k\to\infty$, and closedness gives $\sigma^*\in X^G$.
+
+Suppose an action $a_i$ in the support of $\sigma_i^*$ is strictly worse than some action $b_i$ against $\sigma_{-i}^*$ by margin $\gamma>0$.  By continuity, the same comparison has margin at least $\gamma/2$ along the subsequence for all large $k$.  At a logit fixed point,
+\[
+\frac{\sigma_i^{\lambda_k}(a_i)}
+{\sigma_i^{\lambda_k}(b_i)}
+\le e^{-\lambda_k\gamma/2}\to0,
+\]
+contradicting positive limiting mass on $a_i$.  Every supported action is therefore a best response, so $\sigma^*$ is a Nash equilibrium.
+\end{proof}
+
+Combining this theorem with equilibrium transfer yields a $G$-respecting $\delta_G(\Gamma)$-Nash equilibrium in every finite game.
+
+\section{Tightness of the Transfer Constant}
+
+Fix $k\ge2$.  Player 1 has actions $1,\ldots,k$ and player 2 has two irrelevant actions.  Player 1's payoff is one exactly when action 1 is chosen and zero otherwise; player 2's payoff is always zero.  Let $G_k$ cycle player 1's actions.
+
+Every invariant surrogate gives player 1 equal payoff for all $k$ actions at each fixed action of player 2.  The original difference between action 1 and every other action is one, so strategic distance to any invariant surrogate is at least one.  The all-zero surrogate attains one, hence $\delta_{G_k}=1$.  Every invariant strategy of player 1 is uniform.  Its payoff is $1/k$, whereas deviating to action 1 gives one, so its regret is $1-1/k$.  The ratio to the defect tends to one.  Thus no universal transfer theorem can replace the additive coefficient one by a smaller constant.
+
+\section{Group Averaging}
+
+Define the Reynolds projection
+\[
+\mathcal P_G\Gamma=|G|^{-1}\sum_{g\in G}g\Gamma
+\]
+and direct orbit discrepancy
+$\eta_G(\Gamma)=\max_{g\in G}\devdist(\Gamma,g\Gamma)$.
+
+\begin{theorem}
+\[
+\delta_G(\Gamma)
+\le\devdist(\Gamma,\mathcal P_G\Gamma)
+\le\eta_G(\Gamma)
+\le2\delta_G(\Gamma).
+\]
+\end{theorem}
+\begin{proof}
+The averaged game is invariant, giving the first inequality.  Convexity of the seminorm gives
+\[
+\devdist(\Gamma,\mathcal P_G\Gamma)
+\le |G|^{-1}\sum_g\devdist(\Gamma,g\Gamma)
+\le\eta_G(\Gamma).
+\]
+For any invariant surrogate $\widehat\Gamma$ and any $g$,
+\begin{align*}
+\devdist(\Gamma,g\Gamma)
+&\le\devdist(\Gamma,\widehat\Gamma)
++\devdist(\widehat\Gamma,g\Gamma)\\
+&=\devdist(\Gamma,\widehat\Gamma)
++\devdist(g\widehat\Gamma,g\Gamma)\\
+&=2\devdist(\Gamma,\widehat\Gamma).
+\end{align*}
+Minimize over invariant surrogates and maximize over $g$.
+\end{proof}
+
+The group average can be computed without enumerating the group: each payoff-coordinate orbit receives its arithmetic mean.  Generator-induced union--find therefore computes the projection in near-linear time in the number of enumerated generator edges.
+
+\section{Zero-Sum Programs}
+
+Let $A$ be a row payoff matrix and $-A$ the column payoff.  For strategies $(x,y)$ define
+\[
+\Gap_A(x,y)=\max_i(Ay)_i-\min_j(x^\top A)_j.
+\]
+Writing $p=x^\top Ay$, the row regret is $\max_i(Ay)_i-p$, the column regret is $p-\min_j(x^\top A)_j$, and their sum is $\Gap_A(x,y)$.
+
+The invariant-gap program is
+\begin{align*}
+\min_{x,y,\alpha,\beta}\quad &\alpha-\beta\\
+\text{s.t.}\quad
+&Ay\le\alpha\mathbf1,\qquad x^\top A\ge\beta\mathbf1^\top,\\
+&x\in\Delta_m,\qquad y\in\Delta_n,\\
+&(x,y)\text{ is }G\text{-respecting}.
+\end{align*}
+For fixed $(x,y)$, the smallest feasible $\alpha$ is $\max_i(Ay)_i$ and the largest feasible $\beta$ is $\min_j(x^\top A)_j$.  Hence the optimum is exactly the minimum saddle gap over invariant profiles.
+
+If $A$ is exactly invariant and $y$ is invariant, row actions in the same orbit have identical expected payoffs; the analogous statement holds for columns.  Thus one best-response constraint per action orbit is sufficient.  Strategy probabilities can likewise be represented by one variable per global action orbit, with simplex equations weighted by orbit multiplicity.  This is the quotient LP implemented in the repository.
+
+For approximate zero-sum games, projection is constrained to the intersection of the fixed subspace and the zero-sum subspace.  If its structured defect is $\delta_G^{\mathrm{zs}}$, an invariant equilibrium of the projected matrix has each original-player regret at most $\delta_G^{\mathrm{zs}}$ and total saddle gap at most $2\delta_G^{\mathrm{zs}}$.  The direct invariant-gap LP can only improve this a priori guarantee.
+
+\section{Statistical Stability}
+
+Let $S=\Fix(G)\cap\mathcal C$ for a closed linear class $\mathcal C$, and define
+$d(\Gamma,S)=\inf_{H\in S}\devdist(\Gamma,H)$.
+
+\begin{lemma}[Distance-to-set stability]
+For compatible games $\Gamma$ and $\widetilde\Gamma$,
+\[
+|d(\Gamma,S)-d(\widetilde\Gamma,S)|
+\le\devdist(\Gamma,\widetilde\Gamma).
+\]
+\end{lemma}
+\begin{proof}
+For every $H\in S$, the triangle inequality gives
+$d(\Gamma,S)\le\devdist(\Gamma,H)
+\le\devdist(\Gamma,\widetilde\Gamma)+\devdist(\widetilde\Gamma,H)$.
+Take the infimum over $H$ and then swap the games for the reverse inequality.
+\end{proof}
+
+Let $\widehat\Gamma$ be a nearest invariant surrogate of an estimate $\widetilde\Gamma$, with empirical defect $\widehat\delta$.  If $\sigma$ is an $\epsilon$-equilibrium of $\widehat\Gamma$, then
+\[
+\devdist(\Gamma,\widehat\Gamma)
+\le\devdist(\Gamma,\widetilde\Gamma)+\widehat\delta,
+\]
+so equilibrium transfer yields
+\[
+\operatorname{Reg}_i^\Gamma(\sigma)
+\le\epsilon+\widehat\delta+\devdist(\Gamma,\widetilde\Gamma).
+\]
+If every payoff estimate has error at most $\xi$, then
+$\devdist(\Gamma,\widetilde\Gamma)\le2\xi$.  For $P$ bounded payoff means, each estimated from $M$ independent observations in $[0,1]$, Hoeffding's inequality and a union bound give
+\[
+\xi=\sqrt{\frac{\log(2P/\alpha)}{2M}}
+\]
+with probability at least $1-\alpha$ \cite{hoeffding1963probability}.  This proves the finite-sample bounds in the main paper.
+
+\section{Additional Experimental Details}
+
+The principal synthetic family begins with a quotient matrix $B\in\mathbb R^{q\times q}$ and replaces every quotient action by $d$ copies.  The planted group independently permutes copies within each quotient block.  Perturbations are then added in four forms: independent strategic noise, opponent-dependent nonstrategic shifts, structured within-block heterogeneity, and Bernoulli payoff observations.  This design gives known exact symmetries before perturbation while allowing the symmetry defect to vary continuously.
+
+The role-assignment family is a small common-payoff game in which players must occupy complementary roles.  A heterogeneity parameter adds player--role preferences that break exact interchangeability.  We report strategic defect, regret of projected invariant profiles, and welfare.  The family is not used to claim a welfare theorem; it demonstrates why incentive and welfare preservation must be distinguished.
+
+Runtime results use exactly lifted zero-sum games so that the full and quotient programs solve the same strategic problem.  Each timing is a median over repeated HiGHS solves after a warm-up.  At 256 actions per player, the committed run reports an approximately $8.5\times$ speedup.  Since absolute times depend on hardware and solver version, the experiment is intended to validate scaling with orbit compression rather than establish a universal wall-clock constant.
+
+\bibliography{references}
+\end{document}
