@@ -1,5 +1,11 @@
 """Almost symmetric games: projections, witnesses, and equilibrium certificates."""
 
+from .correlated import (
+    CorrelatedSolution,
+    correlated_equilibrium_violations,
+    is_invariant_distribution,
+    solve_correlated_equilibrium,
+)
 from .cycle import (
     CycleProjectionResult,
     IncentiveEdge,
@@ -24,6 +30,7 @@ from .symmetry import (
     is_exact_symmetry,
     is_invariant_game,
     payoff_coordinate_orbit_labels,
+    profile_orbit_labels,
     reynolds_symmetrize,
 )
 from .zero_sum import (
@@ -38,6 +45,7 @@ __all__ = [
     "Relabeling",
     "ProjectionResult",
     "CycleProjectionResult",
+    "CorrelatedSolution",
     "IncentiveEdge",
     "ZeroSumSolution",
     "add_nonstrategic_component",
@@ -49,7 +57,11 @@ __all__ = [
     "project_strategic",
     "project_strategic_cycle",
     "build_incentive_graph",
+    "correlated_equilibrium_violations",
+    "is_invariant_distribution",
+    "solve_correlated_equilibrium",
     "action_orbit_labels",
+    "profile_orbit_labels",
     "payoff_coordinate_orbit_labels",
     "apply_relabeling",
     "cyclic_action_generator",
