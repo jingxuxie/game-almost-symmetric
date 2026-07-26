@@ -23,7 +23,7 @@ Let $\mathcal C$ be the directed cycles of the orbit graph, including self-loops
 \delta_G(\Gamma)
 =
 \max_{C\in\mathcal C}
-\left(-\frac{1}{|C|}\sum_{e\in C}c_e\right).
+\left(-|C|^{-1}\sum_{e\in C}c_e\right).
 \label{eq:supp-cycle}
 \end{equation}
 At this value, difference-constraint potentials construct a nearest invariant surrogate, while a maximizing cycle certifies that no smaller error is possible.
@@ -39,7 +39,8 @@ x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}-c_e
 \end{equation}
 for every ordered comparison.  The upper inequality is
 \[
-x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}\le c_e+t.
+x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}
+\le c_e+t.
 \]
 The lower inequality is the upper inequality for the reverse comparison.  Thus \eqref{eq:supp-two-sided} is equivalent to a directed system of difference constraints with edge length $c_e+t$.
 
@@ -48,12 +49,12 @@ Such a system is feasible iff every directed cycle has nonnegative total length.
 0\le\sum_{e\in C}(c_e+t)
 =
 \sum_{e\in C}c_e+|C|t
-\qquad\forall C,
+\qquad\text{for every }C,
 \]
 or equivalently
 \[
-t\ge-rac1{|C|}\sum_{e\in C}c_e
-\qquad\forall C.
+t\ge-|C|^{-1}\sum_{e\in C}c_e
+\qquad\text{for every }C.
 \]
 Minimizing over $t\ge0$ proves \eqref{eq:supp-cycle}.  At the critical value, shortest-path distances for lengths $c_e+\delta_G$ give the required orbit potentials.
 \end{proof}
@@ -62,14 +63,14 @@ Minimizing over $t\ge0$ proves \eqref{eq:supp-cycle}.  At the critical value, sh
 
 Karp's dynamic program computes the maximum cycle mean of weights $w_e=-c_e$ in polynomial time \cite{karp1978cycle}.  A predecessor chain in the value table need not itself be a critical cycle, so the implementation uses a separate tight-edge argument.
 
-Let $\lambda=\delta_G$ and define reduced weights $w'_e=w_e-\lambda$.  Every directed cycle has reduced total weight at most zero, and at least one critical cycle has total weight zero whenever the graph contains a positive optimum.  Add a source with zero-weight edges to every vertex and define $h_v$ as the maximum reduced weight of a directed walk from the source to $v$.  Because there is no positive cycle, these maxima are finite and satisfy
+Let $\lambda=\delta_G$ and define reduced weights $w'_e=w_e-\lambda$.  Every directed cycle has reduced total weight at most zero, and at least one critical cycle has total weight zero whenever the optimum is positive.  Add a source with zero-weight edges to every vertex and define $h_v$ as the maximum reduced weight of a directed walk from the source to $v$.  Because there is no positive cycle, these maxima are finite and satisfy
 \begin{equation}
 h_{\mathrm{head}(e)}
 \ge
 h_{\mathrm{tail}(e)}+w'_e.
 \label{eq:supp-maxplus}
 \end{equation}
-Call an edge tight when equality holds.  The slack in \eqref{eq:supp-maxplus} is nonnegative.  Around a zero-weight critical cycle, the potential differences telescope and the edge weights sum to zero, so the slacks sum to zero.  Every edge on that critical cycle is therefore tight.  A directed-cycle search in the tight-edge subgraph returns a checkable witness whose mean is exactly $\lambda$.  The code then verifies both closure and witness mean numerically.
+Call an edge tight when equality holds.  The slack in \eqref{eq:supp-maxplus} is nonnegative.  Around a zero-weight critical cycle, potential differences telescope and edge weights sum to zero, so all slacks on the cycle are zero.  A directed-cycle search in the tight-edge subgraph therefore returns a checkable witness whose mean is exactly $\lambda$.  The code verifies both closure and witness mean numerically.
 
 \subsection{Worked Two-Orbit Example}
 
@@ -81,7 +82,7 @@ $d=x_V-x_U$, the two errors are
 \qquad\text{and}\qquad
 |3-d|.
 \]
-Their minimax value is one, attained at $d=2$.  The two-edge cycle has mean label $(1-3)/2=-1$, and \eqref{eq:supp-cycle} gives the same defect.  The certificate identifies the source of inconsistency: after the symmetry coordinates are merged into only $U$ and $V$, one context asks their potential difference to be near $1$, while another asks it to be near $3$.
+Their minimax value is one, attained at $d=2$.  The two-edge cycle has mean label $(1-3)/2=-1$, and \eqref{eq:supp-cycle} gives the same defect.  The certificate identifies the inconsistency: after symmetry coordinates are merged into only $U$ and $V$, one context asks their potential difference to be near $1$, while another asks it to be near $3$.
 
 \subsection{Cheap Screening Bounds}
 
