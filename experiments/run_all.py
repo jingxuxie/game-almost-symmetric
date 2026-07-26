@@ -14,6 +14,12 @@ import json
 import numpy as np
 
 from .common import FIGURES, RESULTS
+from .correlated_studies import (
+    make_correlated_figures,
+    run_correlated_calibration,
+    run_correlated_runtime,
+    run_role_assignment_correlation,
+)
 from .plotting import make_figures, make_overview_figure
 from .sharpness import (
     make_reynolds_tightness_figure,
@@ -52,6 +58,8 @@ def main() -> None:
         else args.sampling_replicates
     )
     runtime_repetitions = 2 if args.quick else 7
+    correlated_runtime_repetitions = 1 if args.quick else 3
+    correlated_duplicate_factors = (1, 2, 4) if args.quick else (1, 2, 3, 4, 6, 8, 12)
 
     RESULTS.mkdir(parents=True, exist_ok=True)
     FIGURES.mkdir(parents=True, exist_ok=True)
@@ -74,6 +82,15 @@ def main() -> None:
         "sampling": run_sampling(
             args.seed + 5, sampling_replicates
         ),
+        "correlated_calibration": run_correlated_calibration(
+            args.seed + 6, calibration_replicates
+        ),
+        "correlated_role_assignment": run_role_assignment_correlation(),
+        "correlated_runtime": run_correlated_runtime(
+            args.seed + 7,
+            repetitions=correlated_runtime_repetitions,
+            duplicate_factors=correlated_duplicate_factors,
+        ),
     }
     for name, table in tables.items():
         table.to_csv(RESULTS / f"{name}.csv", index=False)
@@ -90,9 +107,24 @@ def main() -> None:
         certificate_mean=("max_regret_certificate", "mean"),
         empirical_coverage=("covered", "mean"),
     ).to_csv(RESULTS / "sampling_summary.csv", index=False)
+    tables["correlated_calibration"].groupby("sigma", as_index=False).agg(
+        strategic_defect_mean=("strategic_defect", "mean"),
+        transferred_ce_violation_mean=("transferred_ce_violation", "mean"),
+        direct_ce_violation_mean=("direct_ce_violation", "mean"),
+        transferred_welfare_mean=("transferred_welfare", "mean"),
+        direct_welfare_mean=("direct_welfare", "mean"),
+    ).to_csv(RESULTS / "correlated_calibration_summary.csv", index=False)
     make_figures(tables)
     make_reynolds_tightness_figure(tables["reynolds_tightness"])
+    make_correlated_figures(
+        tables["correlated_calibration"],
+        tables["correlated_role_assignment"],
+        tables["correlated_runtime"],
+    )
 
+    solved_roles = tables["correlated_role_assignment"].dropna(
+        subset=["solver_welfare"]
+    )
     summary = {
         "seed": args.seed,
         "calibration_replicates": calibration_replicates,
@@ -102,6 +134,18 @@ def main() -> None:
             np.max(
                 tables["calibration"]["saddle_gap"]
                 - tables["calibration"]["certificate"]
+            )
+        ),
+        "max_ce_transfer_violation": float(
+            np.max(
+                tables["correlated_calibration"]["transferred_ce_violation"]
+                - tables["correlated_calibration"]["certificate"]
+            )
+        ),
+        "max_ce_direct_violation": float(
+            np.max(
+                tables["correlated_calibration"]["direct_ce_violation"]
+                - tables["correlated_calibration"]["certificate"]
             )
         ),
         "max_reynolds_ratio_random": float(
@@ -129,11 +173,20 @@ def main() -> None:
                 )
             )
         ),
+        "max_role_assignment_ce_welfare_error": float(
+            np.max(np.abs(solved_roles["solver_welfare"] - 1.0))
+        ),
         "sampling_empirical_coverage": float(
             tables["sampling"]["covered"].mean()
         ),
         "largest_runtime_speedup": float(
             tables["runtime"]["speedup"].max()
+        ),
+        "largest_correlated_variable_reduction": float(
+            np.max(
+                tables["correlated_runtime"]["full_profile_variables"]
+                / tables["correlated_runtime"]["orbit_profile_variables"]
+            )
         ),
     }
     (RESULTS / "summary.json").write_text(
