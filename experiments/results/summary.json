@@ -2,9 +2,13 @@
   "seed": 17,
   "calibration_replicates": 20,
   "sampling_replicates": 40,
+  "quick": false,
   "max_transfer_violation": -1.8041124150158794e-16,
-  "max_reynolds_ratio": 1.3244136637314414,
+  "max_reynolds_ratio_random": 1.3244136637314414,
+  "max_reynolds_ratio_sharpness": 1.95,
+  "max_reynolds_formula_error": 0.0,
   "max_cycle_lp_disagreement": 1.7763568394002505e-15,
+  "max_cycle_witness_disagreement": 1.7763568394002505e-15,
   "sampling_empirical_coverage": 1.0,
   "largest_runtime_speedup": 20.038451654507
 }

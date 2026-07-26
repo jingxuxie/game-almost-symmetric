@@ -1,53 +1,53 @@
 # Proof Notes: Almost Symmetric Games
 
-These notes track the exact theorem statements, proof dependencies, and remaining audit risks for the manuscript **Almost Symmetric Games: Incentive-Preserving Projections and Certified Equilibrium Computation**.
+These notes state the manuscript's theorem stack, proof dependencies, and claim
+boundaries in a form suitable for line-by-line auditing.
 
-## 1. Formal objects
+## 1. Relabelings and fixed subspaces
 
-A finite game is
+A finite normal-form game is
 
 \[
 \Gamma=(N,(A_i)_{i\in N},(u_i)_{i\in N}).
 \]
 
-A relabeling `g` contains a player permutation `pi_g` and action bijections
+A relabeling `g` consists of a player permutation `pi_g` and action bijections
 
 \[
 \tau_{g,i}:A_i\to A_{\pi_g(i)}.
 \]
 
-It maps profiles by
+It maps profiles and games by
 
 \[
 (ga)_{\pi_g(i)}=\tau_{g,i}(a_i),
-\]
-
-and games by
-
-\[
+\qquad
 (g\Gamma)_{\pi_g(i)}(ga)=u_i(a).
 \]
 
 For a finite group `G`,
 
 \[
-\operatorname{Fix}(G)=\{\widehat\Gamma:g\widehat\Gamma=\widehat\Gamma\ \forall g\in G\}.
+\operatorname{Fix}(G)
+=
+\{\widehat\Gamma:g\widehat\Gamma=\widehat\Gamma\ \forall g\in G\}.
 \]
 
-A mixed profile respects `G` when its probabilities are constant under the induced action on the disjoint union of player-action pairs.
+A mixed profile respects `G` when probabilities are invariant under the induced
+action on the disjoint union of player-action coordinates.
 
 ## 2. Strategic distance
 
-For compatible games `Gamma` and `Gamma'`, define the residual
+For compatible games `Gamma` and `H`, let
 
 \[
-r_i(a)=u_i(a)-v_i(a)
+r_i(a)=u_i(a)-h_i(a).
 \]
 
-and the maximum pairwise difference
+Define maximum pairwise difference
 
 \[
-d_{\rm dev}(\Gamma,\Gamma')
+d_{\rm dev}(\Gamma,H)
 =
 \max_{i,a_{-i},a_i,b_i}
 |r_i(a_i,a_{-i})-r_i(b_i,a_{-i})|.
@@ -56,33 +56,31 @@ d_{\rm dev}(\Gamma,\Gamma')
 Equivalently,
 
 \[
-d_{\rm dev}(\Gamma,\Gamma')
+d_{\rm dev}(\Gamma,H)
 =
 \max_{i,a_{-i}}
 \left(\max_{a_i}r_i(a_i,a_{-i})-
 \min_{a_i}r_i(a_i,a_{-i})\right).
 \]
 
-### Proposition: quotient norm
+### Quotient-norm proposition
 
-`d_dev` is a seminorm on payoff tensors. Its kernel is exactly the nonstrategic subspace
+`d_dev` is a relabeling-invariant seminorm. Its kernel is exactly the
+nonstrategic subspace
 
 \[
 n_i(a_i,a_{-i})=c_i(a_{-i}).
 \]
 
-Hence it is a norm after quotienting by nonstrategic components.
-
-Proof: it is the maximum of absolute linear functionals. Distance zero means each residual slice is constant over the player's own action.
-
-### Raw payoff comparison
+Thus it is a norm after quotienting games by opponent-action-dependent payoff
+components. It also satisfies
 
 \[
-d_{\rm dev}(\Gamma,\Gamma')
-\le 2\|\Gamma-\Gamma'\|_\infty.
+d_{\rm dev}(\Gamma,H)
+\le 2\|\Gamma-H\|_\infty,
 \]
 
-There is no universal reverse inequality because arbitrarily large nonstrategic components have zero strategic distance.
+with no reverse inequality up to a universal constant.
 
 ## 3. Strategic symmetry defect
 
@@ -95,7 +93,7 @@ Define
  d_{\rm dev}(\Gamma,\widehat\Gamma).
 \]
 
-For a closed linear class `C`, such as zero-sum or common-payoff games, define the structured version
+For a closed linear class `C`, such as zero-sum or common-payoff games, define
 
 \[
 \delta_{G,C}(\Gamma)
@@ -104,22 +102,29 @@ For a closed linear class `C`, such as zero-sum or common-payoff games, define t
  d_{\rm dev}(\Gamma,\widehat\Gamma).
 \]
 
-Important: the unrestricted and structured defects need not coincide. Every zero-sum theorem in the paper uses the zero-sum structured defect.
+The unrestricted and structured defects can differ. Every zero-sum theorem uses
+the zero-sum structured defect.
 
 ## 4. Projection LP
 
-For every surrogate payoff coordinate introduce `uhat_i(a)`. For every slice `(i,a_-i)`, introduce lower and upper residual variables `L` and `U`, plus objective `t`:
+For every surrogate payoff coordinate introduce `uhat_i(a)`. For every slice
+`(i,a_-i)`, introduce lower and upper residual bounds `L` and `U`, plus
+objective `t`:
 
 \[
 \begin{array}{ll}
 \min&t\\
-\text{s.t.}&L_{i,a_{-i}}\le u_i(a)-\widehat u_i(a)\le U_{i,a_{-i}},\\
+\text{s.t.}&L_{i,a_{-i}}\le u_i(a)-\widehat u_i(a)
+\le U_{i,a_{-i}},\\
 &U_{i,a_{-i}}-L_{i,a_{-i}}\le t,\\
-&\widehat u_i(a)=\widehat u_{\pi_g(i)}(ga)\quad\forall g\in S.
+&\widehat u_i(a)=\widehat u_{\pi_g(i)}(ga)
+\quad\forall g\in S.
 \end{array}
 \]
 
-Here `S` is a generating set. For fixed surrogate payoffs, the minimum feasible width of each residual interval equals the range of that slice; therefore the optimum is exactly `delta_G`.
+For a fixed surrogate, the smallest interval width in a residual slice is
+exactly that slice's MPD contribution. Generator invariance is equivalent to
+group invariance. Hence the optimum is exactly `delta_G`.
 
 If
 
@@ -129,15 +134,15 @@ P=n\prod_i|A_i|,
 Q=\sum_i\prod_{j\ne i}|A_j|,
 \]
 
-the compact LP uses `P + 2Q + 1` variables and `2P + Q` strategic inequalities, plus sparse generator and structure equalities.
+the compact LP uses `P + 2Q + 1` variables and `2P + Q` strategic
+inequalities, plus sparse generator and optional structure equalities.
 
 ## 5. Maximum-mean-cycle characterization
 
-This is the main structural strengthening beyond the initial roadmap.
-
 ### Orbit graph
 
-Vertices are payoff-coordinate orbits `[i,a]` under `G`. For each ordered unilateral comparison from baseline action `b_i` to action `a_i` against the same `a_-i`, add an edge
+Vertices are payoff-coordinate orbits `[i,a]`. For every ordered unilateral
+comparison from distinct action `b_i` to `a_i` against `a_-i`, add an edge
 
 \[
 [i,(b_i,a_{-i})]\to[i,(a_i,a_{-i})]
@@ -149,19 +154,16 @@ with label
 c_e=u_i(a_i,a_{-i})-u_i(b_i,a_{-i}).
 \]
 
-An invariant surrogate is one potential `x_v` per orbit. Its error on edge `e` is
+An invariant surrogate assigns one potential `x_v` per vertex. Error at most
+`t` is equivalent, using the reverse comparison, to
 
 \[
-|x_{\rm head(e)}-x_{\rm tail(e)}-c_e|.
+x_{\rm head(e)}-x_{\rm tail(e)}\le c_e+t
+\quad\forall e.
 \]
 
-Because every ordered comparison has its reverse, error at most `t` is equivalent to the one-sided difference constraints
-
-\[
-x_{\rm head(e)}-x_{\rm tail(e)}\le c_e+t.
-\]
-
-A system of difference constraints is feasible iff every directed cycle has nonnegative total edge length. Thus
+A difference-constraint system is feasible exactly when every directed cycle
+has nonnegative total length. Therefore, with an empty maximum defined as zero,
 
 \[
 \boxed{
@@ -172,18 +174,31 @@ A system of difference constraints is feasible iff every directed cycle has nonn
 }
 \]
 
-At the critical shift there is no negative cycle. Shortest-path potentials provide a nearest invariant surrogate. Applying Karp's algorithm to weights `-c_e` computes the value and a critical cycle in polynomial time.
+Self-loops are included. Parallel upper-bound edges with the same endpoints can
+be replaced by the smallest label.
 
-### Points that need careful wording
+### Constructive upper bound
 
-- Self-loops must be retained; a self-loop can itself certify inconsistency after orbit identification.
-- Parallel edges are allowed. For the one-sided system, only the minimum label for a fixed ordered endpoint pair matters.
-- The reverse comparison is what supplies the lower half of the absolute-error constraint.
-- The cycle theorem applies to the unrestricted projection. Adding zero-sum or team equalities may destroy the pure difference-constraint form, so structured projections continue to use the LP.
+At the critical shift, all edge lengths `c_e + delta_G` have no negative cycle.
+Shortest-path potentials give a feasible invariant surrogate at distance
+`delta_G`.
 
-### Numerical audit
+### Certified lower-bound witness
 
-`tests/test_cycle.py` compares the cycle method with the LP on 100 randomized games. The largest observed disagreement is below `5e-9`.
+Let `w_e=-c_e` and `lambda=delta_G`. The reduced graph with weights
+`w_e-lambda` has no positive cycle and, when nonempty, has a zero-weight
+critical cycle. Max-plus path potentials make every reduced-edge inequality have
+nonnegative slack. Around a zero-weight cycle the slacks telescope and sum to
+zero, so every critical-cycle edge is tight. A directed-cycle search in the
+tight-edge graph yields a closed cycle whose mean is `lambda`.
+
+This avoids treating a predecessor chain in Karp's value table as automatically
+critical.
+
+### Scope
+
+The cycle theorem applies to the unrestricted fixed subspace. Structured
+zero-sum and team projections remain LPs.
 
 ## 6. Mixed incentive transfer
 
@@ -193,38 +208,36 @@ If
 d_{\rm dev}(\Gamma,\widehat\Gamma)\le\delta,
 \]
 
-then for every player, opponent mixture, and two own mixed strategies, the difference between their two deviation incentives across the games is at most `delta`.
-
-Reason: at every pure opponent profile, all residual values lie in an interval of width `delta`; two convex combinations differ by at most the interval width. Average over opponent profiles.
-
-Therefore, if `sigma` is an `epsilon`-Nash equilibrium of the surrogate,
+then every unilateral mixed-strategy incentive changes by at most `delta`.
+Consequently, an `epsilon`-Nash equilibrium of the surrogate satisfies
 
 \[
 \operatorname{Reg}_i^\Gamma(\sigma)
 \le \epsilon+\delta.
 \]
 
-## 7. Existence of an invariant approximate equilibrium
+## 7. Invariant approximate equilibrium
 
-Every exactly invariant finite game has an invariant Nash equilibrium. A self-contained proof:
+Every exactly invariant finite game has an invariant Nash equilibrium:
 
-1. The fixed-profile set `X^G` is nonempty, compact, and convex.
-2. The logit-response map is equivariant in an invariant game, so it maps `X^G` into itself.
-3. Brouwer gives an invariant logit fixed point at every precision.
-4. Along a convergent sequence as precision tends to infinity, strictly suboptimal actions receive vanishing mass.
-5. The limit is an invariant Nash equilibrium.
+1. the fixed-profile set is nonempty, compact, and convex;
+2. the logit-response map is equivariant and preserves the fixed set;
+3. Brouwer gives an invariant logit fixed point at every precision;
+4. any limit as precision diverges assigns positive mass only to best responses.
 
-Combining this with a nearest invariant surrogate and transfer yields a `G`-respecting `delta_G`-Nash equilibrium in every finite game.
+Combining this with a nearest invariant surrogate yields a `G`-respecting
+`delta_G`-Nash equilibrium in every finite game.
 
-## 8. Tightness
+## 8. Tightness of the transfer coefficient
 
-Player 1 has `k` actions, one with payoff 1 and the others with payoff 0, independent of player 2. The group cycles all `k` actions.
+Player 1 has `k` cyclically identified actions, one with payoff one and the rest
+with payoff zero. Player 2 is strategically irrelevant.
 
-- Every invariant surrogate equalizes those action payoffs, so `delta_G = 1`.
-- The only invariant strategy is uniform.
-- Its regret is `1 - 1/k`.
+- Every invariant surrogate equalizes the action payoffs, so `delta_G=1`.
+- The only invariant strategy of player 1 is uniform.
+- Its regret is `1-1/k`.
 
-Thus the coefficient one in the transfer/existence theorem is asymptotically optimal.
+Thus the coefficient one is asymptotically optimal.
 
 ## 9. Reynolds averaging
 
@@ -245,32 +258,72 @@ Then
 \le 2\delta_G.
 \]
 
-Proof ingredients:
+The first inequality is feasibility, the second is convexity, and the third is
+the triangle inequality through an optimal invariant surrogate.
 
-- the average is invariant;
-- convexity of the seminorm;
-- for any invariant surrogate `H`,
-  \[
-  d(\Gamma,g\Gamma)\le d(\Gamma,H)+d(gH,g\Gamma)=2d(\Gamma,H).
-  \]
+### Factor-two tightness in zero-sum games
 
-The average is computed from payoff-coordinate orbits, not by enumerating the group.
+For every `d>=2`, let the row player have `d` actions in one orbit and the
+column player have two `d`-action blocks. A distinguished row receives payoff
+zero in the first block and one in the second; every other row receives the
+opposite payoff. The column payoff is the negative row payoff.
 
-## 10. Zero-sum results
+The zero game is an invariant zero-sum surrogate at strategic distance one.
+Every invariant surrogate equalizes the distinguished and ordinary row at a
+fixed column, while their original payoffs differ by one, so both the
+unrestricted and zero-sum structured defects equal one.
+
+The Reynolds row-payoff means in the two column blocks are `(d-1)/d` and `1/d`.
+On the distinguished row, the residual levels are
+
+\[
+-\frac{d-1}{d}
+\quad\text{and}\quad
+\frac{d-1}{d},
+\]
+
+so
+
+\[
+d_{\rm dev}(\Gamma_d,\mathcal P_{G_d}\Gamma_d)
+=2-\frac{2}{d}.
+\]
+
+The factor two is therefore asymptotically tight even relative to the nearest
+symmetric zero-sum surrogate.
+
+## 10. Nested groups
+
+For
+
+\[
+G_0\subseteq G_1\subseteq\cdots\subseteq G_K,
+\]
+
+the fixed subspaces shrink, so
+
+\[
+\delta_{G_0}\le\delta_{G_1}\le\cdots\le\delta_{G_K}.
+\]
+
+The number of action and payoff-coordinate orbits cannot increase. This is the
+certified compression--fidelity frontier.
+
+## 11. Zero-sum results
 
 For a matrix game,
 
 \[
 \operatorname{Gap}_A(x,y)
 =
-\max_i(Ay)_i-\min_j(x^T A)_j
+\max_i(Ay)_i-\min_j(x^TA)_j
 \]
 
 is the sum of the two player regrets.
 
 Using the zero-sum structured defect:
 
-- each player regret of a projected equilibrium is at most `delta_G^zs`;
+- each transferred player regret is at most `delta_G^zs`;
 - total saddle gap is at most `2 delta_G^zs`.
 
 The direct invariant-gap LP minimizes
@@ -287,11 +340,11 @@ Ay\le\alpha\mathbf 1,
 x^TA\ge\beta\mathbf 1^T,
 \]
 
-simplex constraints, and orbit-equality constraints. For fixed `(x,y)`, the best `alpha` and `beta` make the objective exactly the saddle gap.
+simplex constraints, and global action-orbit equalities. For an exactly
+invariant matrix, one best-response constraint per relevant action orbit is
+sufficient.
 
-For an exactly invariant matrix and invariant opponent strategy, best-response values are constant on action orbits; one best-response constraint per orbit suffices.
-
-## 11. Statistical stability
+## 12. Statistical stability
 
 Distance to a fixed closed set is one-Lipschitz:
 
@@ -300,19 +353,20 @@ Distance to a fixed closed set is one-Lipschitz:
 \le d_{\rm dev}(\Gamma,\widetilde\Gamma).
 \]
 
-If each estimated payoff entry is within `xi` of the truth, then
+If every payoff estimate has entrywise error at most `xi`, then
 
 \[
 d_{\rm dev}(\Gamma,\widetilde\Gamma)\le2\xi.
 \]
 
-For `P` bounded means, each estimated from `M` independent samples, Hoeffding plus a union bound gives
+For `P` bounded means with `M` independent samples each,
 
 \[
 \xi_M=\sqrt{\frac{\log(2P/\alpha)}{2M}}.
 \]
 
-An exact equilibrium of the projected estimate has true per-player regret at most
+An exact equilibrium of the projected estimate has true per-player regret at
+most
 
 \[
 \widehat\delta+2\xi_M,
@@ -324,20 +378,27 @@ and zero-sum saddle gap at most
 2\widehat\delta+4\xi_M.
 \]
 
-## 12. Claims intentionally not made
+## 13. Numerical audit
 
-- A small strategic defect does **not** imply a welfare guarantee.
-- The paper does not solve approximate symmetry discovery; `G` is supplied.
-- Polynomial time is with respect to the explicit normal-form table.
-- General-sum Nash computation does not become tractable merely because projection is tractable.
-- The maximum-mean-cycle solver is for the unrestricted projection; structured classes use the LP.
+The independent checks cover:
 
-## 13. Highest-priority proof audit
+- empty, self-loop, and parallel-edge orbit graphs;
+- LP versus cycle defect on randomized games;
+- witness closure and critical mean;
+- reconstructed-surrogate distance;
+- player-swapping action orbits;
+- transfer and zero-sum certificates;
+- both sharpness families;
+- finite-sample coverage;
+- full versus orbit-reduced solver equivalence.
 
-Before submission, an independent reader should check:
+## 14. Claims intentionally not made
 
-1. the orientation/sign convention in the cycle formula;
-2. self-loops and parallel-edge compression in the cycle graph;
-3. the exact relationship between global action orbits and strategy-equality constraints when a symmetry swaps players;
-4. that every zero-sum claim consistently uses the structured defect;
-5. AAAI page-limit placement of proof sketches versus supplement.
+- Approximate symmetry in games or MARL is not claimed to be new broadly.
+- MPD itself is not introduced by this paper.
+- The candidate group is supplied rather than discovered.
+- General-sum Nash computation remains hard.
+- Small strategic defect does not imply welfare preservation.
+- Polynomial time is measured in the explicit normal-form table size.
+- Stochastic, extensive-form, graphical, and polymatrix extensions remain
+  future work.

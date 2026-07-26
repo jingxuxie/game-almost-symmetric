@@ -9,6 +9,7 @@ import pandas as pd
 
 from .common import save_plot
 
+
 def make_figures(tables: dict[str, pd.DataFrame]) -> None:
     nonstrategic = tables["nonstrategic"]
     fig, axis = plt.subplots(figsize=(3.35, 2.45))
@@ -46,7 +47,10 @@ def make_figures(tables: dict[str, pd.DataFrame]) -> None:
     )
     axis.fill_between(
         grouped["sigma"],
-        np.maximum(0.0, grouped["saddle_gap"] - grouped["saddle_gap_std"].fillna(0.0)),
+        np.maximum(
+            0.0,
+            grouped["saddle_gap"] - grouped["saddle_gap_std"].fillna(0.0),
+        ),
         grouped["saddle_gap"] + grouped["saddle_gap_std"].fillna(0.0),
         alpha=0.15,
     )
@@ -68,7 +72,9 @@ def make_figures(tables: dict[str, pd.DataFrame]) -> None:
     axis.grid(alpha=0.25)
     save_plot(fig, "certificate_calibration")
 
-    hierarchy = tables["hierarchy"].sort_values("action_orbits", ascending=False)
+    hierarchy = tables["hierarchy"].sort_values(
+        "action_orbits", ascending=False
+    )
     fig, axis = plt.subplots(figsize=(3.35, 2.45))
     axis.plot(
         hierarchy["action_orbits"],
@@ -95,6 +101,35 @@ def make_figures(tables: dict[str, pd.DataFrame]) -> None:
     axis.grid(alpha=0.25)
     save_plot(fig, "compression_frontier")
 
+    role = tables["role_assignment"].copy()
+    role["welfare_gap"] = (
+        role["best_joint_welfare"] - role["symmetric_team_welfare"]
+    )
+    fig, axis = plt.subplots(figsize=(3.35, 2.45))
+    axis.plot(
+        role["heterogeneity"],
+        role["strategic_defect"],
+        marker="o",
+        label=r"Defect $\delta_G$",
+    )
+    axis.plot(
+        role["heterogeneity"],
+        role["max_regret"],
+        marker="s",
+        label="Maximum regret",
+    )
+    axis.plot(
+        role["heterogeneity"],
+        role["welfare_gap"],
+        marker="^",
+        label="Welfare gap",
+    )
+    axis.set_xlabel("Role-preference heterogeneity")
+    axis.set_ylabel("Error or welfare gap")
+    axis.legend(frameon=False)
+    axis.grid(alpha=0.25)
+    save_plot(fig, "role_assignment")
+
     runtime = tables["runtime"]
     fig, axis = plt.subplots(figsize=(3.35, 2.45))
     axis.plot(
@@ -115,7 +150,7 @@ def make_figures(tables: dict[str, pd.DataFrame]) -> None:
     axis.set_ylabel("Median solve time (s)")
     axis.legend(frameon=False)
     axis.grid(alpha=0.25)
-    save_plot(fig, "runtime")
+    save_plot(fig, "runtime_scaling")
 
     tightness = tables["tightness"]
     fig, axis = plt.subplots(figsize=(3.35, 2.45))
@@ -140,7 +175,9 @@ def make_figures(tables: dict[str, pd.DataFrame]) -> None:
     save_plot(fig, "tightness")
 
     sampling = tables["sampling"]
-    sampling_grouped = sampling.groupby("samples_per_entry", as_index=False).agg(
+    sampling_grouped = sampling.groupby(
+        "samples_per_entry", as_index=False
+    ).agg(
         true_regret=("true_max_regret", "mean"),
         certificate=("max_regret_certificate", "mean"),
         coverage=("covered", "mean"),
@@ -166,6 +203,7 @@ def make_figures(tables: dict[str, pd.DataFrame]) -> None:
     axis.grid(alpha=0.25)
     save_plot(fig, "sampling_certificate")
 
+
 def make_overview_figure() -> None:
     """Generate a compact conceptual overview of the certified pipeline."""
     fig, axis = plt.subplots(figsize=(7.0, 1.55))
@@ -173,30 +211,85 @@ def make_overview_figure() -> None:
     axis.set_ylim(0.0, 1.0)
     axis.axis("off")
     boxes = [
-        (0.015, 0.25, 0.205, 0.55, "Observed game $\\Gamma$\nsmall heterogeneities"),
-        (0.275, 0.25, 0.205, 0.55, "Nearest $G$-symmetric\nsurrogate $\\widehat{\\Gamma}$"),
-        (0.535, 0.25, 0.205, 0.55, "$G$-respecting\nequilibrium $\\widehat{\\sigma}$"),
-        (0.795, 0.25, 0.19, 0.55, "Certificate in $\\Gamma$\n$R_i(\\widehat{\\sigma})\\leq\\delta_G$"),
+        (
+            0.015,
+            0.25,
+            0.205,
+            0.55,
+            "Observed game $\\Gamma$\nsmall heterogeneities",
+        ),
+        (
+            0.275,
+            0.25,
+            0.205,
+            0.55,
+            "Nearest $G$-symmetric\nsurrogate $\\widehat{\\Gamma}$",
+        ),
+        (
+            0.535,
+            0.25,
+            0.205,
+            0.55,
+            "$G$-respecting\nequilibrium $\\widehat{\\sigma}$",
+        ),
+        (
+            0.795,
+            0.25,
+            0.19,
+            0.55,
+            "Certificate in $\\Gamma$\n"
+            "$R_i(\\widehat{\\sigma})\\leq\\delta_G$",
+        ),
     ]
-    for x, y, w, h, label in boxes:
+    for x, y, width, height, label in boxes:
         patch = FancyBboxPatch(
-            (x, y), w, h, boxstyle="round,pad=0.018", fill=False, linewidth=1.2
+            (x, y),
+            width,
+            height,
+            boxstyle="round,pad=0.018",
+            fill=False,
+            linewidth=1.2,
         )
         axis.add_patch(patch)
-        axis.text(x + w / 2, y + h / 2, label, ha="center", va="center", fontsize=8.5)
-    arrow_labels = [r"LP or cycle mean", r"orbit-reduced solver", r"transfer theorem"]
-    for idx, label in enumerate(arrow_labels):
-        left = boxes[idx][0] + boxes[idx][2]
-        right = boxes[idx + 1][0]
+        axis.text(
+            x + width / 2,
+            y + height / 2,
+            label,
+            ha="center",
+            va="center",
+            fontsize=8.5,
+        )
+    arrow_labels = [
+        "LP or cycle mean",
+        "orbit-reduced solver",
+        "transfer theorem",
+    ]
+    for index, label in enumerate(arrow_labels):
+        left = boxes[index][0] + boxes[index][2]
+        right = boxes[index + 1][0]
         arrow = FancyArrowPatch(
-            (left + 0.008, 0.525), (right - 0.008, 0.525),
-            arrowstyle="-|>", mutation_scale=10, linewidth=1.0
+            (left + 0.008, 0.525),
+            (right - 0.008, 0.525),
+            arrowstyle="-|>",
+            mutation_scale=10,
+            linewidth=1.0,
         )
         axis.add_patch(arrow)
-        axis.text((left + right) / 2, 0.73, label, ha="center", va="bottom", fontsize=7.5)
+        axis.text(
+            (left + right) / 2,
+            0.73,
+            label,
+            ha="center",
+            va="bottom",
+            fontsize=7.5,
+        )
     axis.text(
-        0.5, 0.08,
-        r"Strategic defect $\delta_G$ measures unilateral-incentive distortion, not raw payoff mismatch.",
-        ha="center", va="center", fontsize=8.5,
+        0.5,
+        0.08,
+        r"Strategic defect $\delta_G$ measures unilateral-incentive "
+        r"distortion, not raw payoff mismatch.",
+        ha="center",
+        va="center",
+        fontsize=8.5,
     )
     save_plot(fig, "overview")

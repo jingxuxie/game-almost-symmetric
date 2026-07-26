@@ -1,18 +1,18 @@
 \section{Experiments}
 
-The experiments are deliberately small and diagnostic.  Their purpose is to test the theorem stack, compare the sharp projection with inexpensive alternatives, and measure quotient compression rather than to claim large-scale learning performance.  All games are explicit, all optimization problems are solved with SciPy/HiGHS, and every random-number generator uses a fixed seed.  The repository records raw CSV outputs, generated figures, and unit tests.
+The experiments are deliberately small and diagnostic.  Their purpose is to test the theorem stack, compare the sharp projection with inexpensive alternatives, and measure quotient compression rather than to claim large-scale learning performance.  All games are explicit, all optimization problems are solved with SciPy/HiGHS, and every random-number generator uses a fixed seed.  The full sweep uses seed 17, with 20 replicates at each of seven perturbation scales, 40 replicates at each of eight sample counts, and seven timing repetitions at each of eight matrix sizes; deterministic construction studies are evaluated once per listed parameter value.  The repository records raw CSV outputs, generated figures, and unit tests.
 
 \paragraph{Strategic versus raw asymmetry.}
 We first lift a small quotient matrix into a game with interchangeable action copies and then add opponent-action-dependent payoff components of increasing magnitude.  These additions are nonstrategic by construction.  Figure~\ref{fig:diagnostics}(a) shows the predicted separation: the nearest-symmetric raw payoff error grows linearly, while the strategic defect remains at numerical zero.  Thus payoff-level symmetry would reject games that have identical best-response structure.
 
 \paragraph{Certificate calibration.}
-We next add independent strategic perturbations to lifted zero-sum games.  For each perturbed game we compute the zero-sum structured projection, solve the projected game, and evaluate the resulting profile in the original matrix.  Figure~\ref{fig:diagnostics}(b) compares actual saddle gaps with the certificate $2\zsdef$.  Across the committed sweep, the maximum numerical certificate violation is below $3\times10^{-16}$.  We also solve the direct invariant-gap LP; as expected, it can be substantially tighter because it optimizes the final invariant profile rather than a worst-case transfer bound.
+We next add independent strategic perturbations to lifted zero-sum games.  For each perturbed game we compute the zero-sum structured projection, solve the projected game, and evaluate the resulting profile in the original matrix.  Figure~\ref{fig:diagnostics}(b) compares actual saddle gaps with the certificate $2\zsdef$.  Across the committed sweep, every transferred profile satisfies its certificate up to solver tolerance.  We also solve the direct invariant-gap LP; as expected, it can be substantially tighter because it optimizes the final invariant profile rather than a worst-case transfer bound.
 
-\paragraph{Averaging and the factor-two bound.}
-For the same perturbation family, we compare the exact LP projection with orbit averaging.  The largest observed ratio between the Reynolds distance and the optimal strategic defect is $1.263$, below the worst-case factor two in Theorem~\ref{thm:reynolds}.  The result supports using averaging as a fast warm start or surrogate when the sharp LP is unnecessary.
+\paragraph{Averaging and sharpness.}
+For the same perturbation family, we compare the exact structured LP projection with orbit averaging.  The largest observed ratio between the Reynolds distance and the optimal structured defect is $1.325$, below the worst-case factor two in Theorem~\ref{thm:reynolds}.  Separately, we instantiate the zero-sum construction in Proposition~\ref{prop:reynolds-tight} for $d\in\{2,3,4,5,8,12,20,40\}$.  The structured LP defect and unrestricted cycle defect both equal one, while the measured averaging ratio matches $2-2/d$ and reaches $1.95$ at $d=40$.  This distinguishes typical random perturbations from a genuine worst-case construction and verifies that the sharpness persists under zero-sum structure.
 
 \paragraph{Compression--fidelity frontier.}
-We construct nested candidate groups that progressively merge heterogeneous action copies.  Figure~\ref{fig:diagnostics}(c) plots error against the number of action-orbit variables.  Enlarging the group monotonically reduces the representation from 48 variables to 6 while increasing the structured defect from numerical zero to $0.737$; the transferred saddle gap remains below its certificate at every point.  This is the operational interpretation of \eqref{eq:defect-monotone}: the designer can select the most compressed group whose certified error is acceptable.
+We construct nested candidate groups that progressively merge heterogeneous action copies.  Figure~\ref{fig:diagnostics}(c) plots error against the number of action-orbit variables.  Enlarging the group monotonically reduces the representation from 48 variables to 6 while increasing the structured defect; the transferred saddle gap remains below its certificate at every point.  This is the operational interpretation of \eqref{eq:defect-monotone}: the designer can select the most compressed group whose certified error is acceptable.
 
 \paragraph{Role assignment and welfare.}
 The common-payoff role-assignment family in Figure~\ref{fig:diagnostics}(d) contains nominally interchangeable agents with increasingly heterogeneous role preferences.  Strategic projection continues to certify unilateral incentives, but invariant coordination can lose welfare as heterogeneity grows.  This stress test illustrates an important limitation: approximate symmetry controls exploitability, not equilibrium selection or social value.  Welfare guarantees require additional assumptions, such as uniqueness or a welfare-stable equilibrium correspondence.
@@ -21,25 +21,25 @@ The common-payoff role-assignment family in Figure~\ref{fig:diagnostics}(d) cont
 \centering
 \begin{minipage}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{../experiments/figures/nonstrategic_separation.pdf}\\[-1mm]
+\includegraphics[width=\linewidth]{../experiments/figures/nonstrategic_separation.pdf}\\
 {\small (a) Nonstrategic payoff shifts.}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{../experiments/figures/certificate_calibration.pdf}\\[-1mm]
+\includegraphics[width=\linewidth]{../experiments/figures/certificate_calibration.pdf}\\
 {\small (b) Zero-sum certificate calibration.}
 \end{minipage}
 
 \begin{minipage}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{../experiments/figures/compression_frontier.pdf}\\[-1mm]
+\includegraphics[width=\linewidth]{../experiments/figures/compression_frontier.pdf}\\
 {\small (c) Compression--fidelity frontier.}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{../experiments/figures/role_assignment.pdf}\\[-1mm]
+\includegraphics[width=\linewidth]{../experiments/figures/role_assignment.pdf}\\
 {\small (d) Heterogeneous role assignment.}
 \end{minipage}
 \caption{Theory diagnostics.  Incentive distance ignores strategically irrelevant shifts, transferred profiles satisfy the predicted regret bounds, larger symmetry groups trade accuracy for compression, and incentive certification alone does not imply welfare preservation.  Figure legends abbreviate the structured zero-sum defect $\zsdef$ as $\delta_G$.}
@@ -47,22 +47,22 @@ The common-payoff role-assignment family in Figure~\ref{fig:diagnostics}(d) cont
 \end{figure*}
 
 \paragraph{Orbit-reduced computation.}
-On exactly lifted matrix games, we compare the ordinary equilibrium LP with the orbit-reduced formulation.  Both return saddle gaps at numerical zero.  As the number of duplicated actions grows, the full program scales with the original action count while the reduced program retains the quotient dimension.  The largest game in the current laptop sweep has 256 actions per player and yields an approximately $8.5\times$ median speedup; Figure~\ref{fig:runtime-sampling}(a) shows the increasing separation.
+On exactly lifted matrix games, we compare the ordinary equilibrium LP with the orbit-reduced formulation.  Both return saddle gaps at numerical zero.  As equivalent actions are duplicated, the full program scales with the original action count while the reduced program retains the quotient dimension.  Figure~\ref{fig:runtime-sampling}(a) shows the increasing separation through 512 actions per player; absolute timings are machine dependent, so we emphasize scaling rather than a universal speedup constant.
 
 \paragraph{Finite-sample certificates.}
-Finally, each payoff entry is treated as the mean of a Bernoulli variable and estimated from independent samples.  We project the empirical game, solve the surrogate, and evaluate against the known population matrix.  Figure~\ref{fig:runtime-sampling}(b) plots true maximum regret and the Hoeffding certificate from Corollary~\ref{cor:sampling}.  The certificate covers all 70 committed trials and contracts at the expected $M^{-1/2}$ rate.  Its conservatism is visible, motivating variance-adaptive confidence sets as future work.
+Finally, each row-player payoff entry is treated as the mean of a Bernoulli variable and estimated from independent samples; the column payoff is its negative.  We project the empirical zero-sum game, solve the surrogate, and evaluate against the known population matrix.  Figure~\ref{fig:runtime-sampling}(b) plots true maximum regret and the Hoeffding certificate from Corollary~\ref{cor:sampling}.  The certificate covers every trial in the committed sweep and contracts at the expected $M^{-1/2}$ rate.  Its conservatism is visible, motivating variance-adaptive confidence sets as future work.
 
 \begin{figure*}[t]
 \centering
 \begin{minipage}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{../experiments/figures/runtime_scaling.pdf}\\[-1mm]
+\includegraphics[width=\linewidth]{../experiments/figures/runtime_scaling.pdf}\\
 {\small (a) Full versus orbit-reduced LP runtime.}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=\linewidth]{../experiments/figures/sampling_certificate.pdf}\\[-1mm]
+\includegraphics[width=\linewidth]{../experiments/figures/sampling_certificate.pdf}\\
 {\small (b) Finite-sample regret certificate.}
 \end{minipage}
 \caption{Computational and statistical validation.  Orbit reduction becomes increasingly advantageous as equivalent actions are duplicated, while the distribution-free sampling bound contracts with the number of observations per payoff entry.}
@@ -70,4 +70,4 @@ Finally, each payoff entry is treated as the mean of a Bernoulli variable and es
 \end{figure*}
 
 \paragraph{Implementation checks.}
-The codebase contains fifteen deterministic tests.  In addition to invariance, transfer, zero-sum, and sampling checks, a randomized test compares the cycle characterization against the projection LP on 100 generated games.  The largest observed disagreement is below $5\times10^{-9}$, providing an independent numerical check of Theorem~\ref{thm:cycle}.  These diagnostics do not replace proof, but they are useful safeguards against sign, orbit, and relabeling errors in the implementation.
+The test suite audits critical self-loops, parallel-edge compression, closed-walk witnesses, and player-swapping symmetries.  Across 100 newly generated games, the critical-cycle value, witness mean, reconstructed-surrogate distance, and independent LP objective agree to numerical tolerance.  These diagnostics do not replace proof, but they guard against sign, orbit, and witness-extraction errors.
