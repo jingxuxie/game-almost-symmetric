@@ -76,6 +76,21 @@ def _large_overfull_boxes(log_text: str, threshold: float) -> list[str]:
     return issues
 
 
+def _pdf_metadata_issues(pdfinfo: str, pdf_name: str) -> list[str]:
+    issues: list[str] = []
+    page_size_match = re.search(r"^Page size:\s+(.+)$", pdfinfo, re.MULTILINE)
+    page_size = page_size_match.group(1).strip() if page_size_match else "unknown"
+    if "612 x 792" not in page_size and "letter" not in page_size.lower():
+        issues.append(f"{pdf_name} is not US letter: {page_size}")
+
+    author_match = re.search(r"^Author:\s*(.*)$", pdfinfo, re.MULTILINE)
+    if author_match:
+        author = author_match.group(1).strip()
+        if author and "anonymous" not in author.lower():
+            issues.append(f"{pdf_name} has non-anonymous Author metadata: {author}")
+    return issues
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -91,12 +106,19 @@ def main() -> int:
     paper = root / "paper"
     main_pdf = paper / "main.pdf"
     supplement_pdf = paper / "supplement.pdf"
-    required = [
-        main_pdf,
-        supplement_pdf,
-        paper / "main.aux",
+    checklist_pdf = paper / "reproducibility_checklist.pdf"
+    checklist_source = paper / "reproducibility_checklist.tex"
+    pdfs = (main_pdf, supplement_pdf, checklist_pdf)
+    logs = (
         paper / "main.log",
         paper / "supplement.log",
+        paper / "reproducibility_checklist.log",
+    )
+    required = [
+        *pdfs,
+        *logs,
+        paper / "main.aux",
+        checklist_source,
     ]
     missing = [str(path) for path in required if not path.exists()]
     if missing:
@@ -115,21 +137,28 @@ def main() -> int:
             f"above limit {args.technical_page_limit}"
         )
 
-    pdfinfo = _run(["pdfinfo", str(main_pdf)], cwd=root)
-    pages_match = re.search(r"^Pages:\s+(\d+)", pdfinfo, re.MULTILINE)
-    page_size_match = re.search(r"^Page size:\s+(.+)$", pdfinfo, re.MULTILINE)
+    checklist_text = checklist_source.read_text(errors="replace")
+    # The official template repeats the placeholder in its instructions and
+    # example. More than two occurrences means an actual answer remains blank.
+    placeholder_count = checklist_text.count("Type your response here")
+    if placeholder_count > 2:
+        issues.append(
+            "reproducibility checklist still contains unanswered placeholders"
+        )
+
+    main_pdfinfo = _run(["pdfinfo", str(main_pdf)], cwd=root)
+    pages_match = re.search(r"^Pages:\s+(\d+)", main_pdfinfo, re.MULTILINE)
+    page_size_match = re.search(
+        r"^Page size:\s+(.+)$", main_pdfinfo, re.MULTILINE
+    )
     total_pages = int(pages_match.group(1)) if pages_match else -1
-    page_size = page_size_match.group(1).strip() if page_size_match else "unknown"
-    if "612 x 792" not in page_size and "letter" not in page_size.lower():
-        issues.append(f"main PDF is not US letter: {page_size}")
+    main_page_size = (
+        page_size_match.group(1).strip() if page_size_match else "unknown"
+    )
 
-    author_match = re.search(r"^Author:\s*(.*)$", pdfinfo, re.MULTILINE)
-    if author_match:
-        author = author_match.group(1).strip()
-        if author and "anonymous" not in author.lower():
-            issues.append(f"non-anonymous PDF Author metadata: {author}")
-
-    for pdf in (main_pdf, supplement_pdf):
+    for pdf in pdfs:
+        pdfinfo = _run(["pdfinfo", str(pdf)], cwd=root)
+        issues.extend(_pdf_metadata_issues(pdfinfo, pdf.name))
         font_output = _run(["pdffonts", str(pdf)], cwd=root)
         issues.extend(
             f"{pdf.name}: {issue}" for issue in _font_issues(font_output)
@@ -142,7 +171,7 @@ def main() -> int:
         "There were undefined citations",
     )
     overfull: list[str] = []
-    for log_path in (paper / "main.log", paper / "supplement.log"):
+    for log_path in logs:
         log_text = log_path.read_text(errors="replace")
         for marker in fatal_log_markers:
             if marker in log_text:
@@ -158,9 +187,9 @@ def main() -> int:
     print("AAAI submission validation")
     print(f"  technical content through page: {technical_page}")
     print(f"  main PDF total pages: {total_pages}")
-    print(f"  main PDF page size: {page_size}")
-    print(f"  main PDF: {main_pdf}")
-    print(f"  supplement PDF: {supplement_pdf}")
+    print(f"  main PDF page size: {main_page_size}")
+    for pdf in pdfs:
+        print(f"  built PDF: {pdf}")
 
     if issues:
         print("\nValidation failures:")
