@@ -264,7 +264,7 @@ The zero game is an invariant zero-sum surrogate at strategic distance one: in e
 \[
 \delta_{G_d}(\Gamma_d)
 =
-\delta_{G_d,\mathcal Z}(\Gamma_d)
+\delta_{G_d}^{\mathrm{zs}}(\Gamma_d)
 =1.
 \]
 
@@ -331,7 +331,7 @@ Let $\widehat\Gamma$ be a nearest invariant surrogate of an estimate $\widetilde
 \le\epsilon+\widehat\delta+\devdist(\Gamma,\widetilde\Gamma).
 \]
 If every payoff estimate has error at most $\xi$, then
-$\devdist(\Gamma,\widetilde\Gamma)\le2\xi$.  For $P$ bounded payoff means, each estimated from $M$ independent observations in $[0,1]$, Hoeffding's inequality and a union bound give
+$\devdist(\Gamma,\widetilde\Gamma)\le2\xi$.  For $P$ payoff means, each estimated from $M$ independent observations contained in an interval of length one, Hoeffding's inequality and a union bound give
 \[
 \xi=\sqrt{\frac{\log(2P/\alpha)}{2M}}
 \]
@@ -339,7 +339,7 @@ with probability at least $1-\alpha$ \cite{hoeffding1963probability}.  This prov
 
 \section{Additional Experimental Details}
 
-The principal synthetic family begins with a quotient matrix and replaces every quotient action by interchangeable copies.  Perturbations include independent strategic noise, opponent-dependent nonstrategic shifts, structured heterogeneity, and Bernoulli payoff observations.
+The principal synthetic family begins with a quotient matrix and replaces every quotient action by interchangeable copies.  Perturbations include independent strategic noise, opponent-dependent nonstrategic shifts, structured heterogeneity, and Bernoulli payoff observations.  The full sweep uses seed 17.  The calibration experiment uses 20 replicates at each of seven noise levels; the sampling experiment uses 40 replicates at each of eight sample counts; and the runtime experiment reports the median of seven solves at each of eight matrix sizes.  The remaining construction studies are deterministic and are evaluated once at every listed parameter value.
 
 The critical-cycle audit checks that consecutive witness edges form a closed walk, the negative mean witness label equals the computed defect, and the reconstructed surrogate attains that defect.  Dedicated tests exercise the empty graph, critical self-loops, parallel-edge compression, and player-swapping symmetries, in addition to 100 randomized comparisons with the LP.
 
