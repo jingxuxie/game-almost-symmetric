@@ -51,21 +51,24 @@ For any invariant $\widehat\Gamma$ and any $g$,
 where relabeling invariance and $g\widehat\Gamma=\widehat\Gamma$ are used.  Minimize over $\widehat\Gamma$.
 \end{proof}
 
-The constant two cannot be improved.
+The constant two cannot be improved, even in zero-sum games.
 \begin{proposition}[Tightness of group averaging]
 \label{prop:reynolds-tight}
-For every $d\ge2$, there is a two-player game $\Gamma_d$ and a within-block relabeling group $G_d$ such that
+For every $d\ge2$, there is a two-player zero-sum game $\Gamma_d$ and a within-player relabeling group $G_d$ such that
 \[
-\delta_{G_d}(\Gamma_d)=1,
+\delta_{G_d}(\Gamma_d)
+=
+\delta_{G_d,\mathcal Z}(\Gamma_d)
+=1,
 \qquad
 \devdist(\Gamma_d,\mathcal P_{G_d}\Gamma_d)
 =
-2-\frac{2}{d^2}.
+2-\frac{2}{d}.
 \]
-Hence the approximation ratio of group averaging converges to two.
+Hence the approximation ratio of group averaging converges to two even relative to the nearest symmetric zero-sum surrogate.
 \end{proposition}
 \begin{proof}[Proof sketch]
-Give each player two blocks of $d$ actions and let $G_d$ independently cycle actions within each block.  The payoff construction in the supplement uses values in $\{-1,0,1\}$ and gives player 2 zero utility.  Two unilateral comparisons between the row blocks, in two column contexts, induce a directed two-cycle with labels $-1,-1$; Theorem~\ref{thm:cycle} gives $\delta_{G_d}\ge1$, while the zero surrogate attains error one.  Averaging the two relevant payoff-coordinate orbits and evaluating the residual range at the distinguished column gives exactly $2-2/d^2$.
+Give the row player $d$ actions in one orbit and the column player two $d$-action blocks.  A distinguished row receives payoff zero in the first block and one in the second; every other row receives the opposite payoff, and the column payoff is its negative.  The zero game is an invariant zero-sum surrogate at distance one.  Conversely, invariance equalizes all row-action payoffs within a fixed column, whereas the distinguished and any other row differ by one, proving a matching lower bound.  Orbit averaging replaces the two row-payoff blocks by their means $(d-1)/d$ and $1/d$.  On the distinguished row, the two residual levels are $-(d-1)/d$ and $(d-1)/d$, whose range is $2-2/d$.
 \end{proof}
 
 Although \eqref{eq:reynolds} appears to require enumerating $G$, it can be computed from generators alone: the group average assigns each payoff coordinate the mean value over its payoff-coordinate orbit.  A union--find traversal of generator edges therefore suffices.  When the original game belongs to a relabeling-invariant convex linear class, such as zero-sum or common-payoff games, orbit averaging remains in that class and the same argument applies to the corresponding structured defect.
