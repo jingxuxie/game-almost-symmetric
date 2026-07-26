@@ -17,31 +17,38 @@ For a supplied group `G` of player/action relabelings, the code computes
 - an equivalent maximum-mean-cycle characterization;
 - a certified critical-cycle witness and constructive orbit potentials;
 - Reynolds/orbit averaging, a closed-form factor-two projection;
-- symmetry-respecting zero-sum equilibria and a posteriori saddle-gap
-  certificates; and
-- orbit-compressed zero-sum solvers.
+- symmetry-respecting Nash, correlated, and coarse-correlated equilibria;
+- profile-orbit correlated-equilibrium programs for general-sum games;
+- symmetry-respecting zero-sum equilibria and saddle-gap certificates; and
+- orbit-compressed zero-sum and correlated-equilibrium solvers.
 
-The current theorem stack proves that an `epsilon`-Nash equilibrium of a
-surrogate at strategic distance `delta` is an `(epsilon + delta)`-Nash
-equilibrium of the original game. Consequently, every finite game admits a
-`G`-respecting `delta_G`-Nash equilibrium. The additive coefficient one is
-asymptotically tight. Group averaging is always within factor two of the
-optimal strategic projection, and an explicit **zero-sum** family attains ratio
+The theorem stack proves that an `epsilon`-Nash, correlated, or
+coarse-correlated equilibrium of a surrogate at strategic distance `delta`
+transfers with additive violation at most `delta`. Consequently, every finite
+game admits `G`-respecting `delta_G` versions of all three solution concepts.
+The Nash coefficient one is asymptotically tight.
+
+Group averaging is always within factor two of the optimal strategic
+projection, and an explicit zero-sum family attains ratio
 
 ```text
 2 - 2 / d
 ```
 
-so this factor is also asymptotically tight, even relative to the nearest
-symmetric zero-sum surrogate.
+so this factor is also asymptotically tight. Correlation provides a separate
+coordination resource: in the `n`-agent, `n`-role assignment game, independent
+invariant play has welfare `n! / n**n`, while an invariant correlated
+equilibrium has welfare one.
 
 ## Repository layout
 
 - `paper/main.tex`: AAAI-27 main manuscript.
 - `paper/supplement.tex`: complete proofs and additional experimental details.
-- `src/almost_symmetric/`: game, symmetry, projection, cycle, and zero-sum
-  algorithms.
+- `src/almost_symmetric/`: game, symmetry, projection, cycle, zero-sum, and
+  correlated-equilibrium algorithms.
 - `experiments/run_all.py`: deterministic experiment suite and figure generator.
+- `experiments/correlated_studies.py`: CE transfer, role assignment, and
+  profile-orbit compression studies.
 - `experiments/sharpness.py`: exact zero-sum Reynolds factor-two construction.
 - `experiments/results/`: generated CSV tables and summary metrics.
 - `experiments/figures/`: generated PDF/PNG figures, not versioned.
@@ -69,9 +76,10 @@ python -m pip install -e ".[dev]"
 pytest
 ```
 
-The adversarial cycle tests cover empty graphs, critical self-loops,
-parallel-edge compression, global action orbits under player swaps, exact
-sharpness families, and randomized agreement between the cycle and LP solvers.
+The adversarial tests cover empty incentive graphs, critical self-loops,
+parallel-edge compression, player-swapping symmetries, exact sharpness
+families, CE/CCE transfer, invariant profile orbits, and randomized agreement
+between the cycle and LP solvers.
 
 ## Reproduce experiments
 
@@ -96,8 +104,8 @@ small explicit games. No GPU is required.
 ## Build and validate the submission
 
 The repository includes the official AAAI-27 author kit. From the repository
-root, one command regenerates the experiments, builds both PDFs, and runs the
-submission checks:
+root, one command regenerates the experiments, builds the manuscript,
+supplement, and reproducibility checklist, and runs the submission checks:
 
 ```bash
 make -C paper check
@@ -120,19 +128,21 @@ The checker verifies:
 
 ## Current empirical checks
 
-With seed 17, the committed deterministic studies report:
+The deterministic studies verify that
 
 - cycle and LP defects agree to numerical precision;
 - every critical-cycle witness is a closed walk whose mean certifies the defect;
-- no equilibrium-transfer certificate violation in the perturbed zero-sum
-  sweep;
-- the largest random-perturbation Reynolds/optimal ratio is about `1.325`;
-- the zero-sum sharpness family matches `2 - 2 / d` and reaches `1.95` at
-  `d=40`;
+- transferred Nash, CE, and CCE solutions satisfy their strategic-distance
+  certificates;
+- direct invariant approximate-CE optimization can improve welfare while
+  retaining the same incentive budget;
+- the role-assignment CE LP recovers welfare one, matching the analytic
+  construction;
+- the zero-sum sharpness family matches `2 - 2 / d`;
 - raw payoff defect grows under strategically irrelevant shifts while strategic
   defect remains numerically zero;
-- orbit reduction produces increasing runtime separation through 512 actions
-  per player; and
+- orbit reduction produces increasing separation in both zero-sum strategy
+  programs and correlated joint-distribution variables; and
 - the finite-sample certificate covers every trial in the committed sweep.
 
 These are synthetic theorem checks and diagnostics, not claims about large-scale
@@ -142,8 +152,9 @@ learned agents.
 
 The candidate relabeling group is supplied as semantic prior knowledge or as a
 small hierarchy. Discovering approximate symmetries from scratch is outside the
-first paper. In general-sum games, projection and transfer are tractable but Nash
-equilibrium computation retains its usual hardness. The strategic defect
-certifies incentives and exploitability, not welfare or equilibrium selection.
-The implementation uses explicit normal-form tables; compact graphical,
-polymatrix, stochastic, and extensive-form extensions remain future work.
+first paper. In general-sum games, projection and CE/CCE optimization are
+tractable, but Nash equilibrium computation retains its usual hardness. The
+strategic defect certifies incentives and exploitability, not welfare or
+equilibrium selection unless an explicit selection objective is imposed. The
+implementation uses explicit normal-form tables; compact graphical, polymatrix,
+stochastic, and extensive-form extensions remain future work.
