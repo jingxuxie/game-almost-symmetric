@@ -138,10 +138,10 @@ def main() -> int:
         )
 
     checklist_text = checklist_source.read_text(errors="replace")
-    # The official template repeats the placeholder in its instructions and
-    # example. More than two occurrences means an actual answer remains blank.
+    # The official template contains the placeholder three times in its
+    # instructions/example. Any additional occurrence is an unanswered item.
     placeholder_count = checklist_text.count("Type your response here")
-    if placeholder_count > 2:
+    if placeholder_count > 3:
         issues.append(
             "reproducibility checklist still contains unanswered placeholders"
         )
