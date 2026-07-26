@@ -134,6 +134,24 @@ def action_orbit_labels(
     return uf.labels()
 
 
+def profile_orbit_labels(
+    action_sizes: Sequence[int], generators: Iterable[Relabeling]
+) -> np.ndarray:
+    """Orbit labels for pure joint-action profiles."""
+
+    sizes = tuple(int(m) for m in action_sizes)
+    gens = validate_generators(sizes, generators)
+    n_profiles = int(np.prod(sizes, dtype=int))
+    uf = _UnionFind(n_profiles)
+    for profile in product(*(range(m) for m in sizes)):
+        flat = int(np.ravel_multi_index(profile, sizes))
+        for generator in gens:
+            mapped = generator.map_profile(profile)
+            mapped_flat = int(np.ravel_multi_index(mapped, sizes))
+            uf.union(flat, mapped_flat)
+    return uf.labels()
+
+
 def payoff_coordinate_orbit_labels(
     action_sizes: Sequence[int], generators: Iterable[Relabeling]
 ) -> np.ndarray:

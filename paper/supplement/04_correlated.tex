@@ -1,0 +1,94 @@
+\section{Correlated and Coarse-Correlated Equilibrium}
+
+For a joint distribution $\mu\in\Delta(A)$, define the unconditional CE deviation gain
+\[
+R^{\mathrm{CE}}_{i,a_i\to b_i}(\mu;\Gamma)
+=
+\sum_{a_{-i}}\mu(a_i,a_{-i})
+[u_i(b_i,a_{-i})-u_i(a_i,a_{-i})].
+\]
+The distribution is an $\epsilon$-CE when all these gains are at most $\epsilon$.  For CCE, a player selects a fixed action before observing a recommendation:
+\[
+R^{\mathrm{CCE}}_{i\to b_i}(\mu;\Gamma)
+=
+\sum_a\mu(a)
+[u_i(b_i,a_{-i})-u_i(a)]
+\le\epsilon.
+\]
+A distribution respects $G$ when $\mu(ga)=\mu(a)$ for all $g,a$.
+
+\begin{theorem}[CE and CCE transfer]
+\label{thm:supp-ce-transfer}
+If $\devdist(\Gamma,\widehat\Gamma)\le\delta$, every $\epsilon$-CE of $\widehat\Gamma$ is an $(\epsilon+\delta)$-CE of $\Gamma$.  The same holds for CCE.
+\end{theorem}
+\begin{proof}
+For a fixed CE deviation $a_i\to b_i$, strategic distance bounds the pointwise difference between its gains in the two games by $\delta$.  Therefore
+\begin{align*}
+\big|R^{\mathrm{CE}}_{i,a_i\to b_i}(\mu;\Gamma)
+&-R^{\mathrm{CE}}_{i,a_i\to b_i}(\mu;\widehat\Gamma)\big|\\
+&\le
+\delta\sum_{a_{-i}}\mu(a_i,a_{-i})
+\le\delta.
+\end{align*}
+Adding the surrogate violation proves the CE claim.  For CCE, the same pointwise bound is averaged with weights summing to one.
+\end{proof}
+
+\begin{theorem}[Invariant objective-optimal CE]
+\label{thm:supp-invariant-ce}
+Suppose $\widehat\Gamma$ is exactly $G$-invariant.  Let
+$w:A\to\mathbb R$ satisfy $w(ga)=w(a)$.  Among the CE maximizing
+$\sum_a\mu(a)w(a)$, some maximizer respects $G$.  The same statement holds for CCE.
+\end{theorem}
+\begin{proof}
+For $g\in G$, let $g\mu$ be the pushforward distribution.  Exact game invariance implies that $g$ bijectively relabels every CE incentive constraint.  Thus $g\mu$ is CE whenever $\mu$ is.  The CE polytope is convex, so
+\[
+\overline\mu=|G|^{-1}\sum_{g\in G}g\mu
+\]
+is feasible and invariant.  If $\mu$ maximizes the objective, every $g\mu$ has the same value because $w$ is invariant, and hence so does $\overline\mu$.  CCE constraints are relabeled in exactly the same way.
+\end{proof}
+
+Taking any linear objective, such as zero, proves existence of invariant CE and CCE.  Combining Theorems~\ref{thm:supp-ce-transfer} and
+\ref{thm:supp-invariant-ce} with a nearest invariant surrogate yields a $G$-respecting $\delta_G$-CE and $\delta_G$-CCE in every finite game.
+
+\subsection{Profile-Orbit Linear Program}
+
+Let $\mathcal O_A$ be the pure-profile orbits under $G$.  Represent an invariant distribution by one nonnegative variable $z_O$ per orbit, interpreted as the probability of each individual profile in $O$.  The simplex constraint is
+\begin{equation}
+\sum_{O\in\mathcal O_A}|O|z_O=1.
+\label{eq:supp-orbit-simplex}
+\end{equation}
+For CE, every ordered deviation produces the linear inequality
+\[
+\sum_{a_{-i}}
+ z_{[(a_i,a_{-i})]}
+[u_i(b_i,a_{-i})-u_i(a_i,a_{-i})]
+\le\epsilon.
+\]
+There are $\sum_i|A_i|(|A_i|-1)$ such inequalities.  CCE instead has $\sum_i|A_i|$ fixed-deviation inequalities.  A linear objective $w$ contributes coefficient
+$\sum_{a\in O}w(a)$ to variable $z_O$.
+
+\begin{proposition}[Orbit LP exactness]
+\label{prop:supp-orbit-ce}
+For an explicit game, optimizing a linear objective over invariant CE or CCE is a polynomial-size linear program.  If the game and objective are exactly $G$-invariant, its optimum equals the unrestricted CE or CCE optimum.
+\end{proposition}
+\begin{proof}
+The first claim follows from the explicit constraint count above.  For the second, take an unrestricted objective-optimal equilibrium and average it over $G$ using Theorem~\ref{thm:supp-invariant-ce}.  The average is feasible, invariant, and objective-optimal, so it is represented in the orbit program.
+\end{proof}
+
+This gives a tractable end-to-end general-sum pipeline: compute a symmetric surrogate, optimize an invariant CE in profile-orbit variables, and certify its original-game incentive violation by Theorem~\ref{thm:supp-ce-transfer}.  The selection objective may be evaluated using the original estimated payoffs even though feasibility is imposed using the surrogate; transfer depends only on the surrogate incentive constraints.
+
+\subsection{Independent and Correlated Role Assignment}
+
+There are $n$ agents and $n$ roles.  Every agent receives common payoff one iff all selected roles are distinct, and zero otherwise.  The game is invariant to arbitrary player permutations and common role relabelings.
+
+\begin{proposition}[Role-assignment separation]
+\label{prop:supp-role}
+The fully symmetry-respecting independent profile has welfare $n!/n^n$.  A fully symmetry-respecting CE has welfare one.
+\end{proposition}
+\begin{proof}
+Player and role symmetry force every marginal of an invariant product profile to be uniform over the $n$ roles.  Under independent uniform draws, all roles are distinct in exactly $n!$ of the $n^n$ joint outcomes.
+
+For the correlated distribution, sample uniformly from the $n!$ permutations of the roles and privately recommend one role to each player.  The distribution is invariant to permuting agents and to relabeling roles.  Conditional on any recommendation, following it gives a distinct role and payoff one.  Deviating to any other role duplicates the role recommended to another player and gives payoff zero.  The distribution is therefore CE and has welfare one.
+\end{proof}
+
+Using Stirling's approximation, $n!/n^n\asymp\sqrt{2\pi n}e^{-n}$, whereas correlated welfare remains one.  This exponential separation demonstrates that welfare loss need not come from respecting symmetry; it can arise from the additional requirement that a symmetric solution factor into independent marginals.  In applications, the CE interpretation requires a mediator, shared random seed, dispatcher, or common signal.

@@ -1,0 +1,13 @@
+\section{Related Work}
+
+\paragraph{Game symmetries and strategic equivalence.}
+Exact player/action relabelings have been connected to graph automorphism and to the complexity of symmetry-respecting equilibria \cite{tewolde2025game}; even symmetric common-payoff games can remain computationally difficult \cite{ghosh2026complexity}.  We instead quantify the incentive perturbation required to make a supplied group exact.  Our distance is the maximum pairwise difference (MPD) used for near-potential games \cite{candogan2013near}.  It factors out the nonstrategic components appearing in game decompositions and strategic-equivalence theory \cite{candogan2011flows,hwang2020strategic}, but our target set is the fixed subspace of an arbitrary relabeling group.  This yields orbit-specific projection algorithms and obstruction witnesses rather than a new game metric.
+
+\paragraph{Approximate symmetry and abstraction.}
+Partial or approximate permutation symmetry has been exploited in multi-agent reinforcement learning to balance statistical efficiency and model mismatch \cite{yu2024partial,yardim2025approximately}.  Approximate homomorphisms and game abstractions instead merge states, actions, or information sets in sequential models \cite{ravindran2004mdp,gilpin2007lossless,kroer2014extensive,ishibashi2025approximate}.  Our setting is an explicit normal-form game with arbitrary player--action relabelings, and the approximation error is the worst distortion of a unilateral incentive.
+
+\paragraph{Correlated solutions.}
+Correlated equilibrium was introduced by \citet{aumann1974subjectivity}; its finite-game existence and linear structure are classical \cite{hart1989existence,papadimitriou2008computing}.  Symmetric CE have been classified for symmetric $2\times2$ games \cite{amir2017correlated}, and exchangeable equilibrium lies between symmetric Nash and symmetric CE \cite{stein2013exchangeable}.  Exact game symmetries can support a correlation device that randomizes over relabeled high-payoff profiles \cite{tewolde2025game}.  We add approximate CE/CCE transfer under arbitrary supplied groups and a profile-orbit optimization program with an explicit certificate in the original game.
+
+\paragraph{Symmetry-aware learned solvers and coordination.}
+Other-Play uses known symmetries to avoid arbitrary conventions in zero-shot coordination \cite{hu2020otherplay}.  Learned equilibrium solvers and NfgTransformer enforce permutation equivariance across games \cite{marris2022turbocharging,liu2024nfgtransformer}.  Those methods learn across transformed environments; we audit one game and one proposed group, returning a sharp defect, a local witness, and a certified solution.

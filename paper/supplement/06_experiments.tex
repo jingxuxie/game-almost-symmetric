@@ -1,0 +1,102 @@
+\section{Additional Experimental Results}
+
+All experiments use explicit normal-form games, SciPy's HiGHS interface, fixed random seeds, and one CPU core.  The full configuration uses seed 17, 20 replicates at every perturbation scale, 40 replicates at every sample count, seven timing repetitions for the zero-sum study, and three timing repetitions for the CE study.  Construction-based sharpness results are evaluated once per listed parameter.  The repository records the software environment, every CSV file, and both PDF and PNG figures.
+
+\begin{table*}[t]
+\centering
+\begin{tabular}{lll}
+\toprule
+Study & Varied quantity & Primary diagnostic\\
+\midrule
+Nonstrategic shift & scale $0$--$10$ & raw versus strategic defect\\
+Strategic noise & $\sigma=0$--$0.35$ & regret or gap versus certificate\\
+Group hierarchy & orbit size $1,2,4,8$ & compression versus defect\\
+Reynolds family & $d=2$--$40$ & approximation ratio $2-2/d$\\
+Role assignment & $n=2$--$10$ & independent versus CE welfare\\
+Payoff sampling & $M=5$--$1000$ & coverage and contraction\\
+Runtime & duplicated actions & full versus orbit programs\\
+\bottomrule
+\end{tabular}
+\caption{Laptop-scale validation suite.  The synthetic families isolate one theorem at a time rather than model a large learned system.}
+\label{tab:supp-studies}
+\end{table*}
+
+\subsection{Strategic Versus Raw Payoff Asymmetry}
+
+We begin with an exactly lifted zero-sum quotient game and add arbitrary opponent-action-dependent payoff components.  These components are nonstrategic: the original and shifted games have identical unilateral incentives.  Figure~\ref{fig:supp-separation}(a) shows that nearest-symmetric raw payoff error grows with the shift magnitude, while strategic defect stays at numerical zero.  This verifies that payoff-level approximate symmetry can reject games whose equilibrium behavior is unchanged.
+
+\subsection{Sharpness of Group Averaging}
+
+For the zero-sum construction underlying Theorem~\ref{thm:supp-reynolds}, we independently compute the structured LP defect, unrestricted cycle defect, and Reynolds distance.  Figure~\ref{fig:supp-separation}(b) shows exact agreement with $2-2/d$ for
+$d\in\{2,3,4,5,8,12,20,40\}$.  The largest instance reaches ratio $1.95$.  Random perturbations in the calibration study produce substantially smaller averaging ratios, separating typical behavior from the proved worst case.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/nonstrategic_separation.pdf}\\
+{\small (a) Raw and strategic asymmetry.}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/reynolds_tightness.pdf}\\
+{\small (b) Exact Reynolds sharpness.}
+\end{minipage}
+\caption{Distance diagnostics.  Strategically irrelevant shifts are ignored by MPD, while the explicit zero-sum family approaches the factor-two averaging bound.}
+\label{fig:supp-separation}
+\end{figure*}
+
+\subsection{Correlated-Equilibrium Compression}
+
+The CE runtime family starts from a random $3\times3$ two-player general-sum quotient and duplicates every action $d$ times.  The game is exactly invariant under independent within-block permutations.  Both the unrestricted welfare-optimal CE and the profile-orbit CE attain the same objective, as Proposition~\ref{prop:supp-orbit-ce} predicts.  The full distribution uses $(3d)^2$ variables, while the orbit program uses nine.  Figure~\ref{fig:supp-computation}(a) displays the resulting representation gap.  The current implementation retains the full set of CE incentive constraints, so this study isolates distribution-variable reduction rather than claiming a fully quotient-sized constraint matrix.
+
+\subsection{Zero-Sum Runtime Scaling}
+
+For exact lifted zero-sum games, the ordinary equilibrium LP and orbit-reduced program solve the same strategic problem and both return numerical saddle gaps of zero.  Figure~\ref{fig:supp-computation}(b) shows increasing runtime separation as actions are duplicated through 512 actions per player, while the quotient remains $4\times4$.  Absolute timings depend on hardware and solver version; the scientifically relevant observation is that the full program grows with the lifted action count while the orbit program retains quotient dimension.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/correlated_compression.pdf}\\
+{\small (a) CE joint-distribution variables.}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/runtime_scaling.pdf}\\
+{\small (b) Zero-sum solve time.}
+\end{minipage}
+\caption{Computational compression under exact duplicated-action symmetries.}
+\label{fig:supp-computation}
+\end{figure*}
+
+\subsection{Finite-Sample Certificates}
+
+Each row-player payoff is transformed into a Bernoulli mean in $[0,1]$ and estimated independently from $M$ observations; the column payoff is its negative.  We project the empirical zero-sum game, solve the invariant surrogate, and evaluate the profile against the population matrix.  Figure~\ref{fig:supp-statistics}(a) compares true maximum regret with the $95\%$ certificate from the statistical analysis.  Every committed trial is covered, and the confidence contribution contracts at the predicted $M^{-1/2}$ rate.  The gap between empirical regret and the distribution-free bound motivates variance-adaptive confidence regions.
+
+\subsection{Heterogeneous Role Preferences}
+
+The two-player common-payoff role game assigns high value to complementary operational roles and adds player-specific role preferences of increasing magnitude.  Figure~\ref{fig:supp-statistics}(b) reports strategic defect, maximum original-game regret of the selected invariant equilibrium, and its welfare gap relative to the best joint action.  Regret remains certified while welfare may degrade, illustrating why strategic distance alone does not control equilibrium selection.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/sampling_certificate.pdf}\\
+{\small (a) Finite-sample regret certificate.}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/role_assignment.pdf}\\
+{\small (b) Incentive and welfare diagnostics.}
+\end{minipage}
+\caption{Statistical coverage and the limitation of incentive-only guarantees.}
+\label{fig:supp-statistics}
+\end{figure*}
+
+\subsection{Implementation Audits}
+
+The cycle and LP solvers share orbit construction but use independent optimization logic.  Across 100 generated games, the LP objective, maximum cycle mean, critical-witness mean, and reconstructed-surrogate distance agree to numerical tolerance.  Dedicated adversarial tests cover an empty incentive graph, a critical self-loop, compressed parallel edges, and a symmetry that exchanges players.  Additional tests verify Nash, CE, and CCE transfer, exact role-assignment welfare, profile-orbit labels under player swaps, and equality of full and invariant CE objectives in exact games.

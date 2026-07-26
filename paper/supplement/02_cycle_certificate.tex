@@ -1,0 +1,108 @@
+\section{Critical-Cycle Characterization}
+
+Let $V$ contain one vertex for each orbit of payoff coordinates $(i,a)$ under $G$.  For every player $i$, opponent profile $a_{-i}$, and ordered pair of distinct own actions $(b_i,a_i)$, insert an edge
+\[
+e:[i,(b_i,a_{-i})]\longrightarrow[i,(a_i,a_{-i})]
+\]
+with label
+\[
+c_e=u_i(a_i,a_{-i})-u_i(b_i,a_{-i}).
+\]
+The reverse ordered comparison is also present before orbit identification.  Parallel edges are allowed; for a fixed ordered endpoint pair, only the smallest label matters for the one-sided upper-bound system.  Self-loops must be retained because symmetry identification can collapse a nonzero comparison onto one vertex.
+
+An invariant surrogate assigns one potential $x_v$ to every vertex, with
+$\widehat u_i(a)=x_{[i,a]}$.  Its error on edge $e$ is
+\[
+|x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}-c_e|.
+\]
+
+\begin{theorem}[Maximum-mean-cycle formula]
+\label{thm:supp-cycle}
+Let $\mathcal C$ be the directed cycles of the orbit graph, including self-loops.  With value zero when $\mathcal C$ is empty,
+\begin{equation}
+\delta_G(\Gamma)
+=
+\max_{C\in\mathcal C}
+\left(-|C|^{-1}\sum_{e\in C}c_e\right).
+\label{eq:supp-cycle}
+\end{equation}
+At this value, difference-constraint potentials construct a nearest invariant surrogate, while a maximizing cycle certifies that no smaller error is possible.
+\end{theorem}
+\begin{proof}
+A potential has strategic error at most $t$ exactly when
+\begin{equation}
+-t
+\le
+x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}-c_e
+\le t
+\label{eq:supp-two-sided}
+\end{equation}
+for every ordered comparison.  The upper inequality is
+\[
+x_{\mathrm{head}(e)}-x_{\mathrm{tail}(e)}
+\le c_e+t.
+\]
+The lower inequality is the upper inequality for the reverse comparison.  Thus \eqref{eq:supp-two-sided} is equivalent to a directed system of difference constraints with edge length $c_e+t$.
+
+Such a system is feasible iff every directed cycle has nonnegative total length.  Necessity follows by summing the inequalities around a cycle, where the potentials telescope.  For sufficiency, add a zero-length source edge to every vertex and use shortest-path distances; when no negative cycle exists, these distances are finite and satisfy every constraint.  Therefore $t$ is feasible iff
+\[
+0\le\sum_{e\in C}(c_e+t)
+=
+\sum_{e\in C}c_e+|C|t
+\qquad\text{for every }C,
+\]
+or equivalently
+\[
+t\ge-|C|^{-1}\sum_{e\in C}c_e
+\qquad\text{for every }C.
+\]
+Minimizing over $t\ge0$ proves \eqref{eq:supp-cycle}.  At the critical value, shortest-path distances for lengths $c_e+\delta_G$ give the required orbit potentials.
+\end{proof}
+
+\subsection{Certified Witness Extraction}
+
+Karp's dynamic program computes the maximum cycle mean of weights $w_e=-c_e$ in polynomial time \cite{karp1978cycle}.  A predecessor chain in the value table need not itself be a critical cycle, so the implementation uses a separate tight-edge argument.
+
+Let $\lambda=\delta_G$ and define reduced weights $w'_e=w_e-\lambda$.  Every directed cycle has reduced total weight at most zero, and at least one critical cycle has total weight zero whenever the optimum is positive.  Add a source with zero-weight edges to every vertex and define $h_v$ as the maximum reduced weight of a directed walk from the source to $v$.  Because there is no positive cycle, these maxima are finite and satisfy
+\begin{equation}
+h_{\mathrm{head}(e)}
+\ge
+h_{\mathrm{tail}(e)}+w'_e.
+\label{eq:supp-maxplus}
+\end{equation}
+Call an edge tight when equality holds.  The slack in \eqref{eq:supp-maxplus} is nonnegative.  Around a zero-weight critical cycle, potential differences telescope and edge weights sum to zero, so all slacks on the cycle are zero.  A directed-cycle search in the tight-edge subgraph therefore returns a checkable witness whose mean is exactly $\lambda$.  The code verifies both closure and witness mean numerically.
+
+\subsection{Worked Two-Orbit Example}
+
+Suppose two payoff-coordinate orbits $U,V$ receive comparisons
+$U\to V$ with label $1$ and $V\to U$ with label $-3$.  Writing
+$d=x_V-x_U$, the two errors are
+\[
+|d-1|
+\qquad\text{and}\qquad
+|3-d|.
+\]
+Their minimax value is one, attained at $d=2$.  The two-edge cycle has mean label $(1-3)/2=-1$, and \eqref{eq:supp-cycle} gives the same defect.  The certificate identifies the inconsistency: after symmetry coordinates are merged into only $U$ and $V$, one context asks their potential difference to be near $1$, while another asks it to be near $3$.
+
+\subsection{Cheap Screening Bounds}
+
+For any generator set $S$,
+\begin{equation}
+\frac12\max_{s\in S}\devdist(\Gamma,s\Gamma)
+\le
+\delta_G(\Gamma)
+\le
+\devdist(\Gamma,\mathcal P_G\Gamma).
+\label{eq:supp-screening}
+\end{equation}
+The upper bound evaluates the feasible group-averaged surrogate.  For the lower bound, any invariant $\widehat\Gamma$ satisfies
+\[
+\devdist(\Gamma,s\Gamma)
+\le
+\devdist(\Gamma,\widehat\Gamma)
++
+\devdist(s\widehat\Gamma,s\Gamma)
+=
+2\devdist(\Gamma,\widehat\Gamma).
+\]
+Thus generator discrepancies and orbit averaging can screen a hierarchy before running the sharp projection.  A critical cycle can then guide refinement by identifying which orbit identifications or payoff estimates dominate the remaining defect.

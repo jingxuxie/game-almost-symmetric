@@ -1,0 +1,47 @@
+\section{A Tractable General-Sum Extension}
+
+A correlated equilibrium (CE) is a joint distribution $\mu\in\Delta(A)$ satisfying, for every player and deviation $a_i\to b_i$,
+\begin{align}
+R^{\mathrm{CE}}_{i,a_i\to b_i}(\mu;\Gamma)
+&=
+\sum_{a_{-i}}\mu(a_i,a_{-i})\nonumber\\
+&\quad\cdot
+\bigl[u_i(b_i,a_{-i})-u_i(a_i,a_{-i})\bigr]
+\le\epsilon.
+\label{eq:ce-regret}
+\end{align}
+For coarse-correlated equilibrium (CCE), a player chooses one fixed deviation before seeing a recommendation:
+\[
+R^{\mathrm{CCE}}_{i\to b_i}
+=
+\sum_a\mu(a)
+[u_i(b_i,a_{-i})-u_i(a)]
+\le\epsilon.
+\]
+A distribution respects $G$ if $\mu(ga)=\mu(a)$.
+
+\begin{theorem}[CE/CCE transfer]
+\label{thm:ce-transfer}
+If $\devdist(\Gamma,\widehat\Gamma)\le\delta$, every $\epsilon$-CE or $\epsilon$-CCE of $\widehat\Gamma$ is an $(\epsilon+\delta)$-CE or $(\epsilon+\delta)$-CCE of $\Gamma$.
+\end{theorem}
+For CE, each pointwise deviation gain changes by at most $\delta$ and is weighted by recommendation mass at most one; CCE weights sum to one.
+
+\begin{theorem}[Invariant correlated equilibria]
+\label{thm:invariant-ce}
+If $\widehat\Gamma$ is exactly $G$-invariant, it has $G$-respecting CE and CCE.  Moreover, for any $G$-invariant linear objective $w(a)$, some CE or CCE maximizer respects $G$.
+\end{theorem}
+Relabeling bijectively permutes the incentive constraints.  Averaging a feasible distribution over $G$ therefore preserves feasibility; convexity and invariance of $w$ preserve its objective value.  Together with projection and Theorem~\ref{thm:ce-transfer}, every finite game has $G$-respecting $\delta_G$-CE and $\delta_G$-CCE.
+
+\paragraph{Profile-orbit LP.}
+Let $\mathcal O_A$ be the pure-profile orbits.  A $G$-respecting distribution uses one nonnegative variable $z_O$ per orbit, with
+\begin{equation}
+\sum_{O\in\mathcal O_A}|O|z_O=1.
+\label{eq:orbit-simplex}
+\end{equation}
+Substitution into \eqref{eq:ce-regret} gives $|\mathcal O_A|$ variables and $\sum_i|A_i|(|A_i|-1)$ CE inequalities; CCE needs $\sum_i|A_i|$.  Thus a linear objective over invariant CE/CCE is polynomial-time computable for explicit games.  When the game and objective are exactly invariant, group averaging an unrestricted optimum shows that the orbit LP has the same value.
+
+\begin{proposition}[Correlation resolves symmetric roles]
+\label{prop:role-correlation}
+With $n$ agents and $n$ roles, give common payoff one iff all selected roles are distinct.  Fully symmetry-respecting independent play has welfare $n!/n^n$, whereas a fully symmetry-respecting CE has welfare one.
+\end{proposition}
+Player and role symmetry force uniform independent marginals.  A mediator instead samples uniformly from the $n!$ role permutations; following a recommendation yields payoff one, whereas deviating duplicates another agent's role.  Thus the loss comes from independence, not symmetry.  Full proofs are in the supplement.

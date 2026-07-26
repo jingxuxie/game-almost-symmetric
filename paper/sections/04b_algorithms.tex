@@ -1,0 +1,38 @@
+\section{Algorithms and Model Selection}
+
+The theory gives two complementary projection methods.  The sparse LP handles additional linear structure such as zero-sum or common payoffs.  The cycle solver applies to the unrestricted defect and additionally returns a local obstruction witness.  Once a surrogate is constructed, the equilibrium program is selected by the operational setting: Nash for independent play, CE/CCE when a correlation device is available, and the saddle-gap LP for two-player zero-sum auditing.
+
+\begin{table*}[t]
+\centering
+\begin{tabular}{llll}
+\toprule
+Task & Decision variables & Constraints or graph & Certified output\\
+\midrule
+Strategic projection LP & $P+2Q+1$ & $2P+Q$ plus symmetry & nearest structured surrogate\\
+Cycle projection & payoff-orbit potentials & deviation graph $(V,E)$ & sharp defect and critical cycle\\
+Invariant zero-sum solve & action-orbit probabilities & orbit best responses & minimum invariant saddle gap\\
+Invariant CE solve & profile-orbit probabilities & linear CE deviations & selected general-sum $\epsilon$-CE\\
+\bottomrule
+\end{tabular}
+\caption{Algorithmic components.  Here $P=n\prod_i|A_i|$ is the number of payoff entries and $Q=\sum_i\prod_{j\ne i}|A_j|$ the number of player/opponent-profile slices.}
+\label{tab:algorithms}
+\end{table*}
+
+For a nested hierarchy $G_0\subseteq\cdots\subseteq G_K$, the defect is monotone while orbit counts decrease.  A simple certified rule is therefore
+\[
+\max\{k:\delta_{G_k}(\Gamma)\le\varepsilon_{\rm sym}\},
+\]
+which chooses the most compressed candidate satisfying a prescribed symmetry-error budget.  The generator and Reynolds bounds can screen candidates before the sharp solve, and the critical cycle can suggest which orbit to split when the budget is violated.
+
+The final guarantee decomposes cleanly.  If a payoff estimate $\widetilde\Gamma$ is within strategic distance $\varepsilon_{\rm stat}$ of the population game, a surrogate is solved to equilibrium error $\varepsilon_{\rm solve}$, and its empirical projection defect is $\widehat\delta_G$, then
+\begin{equation}
+\text{original-game violation}
+\le
+\varepsilon_{\rm solve}
++
+\widehat\delta_G
++
+\varepsilon_{\rm stat}.
+\label{eq:error-decomposition}
+\end{equation}
+The same decomposition applies to Nash, CE, and CCE; in zero-sum games, summing the two player regrets gives the saddle-gap certificate.  Thus approximation from optimization, symmetry enforcement, and payoff estimation can be budgeted and reported separately.
