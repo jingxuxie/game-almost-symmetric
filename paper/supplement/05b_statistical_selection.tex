@@ -1,0 +1,93 @@
+\section{Confidence-Calibrated Selection Proofs}
+
+We formalize the post-selection argument used in the main paper.  Fix a closed linear game class $\mathcal C$ and candidate groups $G_1,\ldots,G_K$.  Write
+\[
+\delta_k=\delta_{G_k,\mathcal C}(\Gamma),
+\qquad
+\widehat\delta_k=\delta_{G_k,\mathcal C}(\widetilde\Gamma),
+\]
+and let $\widehat\Gamma_k\in\Fix(G_k)\cap\mathcal C$ attain the empirical defect.  The existence of a minimizer follows in the explicit finite-dimensional setting after quotienting out or normalizing the nonstrategic directions.
+
+\begin{lemma}[Uniform deterministic stability]
+\label{lem:supp-selection-stability}
+If $\devdist(\Gamma,\widetilde\Gamma)\le\rho$, then simultaneously for every candidate group,
+\[
+|\delta_k-\widehat\delta_k|\le\rho
+\quad\text{and}\quad
+\devdist(\Gamma,\widehat\Gamma_k)
+\le\widehat\delta_k+\rho.
+\]
+\end{lemma}
+\begin{proof}
+The first claim is the distance-to-set inequality applied to
+$\Fix(G_k)\cap\mathcal C$:
+\begin{align*}
+\delta_k
+&\le
+\devdist(\Gamma,\widetilde\Gamma)
++
+\delta_{G_k,\mathcal C}(\widetilde\Gamma)
+\le\rho+\widehat\delta_k.
+\end{align*}
+Swapping $\Gamma$ and $\widetilde\Gamma$ gives the reverse direction.  For the second claim, the triangle inequality yields
+\[
+\devdist(\Gamma,\widehat\Gamma_k)
+\le
+\devdist(\Gamma,\widetilde\Gamma)
++
+\devdist(\widetilde\Gamma,\widehat\Gamma_k)
+\le\rho+\widehat\delta_k.
+\]
+The argument is deterministic and does not union bound over groups.
+\end{proof}
+
+\begin{theorem}[Certified post-selection]
+\label{thm:supp-selection}
+Let $c_k$ be any deterministic complexity score for candidate $k$, with smaller values preferred.  Given budget $\beta$, suppose
+\[
+\widehat k\in\arg\min_k
+\{c_k:\widehat\delta_k+\rho\le\beta\}
+\]
+is well defined.  Then:
+\begin{enumerate}
+    \item $\delta_{\widehat k}\le\beta$;
+    \item $\devdist(\Gamma,\widehat\Gamma_{\widehat k})\le\beta$;
+    \item every $\epsilon$-Nash, $\epsilon$-CE, or $\epsilon$-CCE solution of $\widehat\Gamma_{\widehat k}$ has corresponding violation at most $\epsilon+\beta$ in $\Gamma$;
+    \item for every candidate $k$ with $\delta_k\le\beta-2\rho$, one has $c_{\widehat k}\le c_k$.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+The first two statements follow immediately from Lemma~\ref{lem:supp-selection-stability} and feasibility of $\widehat k$.  The third statement applies the Nash or mediated-equilibrium transfer theorem to the second bound.  For the oracle comparison, if $\delta_k\le\beta-2\rho$, then
+\[
+\widehat\delta_k+\rho
+\le
+\delta_k+2\rho
+\le\beta,
+\]
+so candidate $k$ belongs to the empirical feasible set.  Since $\widehat k$ minimizes the complexity score over that set, $c_{\widehat k}\le c_k$.
+\end{proof}
+
+The theorem separates two margins.  The selected candidate itself needs only the one-radius upper confidence bound $\widehat\delta_k+\rho$.  The stronger two-radius margin $\beta-2\rho$ appears only in the oracle-comparison statement, because one radius converts the unknown true defect to an empirical defect and the second converts the empirical feasibility test back to the target budget.
+
+\subsection{Instantiation with Bounded Payoff Samples}
+
+Suppose all $P$ payoff entries are means of independent observations contained in intervals of length one and each entry receives at least $M$ samples.  Hoeffding's inequality and a union bound over payoff entries give
+\[
+\max_{i,a}|u_i(a)-\widetilde u_i(a)|
+\le
+\xi_M
+=
+\sqrt{\frac{\log(2P/\alpha)}{2M}}
+\]
+with probability at least $1-\alpha$.  Equation~\eqref{eq:supp-raw-upper} then gives
+$\devdist(\Gamma,\widetilde\Gamma)\le2\xi_M$.  Thus Theorem~\ref{thm:supp-selection} holds with
+\[
+\rho_M=2\xi_M.
+\]
+Crucially, the entrywise event is established before considering any group and controls the strategic distance to the estimated game itself.  Consequently it validates all candidate fixed subspaces simultaneously, with no additional factor depending on $K$.
+
+\subsection{Selection Experiment}
+
+The experiment uses a $16\times16$ zero-sum matrix obtained by lifting a random $2\times2$ quotient, adding structured within-block heterogeneity, and affinely rescaling all row payoffs to $[0.1,0.9]$.  Candidate group sizes $1,2,4,8$ induce 32, 16, 8, and 4 action-orbit variables.  For every sample count, each row-payoff entry is estimated by an independent Bernoulli mean; the column payoff is its negative.  We compute every empirical structured defect, add the common radius in \eqref{eq:selection-radius}, and select the smallest orbit representation below budget $0.38$.
+
+For each selected group we solve the invariant equilibrium of its empirical zero-sum surrogate and evaluate the profile in the population matrix.  The recorded CSV includes the empirical and true defects, selected certificate, realized maximum regret and saddle gap, confidence-event indicator, and the population-oracle candidate.  The two plots in the main paper show that additional samples permit successively stronger compression while retaining the requested certificate.  The study uses 20 independent payoff tables at each of seven sample counts; the quick CI configuration uses three payoff tables at three representative counts.
