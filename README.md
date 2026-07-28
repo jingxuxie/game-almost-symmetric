@@ -19,8 +19,10 @@ For a supplied group `G` of player/action relabelings, the code computes
 - Reynolds/orbit averaging, a closed-form factor-two projection;
 - symmetry-respecting Nash, correlated, and coarse-correlated equilibria;
 - profile-orbit correlated-equilibrium programs for general-sum games;
-- symmetry-respecting zero-sum equilibria and saddle-gap certificates; and
-- orbit-compressed zero-sum and correlated-equilibrium solvers.
+- symmetry-respecting zero-sum equilibria and saddle-gap certificates;
+- orbit-compressed zero-sum and correlated-equilibrium solvers; and
+- confidence-calibrated selection of the most compressed candidate symmetry
+  supported by a sampled payoff table.
 
 The theorem stack proves that an `epsilon`-Nash, correlated, or
 coarse-correlated equilibrium of a surrogate at strategic distance `delta`
@@ -40,15 +42,22 @@ coordination resource: in the `n`-agent, `n`-role assignment game, independent
 invariant play has welfare `n! / n**n`, while an invariant correlated
 equilibrium has welfare one.
 
+For a hierarchy of candidate groups, the statistical selector chooses the
+smallest orbit representation whose empirical defect plus a common confidence
+radius fits a target incentive budget. The same payoff-table event controls all
+candidates, so post-selection does not require an additional multiplicity term.
+
 ## Repository layout
 
 - `paper/main.tex`: AAAI-27 main manuscript.
 - `paper/supplement.tex`: complete proofs and additional experimental details.
-- `src/almost_symmetric/`: game, symmetry, projection, cycle, zero-sum, and
-  correlated-equilibrium algorithms.
+- `src/almost_symmetric/`: game, symmetry, projection, cycle, selection,
+  zero-sum, and correlated-equilibrium algorithms.
 - `experiments/run_all.py`: deterministic experiment suite and figure generator.
 - `experiments/correlated_studies.py`: CE transfer, role assignment, and
   profile-orbit compression studies.
+- `experiments/selection_study.py`: sampled-payoff hierarchy selection and
+  certificate study.
 - `experiments/sharpness.py`: exact zero-sum Reynolds factor-two construction.
 - `experiments/results/`: generated CSV tables and summary metrics.
 - `experiments/figures/`: generated PDF/PNG figures, not versioned.
@@ -78,8 +87,8 @@ pytest
 
 The adversarial tests cover empty incentive graphs, critical self-loops,
 parallel-edge compression, player-swapping symmetries, exact sharpness
-families, CE/CCE transfer, invariant profile orbits, and randomized agreement
-between the cycle and LP solvers.
+families, CE/CCE transfer, statistical group selection, invariant profile
+orbits, and randomized agreement between the cycle and LP solvers.
 
 ## Reproduce experiments
 
@@ -142,8 +151,11 @@ The deterministic studies verify that
 - raw payoff defect grows under strategically irrelevant shifts while strategic
   defect remains numerically zero;
 - orbit reduction produces increasing separation in both zero-sum strategy
-  programs and correlated joint-distribution variables; and
-- the finite-sample certificate covers every trial in the committed sweep.
+  programs and correlated joint-distribution variables;
+- the finite-sample equilibrium certificate covers every trial; and
+- the hierarchy selector certifies the true selected defect and regret in every
+  committed trial and reaches the population-oracle compression at the largest
+  sample sizes.
 
 These are synthetic theorem checks and diagnostics, not claims about large-scale
 learned agents.
