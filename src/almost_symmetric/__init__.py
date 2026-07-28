@@ -21,6 +21,7 @@ from .game import (
     strategic_distance,
 )
 from .projection import ProjectionResult, project_payoff_linf, project_strategic
+from .selection import SymmetrySelectionResult, select_symmetry_group
 from .symmetry import (
     Relabeling,
     action_orbit_labels,
@@ -47,6 +48,7 @@ __all__ = [
     "CycleProjectionResult",
     "CorrelatedSolution",
     "IncentiveEdge",
+    "SymmetrySelectionResult",
     "ZeroSumSolution",
     "add_nonstrategic_component",
     "payoff_linf_distance",
@@ -60,6 +62,7 @@ __all__ = [
     "correlated_equilibrium_violations",
     "is_invariant_distribution",
     "solve_correlated_equilibrium",
+    "select_symmetry_group",
     "action_orbit_labels",
     "profile_orbit_labels",
     "payoff_coordinate_orbit_labels",
