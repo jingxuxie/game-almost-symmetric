@@ -21,6 +21,10 @@ from .correlated_studies import (
     run_role_assignment_correlation,
 )
 from .plotting import make_figures, make_overview_figure
+from .selection_study import (
+    make_selection_figures,
+    run_statistical_selection,
+)
 from .sharpness import (
     make_reynolds_tightness_figure,
     run_reynolds_tightness,
@@ -91,6 +95,11 @@ def main() -> None:
             repetitions=correlated_runtime_repetitions,
             duplicate_factors=correlated_duplicate_factors,
         ),
+        "statistical_selection": run_statistical_selection(
+            args.seed + 8,
+            calibration_replicates,
+            quick=args.quick,
+        ),
     }
     for name, table in tables.items():
         table.to_csv(RESULTS / f"{name}.csv", index=False)
@@ -114,6 +123,18 @@ def main() -> None:
         transferred_welfare_mean=("transferred_welfare", "mean"),
         direct_welfare_mean=("direct_welfare", "mean"),
     ).to_csv(RESULTS / "correlated_calibration_summary.csv", index=False)
+    tables["statistical_selection"].groupby(
+        "samples_per_entry", as_index=False
+    ).agg(
+        selected_action_orbits_median=("selected_action_orbits", "median"),
+        selected_certificate_mean=("selected_certificate", "mean"),
+        selected_true_defect_mean=("selected_true_defect", "mean"),
+        true_max_regret_mean=("true_max_regret", "mean"),
+        oracle_selection_rate=("selected_oracle", "mean"),
+        confidence_event_rate=("confidence_event", "mean"),
+        defect_coverage=("defect_covered", "mean"),
+        regret_coverage=("regret_covered", "mean"),
+    ).to_csv(RESULTS / "statistical_selection_summary.csv", index=False)
     make_figures(tables)
     make_reynolds_tightness_figure(tables["reynolds_tightness"])
     make_correlated_figures(
@@ -121,10 +142,18 @@ def main() -> None:
         tables["correlated_role_assignment"],
         tables["correlated_runtime"],
     )
+    make_selection_figures(tables["statistical_selection"])
 
     solved_roles = tables["correlated_role_assignment"].dropna(
         subset=["solver_welfare"]
     )
+    largest_selection_sample = tables["statistical_selection"][
+        "samples_per_entry"
+    ].max()
+    largest_selection_rows = tables["statistical_selection"][
+        tables["statistical_selection"]["samples_per_entry"]
+        == largest_selection_sample
+    ]
     summary = {
         "seed": args.seed,
         "calibration_replicates": calibration_replicates,
@@ -178,6 +207,15 @@ def main() -> None:
         ),
         "sampling_empirical_coverage": float(
             tables["sampling"]["covered"].mean()
+        ),
+        "selection_defect_coverage": float(
+            tables["statistical_selection"]["defect_covered"].mean()
+        ),
+        "selection_regret_coverage": float(
+            tables["statistical_selection"]["regret_covered"].mean()
+        ),
+        "selection_oracle_rate_largest_sample": float(
+            largest_selection_rows["selected_oracle"].mean()
         ),
         "largest_runtime_speedup": float(
             tables["runtime"]["speedup"].max()
