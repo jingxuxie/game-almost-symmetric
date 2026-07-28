@@ -1,0 +1,58 @@
+\section{Confidence-Calibrated Symmetry Selection}
+
+A compression hierarchy is useful only if the chosen group remains valid after accounting for payoff uncertainty.  Let $G_1,\ldots,G_K$ be candidate groups, let $c_k$ be a compression cost such as the number of action or profile orbits, and fix an optional linear game class $\mathcal C$.  From an estimated game $\widetilde\Gamma$, compute
+$\widehat\delta_k=\delta_{G_k,\mathcal C}(\widetilde\Gamma)$ and a nearest surrogate $\widehat\Gamma_k$.  Suppose a common event guarantees
+$\devdist(\Gamma,\widetilde\Gamma)\le\rho$.
+
+\begin{theorem}[Certified post-selection]
+\label{thm:group-selection}
+For a target incentive budget $\beta$, choose
+\begin{equation}
+\widehat k\in\arg\min_k
+\left\{c_k:\widehat\delta_k+\rho\le\beta\right\}.
+\label{eq:group-selection}
+\end{equation}
+Whenever the feasible set is nonempty:
+(i) $\delta_{G_{\widehat k},\mathcal C}(\Gamma)\le\beta$;
+(ii) every $\epsilon$-Nash, CE, or CCE solution of $\widehat\Gamma_{\widehat k}$ has original-game violation at most $\epsilon+\beta$; and
+(iii) $c_{\widehat k}\le c_k$ for every candidate satisfying
+$\delta_{G_k,\mathcal C}(\Gamma)\le\beta-2\rho$.
+\end{theorem}
+\begin{proof}
+Proposition~\ref{prop:defect-stability} gives
+$|\delta_{G_k,\mathcal C}(\Gamma)-\widehat\delta_k|\le\rho$ simultaneously for every $k$.  Thus the selected group's true defect is at most $\widehat\delta_{\widehat k}+\rho\le\beta$.  Moreover,
+$\devdist(\Gamma,\widehat\Gamma_{\widehat k})\le
+\rho+\widehat\delta_{\widehat k}\le\beta$, so the Nash and mediated-equilibrium transfer theorems prove (ii).  Finally, if a candidate has true defect at most $\beta-2\rho$, then
+$\widehat\delta_k+\rho\le\delta_{G_k,\mathcal C}(\Gamma)+2\rho\le\beta$; it is feasible in \eqref{eq:group-selection}, and optimality gives (iii).
+\end{proof}
+
+The result is a structural-risk principle for symmetry: use the most compressed candidate whose empirical defect plus uncertainty fits the deployment budget.  If no candidate is feasible, the correct output is that the available data do not certify the requested tolerance.  For a zero-sum surrogate, the selected profile has per-player regret at most $\epsilon+\beta$ and total saddle gap at most $2(\epsilon+\beta)$.
+
+\begin{corollary}[Sampled payoff tables]
+\label{cor:group-selection-sampling}
+If each of $P$ payoff means is estimated from at least $M$ independent observations in an interval of length one, then with probability at least $1-\alpha$, Theorem~\ref{thm:group-selection} holds with
+\begin{equation}
+\rho_M=2\sqrt{\frac{\log(2P/\alpha)}{2M}}.
+\label{eq:selection-radius}
+\end{equation}
+The same event controls all candidate groups, so selecting among $K$ groups incurs no additional $\log K$ term.
+\end{corollary}
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/statistical_selection_compression.pdf}\\
+{\small (a) Certified compression versus payoff samples.}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/statistical_selection_certificate.pdf}\\
+{\small (b) Certificate, true defect, and realized regret.}
+\end{minipage}
+\caption{Data-driven selection from four nested symmetry groups.  As the common confidence radius contracts, the rule certifies progressively smaller orbit representations while the selected defect and realized regret stay below the target budget.  The dashed oracle in (a) uses the unknown population game.}
+\label{fig:statistical-selection}
+\end{figure*}
+
+We validate the rule on a bounded $16\times16$ zero-sum game with four nested within-block groups.  The candidates use 32, 16, 8, and 4 action-orbit variables, and the target per-player budget is $0.38$.  Figure~\ref{fig:statistical-selection} aggregates 20 independently sampled payoff tables at each sample size.  More data progressively certify larger groups; at the largest sample sizes the selected representation reaches the population-oracle compression.  Across the sweep, the selected true defect and the actual maximum regret remain within their data-dependent certificates.
