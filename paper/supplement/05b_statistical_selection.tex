@@ -81,13 +81,14 @@ Suppose all $P$ payoff entries are means of independent observations contained i
 \]
 with probability at least $1-\alpha$.  Equation~\eqref{eq:supp-raw-upper} then gives
 $\devdist(\Gamma,\widetilde\Gamma)\le2\xi_M$.  Thus Theorem~\ref{thm:supp-selection} holds with
-\[
+\begin{equation}
 \rho_M=2\xi_M.
-\]
+\label{eq:supp-selection-radius}
+\end{equation}
 Crucially, the entrywise event is established before considering any group and controls the strategic distance to the estimated game itself.  Consequently it validates all candidate fixed subspaces simultaneously, with no additional factor depending on $K$.
 
 \subsection{Selection Experiment}
 
-The experiment uses a $16\times16$ zero-sum matrix obtained by lifting a random $2\times2$ quotient, adding structured within-block heterogeneity, and affinely rescaling all row payoffs to $[0.1,0.9]$.  Candidate group sizes $1,2,4,8$ induce 32, 16, 8, and 4 action-orbit variables.  For every sample count, each row-payoff entry is estimated by an independent Bernoulli mean; the column payoff is its negative.  We compute every empirical structured defect, add the common radius in \eqref{eq:selection-radius}, and select the smallest orbit representation below budget $0.38$.
+The experiment uses a $16\times16$ zero-sum matrix obtained by lifting a random $2\times2$ quotient, adding structured within-block heterogeneity, and affinely rescaling all row payoffs to $[0.1,0.9]$.  Candidate group sizes $1,2,4,8$ induce 32, 16, 8, and 4 action-orbit variables.  For every sample count, each row-payoff entry is estimated by an independent Bernoulli mean; the column payoff is its negative.  We compute every empirical structured defect, add the common radius in \eqref{eq:supp-selection-radius}, and select the smallest orbit representation below budget $0.38$.
 
 For each selected group we solve the invariant equilibrium of its empirical zero-sum surrogate and evaluate the profile in the population matrix.  The recorded CSV includes the empirical and true defects, selected certificate, realized maximum regret and saddle gap, confidence-event indicator, and the population-oracle candidate.  The two plots in the main paper show that additional samples permit successively stronger compression while retaining the requested certificate.  The study uses 20 independent payoff tables at each of seven sample counts; the quick CI configuration uses three payoff tables at three representative counts.
