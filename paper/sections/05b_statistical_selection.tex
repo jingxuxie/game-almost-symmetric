@@ -1,0 +1,49 @@
+\section{Confidence-Calibrated Symmetry Selection}
+
+A hierarchy is useful only if the selected abstraction remains valid after payoff estimation.  Let $G_1,\ldots,G_K$ be candidate groups, let $c_k$ be a compression cost (e.g., number of orbits), and let
+$\widehat\delta_k=\delta_{G_k,\mathcal C}(\widetilde\Gamma)$ be the defect of an estimated game in an optional linear class $\mathcal C$.  Suppose a common event gives
+$\devdist(\Gamma,\widetilde\Gamma)\le\rho$.
+
+\begin{theorem}[Certified post-selection]
+\label{thm:group-selection}
+For target budget $\beta$, choose
+\begin{equation}
+\widehat k\in\arg\min_k
+\{c_k:\widehat\delta_k+\rho\le\beta\}.
+\label{eq:group-selection}
+\end{equation}
+If the set is nonempty, then
+$\delta_{G_{\widehat k},\mathcal C}(\Gamma)\le\beta$, and every $\epsilon$-Nash, CE, or CCE solution of the selected empirical surrogate has original-game violation at most $\epsilon+\beta$.  Moreover,
+$c_{\widehat k}\le c_k$ for every candidate satisfying
+$\delta_{G_k,\mathcal C}(\Gamma)\le\beta-2\rho$.
+\end{theorem}
+\begin{proof}[Proof sketch]
+Distance to each fixed subspace is one-Lipschitz, so
+$|\delta_{G_k,\mathcal C}(\Gamma)-\widehat\delta_k|\le\rho$ simultaneously for all $k$, and the selected surrogate is within $\widehat\delta_{\widehat k}+\rho\le\beta$ of $\Gamma$.  Transfer proves the incentive guarantee.  Any candidate with true defect at most $\beta-2\rho$ passes the empirical test, giving the complexity comparison.  Full details are in the supplement.
+\end{proof}
+
+If $P$ bounded payoff means each receive $M$ independent samples, Hoeffding gives the common radius
+\begin{equation}
+\rho_M=2\sqrt{\frac{\log(2P/\alpha)}{2M}}
+\label{eq:selection-radius}
+\end{equation}
+with probability $1-\alpha$.  Because this event controls the payoff table before any group is selected, it certifies all $K$ candidates without an additional $\log K$ term.  If no candidate passes, the data do not certify the requested budget.
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/statistical_selection_compression.pdf}\\
+{\small (a) Certified compression.}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\linewidth]{../experiments/figures/statistical_selection_certificate.pdf}\\
+{\small (b) Defect, regret, and certificate.}
+\end{minipage}
+\caption{Selection from four nested groups in a sampled $16\times16$ zero-sum game.  More payoff data certify smaller orbit representations while the selected true defect and realized regret remain below the target budget.}
+\label{fig:statistical-selection}
+\end{figure*}
+
+Figure~\ref{fig:statistical-selection} aggregates 20 payoff tables per sample size for candidates with 32, 16, 8, and 4 action-orbit variables and budget $0.38$.  Median selection moves from 32 variables at $M=250$ to 8 at $M=500$ and 4 at $M=2500$; all 140 selections certify the true defect and realized regret, and the largest-sample choices match the population oracle.

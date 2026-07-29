@@ -34,7 +34,7 @@
 \maketitle
 
 \begin{abstract}
-Symmetry can compress games and guide decentralized coordination, but exact payoff invariance is brittle under heterogeneity, estimation noise, and design perturbations.  We study finite normal-form games equipped with a candidate player--action relabeling group and measure approximate symmetry through unilateral-deviation incentives rather than raw payoff differences.  We give a sparse linear program for the nearest exactly symmetric surrogate and an equivalent maximum-mean-cycle algorithm whose critical cycle certifies unavoidable asymmetry.  An $\epsilon$-Nash equilibrium of a surrogate at defect $\delta$ is an $(\epsilon+\delta)$-equilibrium of the original game, and the coefficient is tight.  The same transfer guarantee holds for correlated and coarse-correlated equilibrium.  This yields a profile-orbit linear program for invariant correlated equilibria in general-sum games; in a symmetric role-assignment family, correlation raises welfare from $n!/n^n$ under independent invariant play to one.  Group averaging is a closed-form factor-two approximation to the optimal strategic projection, with an asymptotically tight zero-sum construction.  Orbit-restricted zero-sum programs give exploitability certificates, which extend to sampled payoff tables.  Laptop-scale experiments verify the certificates and sharp constants, separate strategic from payoff asymmetry, and quantify compression and the value of correlation.
+Symmetry can compress games and guide decentralized coordination, but exact payoff invariance is brittle under heterogeneity, estimation noise, and design perturbations.  We study finite normal-form games equipped with a candidate player--action relabeling group and measure approximate symmetry through unilateral-deviation incentives rather than raw payoff differences.  We give a sparse linear program for the nearest exactly symmetric surrogate and an equivalent maximum-mean-cycle algorithm whose critical cycle certifies unavoidable asymmetry.  An $\epsilon$-Nash equilibrium of a surrogate at defect $\delta$ is an $(\epsilon+\delta)$-equilibrium of the original game, and the coefficient is tight.  The same transfer guarantee holds for correlated and coarse-correlated equilibrium.  This yields a profile-orbit linear program for invariant correlated equilibria in general-sum games; in a symmetric role-assignment family, correlation raises welfare from $n!/n^n$ under independent invariant play to one.  Group averaging is a closed-form factor-two approximation to the optimal strategic projection, with an asymptotically tight zero-sum construction.  Orbit-restricted zero-sum programs give exploitability certificates, which extend to sampled payoff tables and confidence-calibrated selection among candidate symmetry groups.  Laptop-scale experiments verify the certificates and sharp constants, separate strategic from payoff asymmetry, and quantify compression and the value of correlation.
 \end{abstract}
 
 \input{sections/01_introduction_related}
@@ -46,9 +46,10 @@ Symmetry can compress games and guide decentralized coordination, but exact payo
 \input{sections/04b_algorithms}
 \input{sections/05_correlated_equilibria}
 \input{sections/05_zero_sum_sampling}
+\input{sections/05b_statistical_selection}
 \input{sections/06_experiments}
 \input{sections/07_discussion}
 
 \label{lasttechnical}
-\bibliography{references}
+\bibliography{references,references_selection}
 \end{document}

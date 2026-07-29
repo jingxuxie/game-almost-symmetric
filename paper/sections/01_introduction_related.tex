@@ -4,7 +4,7 @@ Symmetry can collapse a large multi-agent game into a small quotient and provide
 
 Raw payoff error is a poor remedy.  Adding an arbitrary function $c_i(a_{-i})$ to player $i$'s utility can move the payoff tensor arbitrarily far while preserving every unilateral incentive and equilibrium.  We instead study a game $\Gamma$ with a supplied relabeling group $G$ and ask for the smallest change in unilateral-deviation incentives that makes $G$ exact.  This \emph{strategic symmetry defect} $\delta_G(\Gamma)$ turns $G$ into a certified abstraction: project to an exactly invariant surrogate, solve in orbit variables, and transfer the solution back with an explicit incentive bound.
 
-The framework separates fidelity, computation, and coordination.  A larger group gives more compression but may distort incentives; moreover, symmetry-respecting independent strategies and symmetry-respecting correlated distributions need not have comparable welfare.  Figure~\ref{fig:overview} summarizes the pipeline.
+The framework separates fidelity, computation, and coordination.  A larger group gives more compression but may distort incentives; moreover, symmetry-respecting independent strategies and symmetry-respecting correlated distributions need not have comparable welfare.  When payoffs are estimated, a fourth question appears: which group in a candidate hierarchy is actually supported by the available data?  Figure~\ref{fig:overview} summarizes the pipeline.
 
 \begin{figure*}[t]
 \centering
@@ -19,5 +19,5 @@ Our contributions are:
     \item additive $\epsilon+\delta$ transfer for Nash, correlated, and coarse-correlated equilibrium, including $G$-respecting $\delta_G$ solutions in every finite game;
     \item a profile-orbit LP for invariant correlated equilibria in general-sum games and a role-assignment separation: independent invariant play has welfare $n!/n^n$, whereas invariant correlation achieves one;
     \item a closed-form group average within factor two of optimal, an asymptotically tight zero-sum family, and orbit-restricted zero-sum exploitability programs; and
-    \item laptop-scale validation of the certificates, sharp constants, compression--fidelity frontier, and value of correlation, together with finite-sample payoff guarantees.
+    \item confidence-calibrated selection of the most compressed candidate group supported by sampled payoffs, together with laptop-scale validation of the certificates, sharp constants, compression--fidelity frontier, and value of correlation.
 \end{itemize}

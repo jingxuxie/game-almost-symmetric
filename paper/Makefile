@@ -11,6 +11,8 @@ FIGURES := \
 	../experiments/figures/correlated_calibration.pdf \
 	../experiments/figures/role_assignment_correlation.pdf \
 	../experiments/figures/correlated_compression.pdf \
+	../experiments/figures/statistical_selection_compression.pdf \
+	../experiments/figures/statistical_selection_certificate.pdf \
 	../experiments/figures/runtime_scaling.pdf \
 	../experiments/figures/sampling_certificate.pdf \
 	../experiments/figures/reynolds_tightness.pdf
